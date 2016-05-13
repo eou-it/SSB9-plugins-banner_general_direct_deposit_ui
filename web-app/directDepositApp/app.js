@@ -59,7 +59,7 @@ var directDepositApp = angular.module('directDepositApp', ['ngResource','ui.rout
     ]
 );
 
-directDepositApp.constant('webAppResourcePathString', '../plugins/banner-direct-deposit-ui-0.1');
+directDepositApp.constant('webAppResourcePathString', '../plugins/banner-general-direct-deposit-ui-0.1');
 
 directDepositApp.config(['$stateProvider', '$urlRouterProvider', 'webAppResourcePathString',
     function($stateProvider, $urlRouterProvider, webAppResourcePathString){

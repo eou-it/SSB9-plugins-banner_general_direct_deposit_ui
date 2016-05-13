@@ -37,7 +37,7 @@ class BannerDirectDepositUiGrailsPlugin {
     def title = "Banner Direct Deposit Plugin"
     def description = '''This plugin is BannerDirectDepositUi.'''//.stripMargin()  // TODO Enable this once we adopt Groovy 1.7.3
 
-    def documentation = "http://sungardhe.com/development/horizon/plugins/banner-direct-deposit-ui"
+    def documentation = "http://sungardhe.com/development/horizon/plugins/banner-general-direct-deposit-ui"
 
 
     def doWithWebDescriptor = { xml ->
