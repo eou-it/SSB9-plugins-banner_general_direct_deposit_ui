@@ -2,7 +2,7 @@
  Copyright 2015 Ellucian Company L.P. and its affiliates.
  *******************************************************************************/
 
-generalSsbApp.service('directDepositService', ['$rootScope', '$resource', function ($rootScope, $resource) {
+directDepositApp.service('directDepositService', ['$rootScope', '$resource', function ($rootScope, $resource) {
 
     var fetchRoles = $resource('../ssb/:controller/:action',
             {controller: 'General', action: 'getRoles'}, {query: {method:'GET', isArray:false}}),

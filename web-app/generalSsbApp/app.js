@@ -5,7 +5,7 @@ var generalSsbAppControllers = angular.module('generalSsbAppControllers', []);
 var generalSsbAppDirectives = angular.module('generalSsbAppDirectives', []);
 
 
-var generalSsbApp = angular.module('generalSsbApp', ['ngResource','ui.router','generalSsbAppControllers',
+var directDepositApp = angular.module('directDepositApp', ['ngResource','ui.router','generalSsbAppControllers',
     'generalSsbAppDirectives','ui.bootstrap','I18n','numericApp'])
     .run(
     ['$rootScope', '$state', '$stateParams', '$filter', 'breadcrumbService', 'directDepositService', 'notificationCenterService',
@@ -59,40 +59,44 @@ var generalSsbApp = angular.module('generalSsbApp', ['ngResource','ui.router','g
     ]
 );
 
-generalSsbApp.config(function($stateProvider, $urlRouterProvider){
-    // For any unmatched url, send to /directDepositListing
-    var url = url ? url : 'directDepositListing';
+directDepositApp.constant('webAppResourcePathString', '../plugins/banner-direct-deposit-ui-0.1');
 
-    $urlRouterProvider.otherwise(url) ;
+directDepositApp.config(['$stateProvider', '$urlRouterProvider', 'webAppResourcePathString',
+    function($stateProvider, $urlRouterProvider, webAppResourcePathString){
+        // For any unmatched url, send to /directDepositListing
+        var url = url ? url : 'directDepositListing';
 
-    /*********************************************************
-     * Defining all the different states of the generalSsbApp
-     * Landing pages
-     *********************************************************/
-    $stateProvider
-        .state('directDepositListing', {
-            url: "/directDepositListing",
-            templateUrl: '../generalSsbApp/ddListing/directDepositListing.html',
-            controller: 'ddListingController',
-            onEnter: function(ddListingService){
-                ddListingService.doReload();
-            },
-            data: {
-                breadcrumbs: []
-            },
-            params: {
-                onLoadNotifications: []
-            }
-        });
-});
+        $urlRouterProvider.otherwise(url) ;
 
-generalSsbApp.config(['$locationProvider',
+        /*********************************************************
+         * Defining all the different states of the directDepositApp
+         * Landing pages
+         *********************************************************/
+        $stateProvider
+            .state('directDepositListing', {
+                url: "/directDepositListing",
+                templateUrl: webAppResourcePathString + '/directDepositApp/ddListing/directDepositListing.html',
+                controller: 'ddListingController',
+                onEnter: function(ddListingService){
+                    ddListingService.doReload();
+                },
+                data: {
+                    breadcrumbs: []
+                },
+                params: {
+                    onLoadNotifications: []
+                }
+            });
+    }
+]);
+
+directDepositApp.config(['$locationProvider',
     function ($locationProvider) {
         $locationProvider.html5Mode(false);
     }
 ]);
 
-generalSsbApp.config(['$httpProvider',
+directDepositApp.config(['$httpProvider',
     function ($httpProvider) {
         if (!$httpProvider.defaults.headers.get) {
             $httpProvider.defaults.headers.get = {};

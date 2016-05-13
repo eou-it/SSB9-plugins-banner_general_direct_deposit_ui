@@ -2,17 +2,17 @@
  Copyright 2015 Ellucian Company L.P. and its affiliates.
  *******************************************************************************/
 
-generalSsbAppDirectives.directive('apAccountInfo',[function () {
+generalSsbAppDirectives.directive('apAccountInfo', ['$filter', function ($filter) {
     return{
         restrict: 'E',
-        templateUrl: '../generalSsbApp/ddListing/apAccountInformation.html'
+        templateUrl: $filter('webAppResourcePath')('directDepositApp/ddListing/apAccountInformation.html')
     };
 }]);
 
-generalSsbAppDirectives.directive('apAccountInfoDesktop',[function () {
+generalSsbAppDirectives.directive('apAccountInfoDesktop', ['$filter', function ($filter) {
     return{
         restrict: 'A',
-        templateUrl: '../generalSsbApp/ddListing/apAccountInformationDesktop.html'
+        templateUrl: $filter('webAppResourcePath')('directDepositApp/ddListing/apAccountInformationDesktop.html')
     };
 }]);
 
@@ -29,7 +29,7 @@ generalSsbAppDirectives.directive('accountType',[function () {
 generalSsbAppDirectives.directive('accountStatus', ['$filter', function ($filter) {
     return{
         restrict: 'E',
-        templateUrl: '../generalSsbApp/ddListing/accountStatus.html',
+        templateUrl: $filter('webAppResourcePath')('directDepositApp/ddListing/accountStatus.html'),
         scope: {
             account: '=',
             type: '@'
@@ -47,21 +47,21 @@ generalSsbAppDirectives.directive('accountStatus', ['$filter', function ($filter
     };
 }]);
 
-generalSsbAppDirectives.directive('payListingPanelPopulatedMostRecent',[function () {
+generalSsbAppDirectives.directive('payListingPanelPopulatedMostRecent',['$filter', function ($filter) {
     return{
         restrict: 'E',
         link: function(scope) {
             var type = scope.isDesktopView ? 'Desktop' : '';
-            scope.mostRecentPayPanelPopulatedTemplate = '../generalSsbApp/ddListing/payListingPanelPopulatedMostRecent' + type + '.html'
+            scope.mostRecentPayPanelPopulatedTemplate = $filter('webAppResourcePath')('directDepositApp/ddListing/payListingPanelPopulatedMostRecent' + type + '.html')
         },
         template: '<div ng-include="mostRecentPayPanelPopulatedTemplate"></div>'
     };
 }]);
 
-generalSsbAppDirectives.directive('payAccountInfoMostRecent',[function () {
+generalSsbAppDirectives.directive('payAccountInfoMostRecent',['$filter', function ($filter) {
     return{
         restrict: 'E',
-        templateUrl: '../generalSsbApp/ddListing/payAccountInformationMostRecent.html',
+        templateUrl: $filter('webAppResourcePath')('directDepositApp/ddListing/payAccountInformationMostRecent.html'),
         scope: {
             payHistoryDist: '='
         }
@@ -71,28 +71,30 @@ generalSsbAppDirectives.directive('payAccountInfoMostRecent',[function () {
 /* 
  * relies on the dist variable from the ng-repeat in payListingPanelPopulatedMostRecentDesktop.html 
  */
-generalSsbAppDirectives.directive('payAccountInfoMostRecentDesktop',[function () {
+generalSsbAppDirectives.directive('payAccountInfoMostRecentDesktop',['$filter', function ($filter) {
     return{
         restrict: 'A',
-        templateUrl: '../generalSsbApp/ddListing/payAccountInformationMostRecentDesktop.html'
+        templateUrl: $filter('webAppResourcePath')('directDepositApp/ddListing/payAccountInformationMostRecentDesktop.html')
     };
 }]);
 
-generalSsbAppDirectives.directive('payListingPanelPopulatedProposed',[function () {
+generalSsbAppDirectives.directive('payListingPanelPopulatedProposed',['$filter', function ($filter) {
     return{
         restrict: 'E',
         link: function(scope) {
             var type = scope.isDesktopView ? 'Desktop' : '';
-            scope.proposedPayPanelPopulatedTemplate = '../generalSsbApp/ddListing/payListingPanelPopulatedProposed' + type + '.html'
+            scope.proposedPayPanelPopulatedTemplate = $filter('webAppResourcePath')('directDepositApp/ddListing/payListingPanelPopulatedProposed' + type + '.html')
         },
         template: '<div ng-include="proposedPayPanelPopulatedTemplate"></div>'
     };
 }]);
 
-generalSsbAppDirectives.directive('payAccountInfoProposed', ['ddEditAccountService', function (ddEditAccountService) {
+generalSsbAppDirectives.directive('payAccountInfoProposed', ['ddEditAccountService', '$filter',
+    function (ddEditAccountService, $filter) {
+
     return{
         restrict: 'E',
-        templateUrl: '../generalSsbApp/ddListing/payAccountInformationProposed.html',
+        templateUrl: $filter('webAppResourcePath')('directDepositApp/ddListing/payAccountInformationProposed.html'),
         controller: 'ddListingController',
         link: function(scope, elem, attrs, ctrl){
             scope.alloc = scope.allocation;
@@ -113,7 +115,7 @@ generalSsbAppDirectives.directive('payAccountInfoProposedDesktop',['directDeposi
 
     return{
         restrict: 'A',
-        templateUrl: '../generalSsbApp/ddListing/payAccountInformationProposedDesktop.html',
+        templateUrl: $filter('webAppResourcePath')('directDepositApp/ddListing/payAccountInformationProposedDesktop.html'),
         controller: 'ddListingController',
         link: function(scope, elem, attrs, ctrl){
             scope.alloc = scope.allocation;
@@ -311,19 +313,21 @@ generalSsbAppDirectives.directive('stopClick', [function () {
     };
 }]);
 
-generalSsbAppDirectives.directive('payListingPanelNonpopulatedProposed',[function () {
+generalSsbAppDirectives.directive('payListingPanelNonpopulatedProposed',['$filter', function ($filter) {
     return{
         restrict: 'E',
-        templateUrl: '../generalSsbApp/ddListing/payListingPanelNonpopulatedProposed.html'
+        templateUrl: $filter('webAppResourcePath')('directDepositApp/ddListing/payListingPanelNonpopulatedProposed.html')
     };
 }]);
 
-generalSsbAppDirectives.directive('apListingPanelPopulated',['ddEditAccountService', function (ddEditAccountService) {
+generalSsbAppDirectives.directive('apListingPanelPopulated',['$filter', 'ddEditAccountService',
+    function ($filter, ddEditAccountService) {
+
     return{
         restrict: 'E',
         link: function(scope) {
             var type = scope.isDesktopView ? 'Desktop' : '';
-            scope.apListingPanelPopulatedTemplate = '../generalSsbApp/ddListing/apListingPanelPopulated' + type + '.html'
+            scope.apListingPanelPopulatedTemplate = $filter('webAppResourcePath')('directDepositApp/ddListing/apListingPanelPopulated' + type + '.html');
 
             scope.showEditAP = function(){
                 scope.showEditAccount(scope.apAccount, 'AP');
@@ -333,17 +337,17 @@ generalSsbAppDirectives.directive('apListingPanelPopulated',['ddEditAccountServi
     };
 }]);
 
-generalSsbAppDirectives.directive('apListingPanelNonpopulated',[function () {
+generalSsbAppDirectives.directive('apListingPanelNonpopulated',['$filter', function ($filter) {
     return{
         restrict: 'E',
-        templateUrl: '../generalSsbApp/ddListing/apListingPanelNonpopulated.html',
+        templateUrl: $filter('webAppResourcePath')('directDepositApp/ddListing/apListingPanelNonpopulated.html'),
     };
 }]);
 
-generalSsbAppDirectives.directive('notificationBox',[function () {
+generalSsbAppDirectives.directive('notificationBox',['$filter', function ($filter) {
     return{
         restrict: 'E',
-        templateUrl: '../generalSsbApp/ddListing/ddNotificationBox.html',
+        templateUrl: $filter('webAppResourcePath')('directDepositApp/ddListing/ddNotificationBox.html'),
         scope: {
             notificationText: '@'
         }

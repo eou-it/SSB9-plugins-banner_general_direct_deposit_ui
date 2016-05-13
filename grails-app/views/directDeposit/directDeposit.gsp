@@ -2,8 +2,8 @@
 Copyright 2015 Ellucian Company L.P. and its affiliates.
 *******************************************************************************--}%
 <!DOCTYPE html>
-<!--[if IE 9 ]>    <html xmlns:ng="http://angularjs.org" ng-app="generalSsbApp" id="ng-app" class="ie9"> <![endif]-->
-<html xmlns:ng="http://angularjs.org" ng-app="generalSsbApp" id="ng-app">
+<!--[if IE 9 ]>    <html xmlns:ng="http://angularjs.org" ng-app="directDepositApp" id="ng-app" class="ie9"> <![endif]-->
+<html xmlns:ng="http://angularjs.org" ng-app="directDepositApp" id="ng-app">
 <head>
     <script type="text/javascript">
         var superUser=${session['SUPER_USER_INDICATOR'] ?: 'undefined'};

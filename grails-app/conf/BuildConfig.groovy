@@ -14,20 +14,20 @@ grails.project.test.reports.dir = "target/test-reports"
 grails.war.resources = { stagingDir ->
 }
 
-    grails.plugin.location.'i18n_core'                        = "plugins/i18n_core.git"
-    grails.plugin.location.'banner-ui-ss'                     = "plugins/banner_ui_ss.git"
-    grails.plugin.location.'banner-core'                      = "plugins/banner_core.git"
-    grails.plugin.location.'banner-codenarc'                  = "plugins/banner_codenarc.git"
-    grails.plugin.location.'banner-general-person'            = "plugins/banner_general_person.git"
-    grails.plugin.location.'banner-general-common'            = "plugins/banner_general_common.git"
-    grails.plugin.location.'banner-general-utility'           = "plugins/banner_general_utility.git"
-    grails.plugin.location.'banner-seeddata-catalog'          = "plugins/banner_seeddata_catalog.git"
-    grails.plugin.location.'banner-general-validation-common' = "plugins/banner_general_validation_common.git"
-    grails.plugin.location.'sghe-aurora'                      = "plugins/sghe_aurora.git"
-    grails.plugin.location.'banner-packaging'                 = "plugins/banner_packaging.git"
-    grails.plugin.location.'banner-general-common-ui-ss'      = "plugins/banner_general_common_ui_ss.git"
-    grails.plugin.location.'domain-extension'                 = "plugins/domain_extension.git"
-    grails.plugin.location.'web-app-extensibility'            = "plugins/web-app-extensibility.git"
+    grails.plugin.location.'i18n_core'                        = "../i18n_core.git"
+    grails.plugin.location.'banner-ui-ss'                     = "../banner_ui_ss.git"
+    grails.plugin.location.'banner-core'                      = "../banner_core.git"
+    grails.plugin.location.'banner-codenarc'                  = "../banner_codenarc.git"
+    grails.plugin.location.'banner-general-person'            = "../banner_general_person.git"
+    grails.plugin.location.'banner-general-common'            = "../banner_general_common.git"
+    grails.plugin.location.'banner-general-utility'           = "../banner_general_utility.git"
+    grails.plugin.location.'banner-seeddata-catalog'          = "../banner_seeddata_catalog.git"
+    grails.plugin.location.'banner-general-validation-common' = "../banner_general_validation_common.git"
+    grails.plugin.location.'sghe-aurora'                      = "../sghe_aurora.git"
+    grails.plugin.location.'banner-packaging'                 = "../banner_packaging.git"
+    grails.plugin.location.'banner-general-common-ui-ss'      = "../banner_general_common_ui_ss.git"
+    grails.plugin.location.'domain-extension'                 = "../domain_extension.git"
+    grails.plugin.location.'web-app-extensibility'            = "../web-app-extensibility.git"
     
 grails.project.dependency.resolution = {
 
@@ -47,8 +47,8 @@ grails.project.dependency.resolution = {
         compile ':zipped-resources:1.0'
         compile ':cached-resources:1.0'
         compile ':yui-minify-resources:0.1.4'
-        compile ':cache-headers:1.1.5'
-        test ':code-coverage:1.2.5'
+        compile ':cache-headers:1.1.7'
+        test ':code-coverage:2.0.3-3'
         runtime ":rendering:1.0.0"
         compile ':restful-api:1.0.0'
     }
@@ -91,7 +91,7 @@ grails.war.resources = { stagingDir, args ->
 
 grails.war.copyToWebApp = { args ->
     fileset(dir:"web-app") {
-        include(name: "generalSsbApp/**")
+        include(name: "directDepositApp/**")
         include(name: "js/**")
         include(name: "css/**")
         include(name: "images/**")

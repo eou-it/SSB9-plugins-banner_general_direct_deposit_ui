@@ -85,6 +85,6 @@ Copyright 2015 Ellucian Company L.P. and its affiliates.
 <input enter-key="setCreateFromExisting('no')" ng-model="setup.createFromExisting" class="edit-radio" type="radio" name="create-option" value="no" aria-labelledby="create-opt-new"><span class="lbl radio-list no-padding" id="create-opt-new">{{'directDeposit.label.create.new'|i18n}}</span>
 <div ng-show="setup.createFromExisting === 'no'" class="existing-accts">
     <ng-include
-        src="'../generalSsbApp/ddEditAccount/accountNumberInput.html'">
+        src="webAppResourcePathStr + 'directDepositApp/ddEditAccount/accountNumberInput.html'">
     </ng-include>
 </div>

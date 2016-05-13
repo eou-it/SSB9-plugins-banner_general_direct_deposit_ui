@@ -385,10 +385,10 @@ generalSsbAppDirectives.directive('maskInput', ['$filter', function ($filter) {
     };
 }]);
 
-generalSsbAppDirectives.directive('modalDisclaimer', [function () {
+generalSsbAppDirectives.directive('modalDisclaimer', ['$filter', function ($filter) {
     return {
         restrict: 'E',
-        templateUrl: '../generalSsbApp/ddEditAccount/modalDisclaimer.html',
+        templateUrl:  $filter('webAppResourcePath')('directDepositApp/ddEditAccount/modalDisclaimer.html'),
         link: function (scope, elem, attrs){
             scope.disclaimerId = attrs.id;
 

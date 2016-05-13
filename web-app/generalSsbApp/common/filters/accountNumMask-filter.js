@@ -1,7 +1,7 @@
 /*******************************************************************************
  Copyright 2015 Ellucian Company L.P. and its affiliates.
  *******************************************************************************/
-generalSsbApp.filter('accountNumMask', function () {
+directDepositApp.filter('accountNumMask', function () {
     return function(input){
         var out = '', i;
         

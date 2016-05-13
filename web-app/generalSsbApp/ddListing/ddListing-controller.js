@@ -2,7 +2,8 @@
  Copyright 2015 Ellucian Company L.P. and its affiliates.
  *******************************************************************************/
 generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope', '$state', '$stateParams', '$modal',
-    '$filter', '$q', '$timeout', 'ddListingService', 'ddEditAccountService', 'directDepositService', 'notificationCenterService',
+    '$filter', '$q', '$timeout', 'ddListingService', 'ddEditAccountService', 'directDepositService',
+    'notificationCenterService',
     function ($scope, $rootScope, $state, $stateParams, $modal, $filter, $q, $timeout, ddListingService, ddEditAccountService,
               directDepositService, notificationCenterService){
 
@@ -216,6 +217,10 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
 
         $scope.checkAmount = ''; // Amount to be disbursed via paper check
 
+        // Use filter to get resource path.  This is for usages such as ngInclude's src attribute that use
+        // an Angular expression and *cannot* use interpolation.
+        $scope.webAppResourcePathStr = $filter('webAppResourcePath')('');
+
 
         // CONTROLLER FUNCTIONS
         // --------------------
@@ -270,7 +275,7 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
         var openAddOrEditModal = function(typeInd, isAddNew, acctList) {
 
             $modal.open({
-                templateUrl: '../generalSsbApp/ddEditAccount/ddEditAccount.html',
+                templateUrl: $filter('webAppResourcePath')('directDepositApp/ddEditAccount/ddEditAccount.html'),
                 windowClass: 'edit-account-modal',
                 keyboard: true,
                 controller: "ddEditAccountController",

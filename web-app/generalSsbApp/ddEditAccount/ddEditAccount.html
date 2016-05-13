@@ -10,14 +10,14 @@ Copyright 2015 Ellucian Company L.P. and its affiliates.
     <div ng-if="!setup.hasOtherAccounts">
         <div class="pad-dialog-lr">
             <ng-include
-                src="'../generalSsbApp/ddEditAccount/accountNumberInput.html'">
+                src="webAppResourcePathStr + 'directDepositApp/ddEditAccount/accountNumberInput.html'">
             </ng-include>
         </div>
     </div>
     <div ng-if="setup.hasOtherAccounts">
         <div class="pad-dialog-lr">
             <ng-include
-                    src="'../generalSsbApp/ddEditAccount/existingAccountInput.html'">
+                src="webAppResourcePathStr + 'directDepositApp/ddEditAccount/existingAccountInput.html'">
             </ng-include>
         </div>
     </div>

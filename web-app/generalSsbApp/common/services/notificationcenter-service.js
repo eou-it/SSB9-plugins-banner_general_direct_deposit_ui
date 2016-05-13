@@ -2,7 +2,7 @@
  Copyright 2014 Ellucian Company L.P. and its affiliates.
  *******************************************************************************/
 
-generalSsbApp.service('notificationCenterService', ['$filter', function ($filter) {
+directDepositApp.service('notificationCenterService', ['$filter', function ($filter) {
     var flashNotification = false;
     this.clearNotifications = function() {
         notifications.clearNotifications();

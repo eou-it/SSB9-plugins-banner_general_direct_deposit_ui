@@ -2,7 +2,7 @@
  Copyright 2015 Ellucian Company L.P. and its affiliates.
  *******************************************************************************/
 
-generalSsbApp.service('ddEditAccountService', ['directDepositService', '$resource',
+directDepositApp.service('ddEditAccountService', ['directDepositService', '$resource',
     function (directDepositService, $resource) {
 
     var createAccount = $resource('../ssb/:controller/:action',

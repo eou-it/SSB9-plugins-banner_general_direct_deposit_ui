@@ -2,7 +2,7 @@
  Copyright 2015 Ellucian Company L.P. and its affiliates.
  *******************************************************************************/
 
-generalSsbApp.service( 'breadcrumbService', ['$filter',function ($filter) {
+directDepositApp.service( 'breadcrumbService', ['$filter',function ($filter) {
     var constantBreadCrumb = [];
     var list = [];
     var appUrl = "";

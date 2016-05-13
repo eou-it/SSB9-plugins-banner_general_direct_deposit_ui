@@ -7,7 +7,7 @@ Copyright 2015 Ellucian Company L.P. and its affiliates.
             <div class="col-xs-6 col-sm-6 col-md-6 clear-both xs-fix">
                 <div>
                     <label ng-class="(routingNumErr && !routNumFocused ? 'input-field-label field-error' : 'input-field-label')" class="rout-num-lbl" for="routing-number">{{'directDeposit.account.label.bank.routing.num'|i18n}}</label>
-                    <sample-check-pop-over ng-show="checkBrowserLocale('en-US')" class="dd-popover" popover-img="../images/sample_check_290x166.png" popover-alt="{{'directDeposit.sample.check.alt.text'|i18n}}"></sample-check-pop-over>
+                    <sample-check-pop-over ng-show="checkBrowserLocale('en-US')" class="dd-popover" popover-img="{{'images/sample_check_290x166.png'|webAppResourcePath}}" popover-alt="{{'directDeposit.sample.check.alt.text'|i18n}}"></sample-check-pop-over>
                 </div>
                 <div class="pos-relative input-layer">
                     <input ng-model="account.bankRoutingInfo.bankRoutingNum" ng-blur="routNumFocused=false; validateRoutingNum()" ng-focus="routNumFocused=true" ng-disabled="!creatingNewAccount"
@@ -23,7 +23,7 @@ Copyright 2015 Ellucian Company L.P. and its affiliates.
             <div class="col-xs-6 col-sm-6 col-md-6 xs-fix flex-end">
                 <div class="unflex">
                     <label ng-class="(accountNumErr && !acctNumFocused ? 'input-field-label field-error' : 'input-field-label')" for="account-number">{{'directDeposit.account.label.account.num'|i18n}}</label>
-                    <sample-check-pop-over ng-show="checkBrowserLocale('en-US')" class="dd-popover" popover-img="../images/sample_check_290x166.png" popover-alt="{{'directDeposit.sample.check.alt.text'|i18n}}"></sample-check-pop-over>
+                    <sample-check-pop-over ng-show="checkBrowserLocale('en-US')" class="dd-popover" popover-img="{{'images/sample_check_290x166.png'|webAppResourcePath}}" popover-alt="{{'directDeposit.sample.check.alt.text'|i18n}}"></sample-check-pop-over>
                     <div class="pos-relative input-layer">
                         <input data-ng-model="account.bankAccountNum" ng-blur="acctNumFocused=false; validateAccountNum()" ng-focus="acctNumFocused=true" ng-disabled="!creatingNewAccount"
                             ng-class="['text-input-field', 'semi-bold', 'form-spacing', (accountNumErr && !acctNumFocused ? 'input-field-error' : null)]" mask-input
