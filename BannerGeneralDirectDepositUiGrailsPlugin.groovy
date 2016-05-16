@@ -7,7 +7,7 @@
  * A Grails plugin which is the Banner Direct Deposit sub-application in the
  * consolidated Banner XE application.
  **/
-class BannerDirectDepositUiGrailsPlugin {
+class BannerGeneralDirectDepositUiGrailsPlugin {
 
     // Note: the groupId 'should' be used when deploying this plugin via the 'grails maven-deploy --repository=snapshots' command,
     // however it is not being picked up.  Consequently, a pom.xml file is added to the root directory with the correct groupId
@@ -34,8 +34,8 @@ class BannerDirectDepositUiGrailsPlugin {
 
     def author = "Ellucian"
     def authorEmail = "actionline@ellucian.com"
-    def title = "Banner Direct Deposit Plugin"
-    def description = '''This plugin is BannerDirectDepositUi.'''//.stripMargin()  // TODO Enable this once we adopt Groovy 1.7.3
+    def title = "Banner General Direct Deposit Plugin"
+    def description = '''This plugin is BannerGeneralDirectDepositUi.'''//.stripMargin()  // TODO Enable this once we adopt Groovy 1.7.3
 
     def documentation = "http://sungardhe.com/development/horizon/plugins/banner-general-direct-deposit-ui"
 
