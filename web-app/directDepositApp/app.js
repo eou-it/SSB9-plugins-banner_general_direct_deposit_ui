@@ -147,3 +147,15 @@ directDepositApp.config(['$httpProvider',
         });
     }
 ]);
+
+/*
+ * Disables AngularJS debug data for performance reasons.
+ * To re-enable, enter this in browser debug console:
+ *
+ *     angular.reloadWithDebugInfo();
+ *
+ * For more info, see https://docs.angularjs.org/guide/production
+ */
+directDepositApp.config(['$compileProvider', function ($compileProvider) {
+    $compileProvider.debugInfoEnabled(false);
+}]);
