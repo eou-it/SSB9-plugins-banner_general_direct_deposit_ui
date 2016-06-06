@@ -24,10 +24,10 @@ Copyright 2015 Ellucian Company L.P. and its affiliates.
         <meta charset="${message(code: 'default.character.encoding')}">
 
         <g:if test="${message(code: 'default.language.direction')  == 'rtl'}">
-            <r:require modules="generalSsbAppRTL"/>
+            <r:require modules="directDepositAppRTL"/>
         </g:if>
         <g:else>
-            <r:require modules="generalSsbAppLTR"/>
+            <r:require modules="directDepositAppLTR"/>
         </g:else>
 
     </g:applyLayout>

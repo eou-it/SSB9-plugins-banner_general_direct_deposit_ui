@@ -67,7 +67,7 @@ modules = {
 
     }
 
-    'generalSsbAppLTR' {
+    'directDepositAppLTR' {
         dependsOn "bannerWebLTR, directDepositApp, bootstrapLTR"
 
         // CSS
@@ -76,7 +76,7 @@ modules = {
         resource url:[plugin: 'banner-general-direct-deposit-ui', file: 'css/banner-icon-font.css'],   attrs: [media: 'screen, projection']
     }
 
-    'generalSsbAppRTL' {
+    'directDepositAppRTL' {
         dependsOn "bannerWebRTL, directDepositApp, bootstrapRTL"
 
         // CSS
