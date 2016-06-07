@@ -102,17 +102,19 @@ Copyright 2015 Ellucian Company L.P. and its affiliates.
     <span class="visuallyhidden" id="savings-lbl" tabindex="-1">{{'directDeposit.account.type.savings'|i18n}}</span>
     <div ng-if="isDesktopView && (hasApAccount || hasPayAccountsProposed)" id="footerChunk"></div>
 </div>
-<div footer id="buttonFooter" ng-if="isDesktopView && (hasApAccount || hasPayAccountsProposed)">
-    <span class="desktop-save">
-        <input type="checkbox" class="main-nav-check" id="disclaimer-check" aria-label="{{'directDeposit.label.disclaimer.ack'|i18n}}"
-               aria-describedby="disclaimerTxt" ng-checked="authorizedChanges" ng-click="toggleAuthorizedChanges()"/><span class="lbl"></span>
-        <span class="lbl-text" id="disclaimerTxt">{{'directDeposit.disclaimer.text'|i18n}}</span>
-    </span>
-    <span class="buttons-desktop-save">
-        <button ng-click="cancelChanges()" ng-disabled="disableCancel()" class="btn save-btn" aria-label="{{'directDeposit.cancel.changes.button.label'|i18n}}"
-                title="{{'directDeposit.cancel.changes.button.label'|i18n}}">{{'directDeposit.cancel.changes.button.label'|i18n}}</button>
-        <button ng-click="updateAccounts()" ng-disabled="disableSave()" class="btn save-btn" >{{'directDeposit.save.changes.button.label'|i18n}}</button>
-    </span>
+<div class="dird-footer-container">
+    <div footer id="buttonFooter" ng-if="isDesktopView && (hasApAccount || hasPayAccountsProposed)">
+        <span class="desktop-save">
+            <input type="checkbox" class="main-nav-check" id="disclaimer-check" aria-label="{{'directDeposit.label.disclaimer.ack'|i18n}}"
+                   aria-describedby="disclaimerTxt" ng-checked="authorizedChanges" ng-click="toggleAuthorizedChanges()"/><span class="lbl"></span>
+            <span class="lbl-text" id="disclaimerTxt">{{'directDeposit.disclaimer.text'|i18n}}</span>
+        </span>
+        <span class="buttons-desktop-save">
+            <button ng-click="cancelChanges()" ng-disabled="disableCancel()" class="btn save-btn" aria-label="{{'directDeposit.cancel.changes.button.label'|i18n}}"
+                    title="{{'directDeposit.cancel.changes.button.label'|i18n}}">{{'directDeposit.cancel.changes.button.label'|i18n}}</button>
+            <button ng-click="updateAccounts()" ng-disabled="disableSave()" class="btn save-btn" >{{'directDeposit.save.changes.button.label'|i18n}}</button>
+        </span>
+    </div>
 </div>
 <!-- Audible message div made visible when audible message is to be read by screen reader. Designed to be used with tooltips/popovers that may
      not work correctly with readers. -->

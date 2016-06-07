@@ -360,9 +360,11 @@ generalSsbAppDirectives.directive('footer',[function () {
         link: function (scope, elem) {
             var footer = $("#buttonFooter");
             var chunk = $("#footerChunk");
+            var container = $("div.dird-footer-container");
 
             footer.width(chunk.width() + 30);
             chunk.height(footer.height() + 7);
+            container.css('bottom', footer.height());
 
             scope.$watch(function(){
                 return chunk.width();
@@ -374,6 +376,7 @@ generalSsbAppDirectives.directive('footer',[function () {
                 return footer.height();
             }, function(newVal, oldVal){
                 chunk.height(newVal + 7);
+                container.css('bottom', footer.height());
             });
 
             var postChangeApply = _.debounce(function(){

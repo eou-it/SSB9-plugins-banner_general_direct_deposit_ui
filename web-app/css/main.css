@@ -412,11 +412,15 @@ button.closebtn {
     padding: 1em;
 }
 
+.dird-footer-container {
+    position: absolute;
+    bottom: 49px;
+    left: 0;
+}
+
 #buttonFooter {
     background: #f6f6f6;
     position: fixed;
-    bottom: 30px;
-    left: 0px;
     width: 98%;
     z-index: 15;
     border: 2px #ddd;

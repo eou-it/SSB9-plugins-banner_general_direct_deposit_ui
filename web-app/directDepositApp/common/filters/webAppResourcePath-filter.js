@@ -3,7 +3,7 @@
  *******************************************************************************/
 directDepositApp.filter('webAppResourcePath', ['webAppResourcePathString', function (webAppResourcePathString) {
     return function(input){
-        var separator = input.startsWith('/') ? '' : '/';
+        var separator = input[0] === '/' ? '' : '/';
         return webAppResourcePathString + separator + input;
     };
 }]);
