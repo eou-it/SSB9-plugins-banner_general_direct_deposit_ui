@@ -54,25 +54,7 @@ class AccountListingController  {
 
         model = directDepositAccountCompositeService.getLastPayDistribution(pidm)
 
-        model.docAccts.each { it ->
-            it.net = formatCurrency(it.net)
-        }
-
         render model as JSON
     }
 
-    /**
-     * Formats a Double or BigDecimal to currency.  This is null safe.
-     */
-    private formatCurrency(amount) {
-        def formattedAmount
-
-        if (amount instanceof BigDecimal
-                || amount instanceof Double) {
-            formattedAmount = currencyFormatService.format(ControllerUtility.getCurrencyCode(),
-                    (amount instanceof BigDecimal ? amount : BigDecimal.valueOf(amount)))
-        }
-
-        return formattedAmount
-    }
 }

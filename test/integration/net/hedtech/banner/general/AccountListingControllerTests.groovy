@@ -36,7 +36,7 @@ class AccountListingControllerTests extends BaseIntegrationTestCase {
 
     @Test
     void testGetApAccountsForCurrentUser(){
-        loginSSB 'MYE000001', '111111'
+        loginSSB 'HOSH00018', '111111'
         
         controller.request.contentType = "text/json"
         controller.getApAccountsForCurrentUser()
@@ -44,6 +44,32 @@ class AccountListingControllerTests extends BaseIntegrationTestCase {
         def data = JSON.parse( dataForNullCheck )
         println data
         assertNotNull data
+        assertEquals '38167543', data[0].bankAccountNum
+    }
+
+    @Test
+    void testGetUserPayrollAllocations(){
+        loginSSB 'GDP000005', '111111'
+
+        controller.getUserPayrollAllocations()
+        def dataForNullCheck = controller.response.contentAsString
+        def data = JSON.parse( dataForNullCheck )
+        println data
+        assertNotNull data
+        assertEquals '736900542', data.allocations[0].bankAccountNum
+    }
+
+    @Test
+    void testGetLastPayDateInfo(){
+        loginSSB 'HOP510001', '111111'
+
+        controller.getLastPayDateInfo()
+        def dataForNullCheck = controller.response.contentAsString
+        def data = JSON.parse( dataForNullCheck )
+        println data
+        assertNotNull data
+        assertEquals 7837.31, data.totalNet, 0.001
+        assertEquals 1, data.docAccts.size()
     }
 
 }
