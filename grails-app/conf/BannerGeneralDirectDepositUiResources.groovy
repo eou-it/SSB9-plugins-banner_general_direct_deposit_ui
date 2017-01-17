@@ -16,6 +16,16 @@ modules = {
         resource url: [plugin: 'banner-general-direct-deposit-ui', file: 'js/angular/angular-route.min.js']
     }
 
+    'commonComponents' {
+        resource url:[plugin: 'banner-general-direct-deposit-ui', file: 'js/xe-components/xe-ui-components.js']
+    }
+    'commonComponentsLTR' {
+        resource url:[plugin: 'banner-general-direct-deposit-ui', file: 'css/xe-components/xe-ui-components.css']
+    }
+    'commonComponentsRTL' {
+        resource url:[plugin: 'banner-general-direct-deposit-ui', file: 'css/xe-components/xe-ui-components-rtl.css']
+    }
+
     'bootstrapLTR' {
         dependsOn "jquery"
         defaultBundle environment == "development" ? false : "bootstrap"
@@ -35,7 +45,7 @@ modules = {
     }
 
     'directDepositApp' {
-        dependsOn "angular,glyphicons"
+        dependsOn "angular,glyphicons,commonComponents"
 
         defaultBundle environment == "development" ? false : "directDepositApp"
 
@@ -69,7 +79,7 @@ modules = {
 
     if (System.properties['BANNERXE_APP_NAME'].equals("DirectDeposit") || System.properties['BANNERXE_APP_NAME'] == null) {
         'directDepositAppLTR' {
-            dependsOn "bannerWebLTR, directDepositApp, bootstrapLTR"
+            dependsOn "bannerWebLTR, directDepositApp, bootstrapLTR, commonComponentsLTR"
 
             // CSS
             resource url: [plugin: 'banner-general-direct-deposit-ui', file: 'css/main.css'], attrs: [media: 'screen, projection']
@@ -78,7 +88,7 @@ modules = {
         }
 
         'directDepositAppRTL' {
-            dependsOn "bannerWebRTL, directDepositApp, bootstrapRTL"
+            dependsOn "bannerWebRTL, directDepositApp, bootstrapRTL, commonComponentsRTL"
 
             // CSS
             resource url: [plugin: 'banner-general-direct-deposit-ui', file: 'css/main-rtl.css'], attrs: [media: 'screen, projection']
