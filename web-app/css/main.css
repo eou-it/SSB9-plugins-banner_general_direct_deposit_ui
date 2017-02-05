@@ -340,7 +340,7 @@ input:disabled {
 }
 
 .text-input-field:focus,
-.radio-txt-input:focus, {
+.radio-txt-input:focus {
     border-style: solid;
     border-width: 1px;
     border-color: #206E9F;
@@ -650,13 +650,13 @@ li.listing > .radio-list {
 }
 
 li.listing .radio-txt-input,
-li.listing percent-input > input.form-control,
-li.listing currency-input > input.form-control {
+li.listing .percent-input > input.form-control,
+li.listing .currency-input > input.form-control {
     margin-top: 7px;
 }
 
-percent-input > input.form-control,
-currency-input > input.form-control {
+.percent-input > input.form-control,
+.currency-input > input.form-control {
     /* form-spacing and semi-bold */
     padding: 1em .75em;
     line-height: 136%;
@@ -1357,3 +1357,18 @@ table tr td {
         z-index: 1000;
     }
 }
+
+.dropdown {
+    border: none !important;
+    box-shadow: none !important;
+    width: 100%;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: normal;
+    padding: 0;
+    color: transparent;
+    text-shadow: none;
+}
+
