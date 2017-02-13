@@ -12,7 +12,7 @@ Copyright 2015 Ellucian Company L.P. and its affiliates.
                     <a href="" data-toggle="collapse" data-target="#pay-account-most-recent-listing"
                        ng-class="{'collapsed': payPanelMostRecentCollapsed}" ng-click="payPanelMostRecentCollapsed = !payPanelMostRecentCollapsed;"
                        aria-controls="pay-account-most-recent-listing" aria-expanded="{{!payPanelMostRecentCollapsed}}" role="tab">
-                        {{'directDeposit.label.payDistributionAsOf'|i18n}} {{distributions.mostRecent.payDate}}
+                        {{hasPayAccountsMostRecent ? 'directDeposit.label.payDistributionAsOf' : 'directDeposit.label.payDistribution'|i18n}} {{distributions.mostRecent.payDate}}
                     </a>
                 </h2>
 
