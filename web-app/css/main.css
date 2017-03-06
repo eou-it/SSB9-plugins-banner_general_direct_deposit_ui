@@ -35,6 +35,11 @@ body {
     border-bottom: none;
 }
 
+a.breadcrumbButton.leaf-breadcrumb {
+    text-decoration: none;
+    cursor: default;
+}
+
 #title-panel {
     display: none;
     height: 0;

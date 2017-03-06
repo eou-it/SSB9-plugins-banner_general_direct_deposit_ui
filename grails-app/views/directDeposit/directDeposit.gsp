@@ -21,6 +21,7 @@ Copyright 2015 Ellucian Company L.P. and its affiliates.
         <meta name="locale" content="${request.locale.toLanguageTag()}" >
         <meta name="menuEndPoint" content="${request.contextPath}/ssb/menu"/>
         <meta name="menuBaseURL" content="${request.contextPath}/ssb"/>
+        <meta name="menuBase" content="${request.contextPath}"/>
         <meta charset="${message(code: 'default.character.encoding')}">
 
         <g:if test="${message(code: 'default.language.direction')  == 'rtl'}">
