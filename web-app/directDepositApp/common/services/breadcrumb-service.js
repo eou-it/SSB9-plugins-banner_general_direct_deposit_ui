@@ -26,16 +26,21 @@ directDepositApp.service( 'breadcrumbService', ['$filter',function ($filter) {
 
     this.refreshBreadcrumbs = function() {
         var baseurl = $('meta[name=menuBase]').attr("content"),
+            landingPageUrl = document.location.origin + baseurl,
             breadCrumbInputData = {},
-            updatedHeaderAttributes;
+            updatedHeaderAttributes,
+            registerBackButtonClickListenerOverride = function(location) {
+                $('#breadcrumbBackButton').on('click',function(){
+                    window.location = location;
+                })
+            };
 
         _.each (constantBreadCrumb, function(item) {
             var label = ($filter('i18n')(item.label));
 
             if (item.url) {
-                breadCrumbInputData[label] = (item.url === GENERAL_LANDING_PAGE) ?
-                    document.location.origin + baseurl :
-                    "/" + document.location.pathname.slice(Application.getApplicationPath().length + 1) + "#" + item.url;
+                breadCrumbInputData[label] = (item.url === GENERAL_LANDING_PAGE) ? landingPageUrl :
+                "/" + document.location.pathname.slice(Application.getApplicationPath().length + 1) + "#" + item.url;
             } else {
                 breadCrumbInputData[label] = "";
             }
@@ -46,5 +51,10 @@ directDepositApp.service( 'breadcrumbService', ['$filter',function ($filter) {
         };
 
         BreadCrumbAndPageTitle.draw(updatedHeaderAttributes);
+
+        // As this is in a consolidated app, the default "previous breadcrumb" logic needs to be overridden to
+        // point the back button to the consolidated app landing page URL.  (Note that the back button is only
+        // used for mobile, not desktop.)
+        registerBackButtonClickListenerOverride(landingPageUrl);
     };
 }]);
