@@ -4,19 +4,30 @@
 
 directDepositApp.service( 'breadcrumbService', ['$filter',function ($filter) {
     var constantBreadCrumb = [],
-        GENERAL_LANDING_PAGE = 1;
+        callingUrl,
+        CALLING_URL = 1,
+        GEN_LANDING_PAGE_SIGNATURE = /\/BannerGeneralSsb\/ssb\/general$/;
 
     this.reset = function() {
+        var label;
+
         constantBreadCrumb = [
             {
-                label: 'banner.generalssb.landingpage.title',
-                url: GENERAL_LANDING_PAGE
-            },
-            {
                 label: 'general.breadcrumb.directDeposit',
-                url: '/directDepositListing'
+                url: ''
             }
         ];
+
+        callingUrl = sessionStorage.getItem('genAppCallingPage');
+
+        if (callingUrl) {
+            label = GEN_LANDING_PAGE_SIGNATURE.test(callingUrl) ? 'banner.generalssb.landingpage.title' : 'default.paginate.prev';
+
+            constantBreadCrumb.splice(0, 0, {
+                label: label,
+                url: CALLING_URL
+            });
+        }
     };
 
     this.setBreadcrumbs = function (bc) {
@@ -25,10 +36,9 @@ directDepositApp.service( 'breadcrumbService', ['$filter',function ($filter) {
     };
 
     this.refreshBreadcrumbs = function() {
-        var baseurl = $('meta[name=menuBase]').attr("content"),
-            landingPageUrl = document.location.origin + baseurl,
-            breadCrumbInputData = {},
+        var breadCrumbInputData = {},
             updatedHeaderAttributes,
+            backButtonUrl = '',
             registerBackButtonClickListenerOverride = function(location) {
                 $('#breadcrumbBackButton').on('click',function(){
                     window.location = location;
@@ -39,8 +49,12 @@ directDepositApp.service( 'breadcrumbService', ['$filter',function ($filter) {
             var label = ($filter('i18n')(item.label));
 
             if (item.url) {
-                breadCrumbInputData[label] = (item.url === GENERAL_LANDING_PAGE) ? landingPageUrl :
-                "/" + document.location.pathname.slice(Application.getApplicationPath().length + 1) + "#" + item.url;
+                if (item.url === CALLING_URL) {
+                    breadCrumbInputData[label] = callingUrl;
+                    backButtonUrl = callingUrl;
+                } else {
+                    breadCrumbInputData[label] = "/" + document.location.pathname.slice(Application.getApplicationPath().length + 1) + "#" + item.url;
+                }
             } else {
                 breadCrumbInputData[label] = "";
             }
@@ -53,8 +67,8 @@ directDepositApp.service( 'breadcrumbService', ['$filter',function ($filter) {
         BreadCrumbAndPageTitle.draw(updatedHeaderAttributes);
 
         // As this is in a consolidated app, the default "previous breadcrumb" logic needs to be overridden to
-        // point the back button to the consolidated app landing page URL.  (Note that the back button is only
-        // used for mobile, not desktop.)
-        registerBackButtonClickListenerOverride(landingPageUrl);
+        // point the back button to the calling page URL.  (Note that the back button is only used for mobile,
+        // not desktop.)
+        registerBackButtonClickListenerOverride(backButtonUrl);
     };
 }]);

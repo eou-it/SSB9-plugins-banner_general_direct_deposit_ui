@@ -1,5 +1,5 @@
 %{--*******************************************************************************
-Copyright 2015 Ellucian Company L.P. and its affiliates.
+Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
 *******************************************************************************--}%
 <!DOCTYPE html>
 <!--[if IE 9 ]>    <html xmlns:ng="http://angularjs.org" ng-app="directDepositApp" id="ng-app" class="ie9"> <![endif]-->
@@ -38,6 +38,9 @@ Copyright 2015 Ellucian Company L.P. and its affiliates.
 
     <script type="text/javascript">
         <g:i18n_setup/>
+    </script>
+    <script type="text/javascript">
+        sessionStorage.setItem('genAppCallingPage', document.referrer);
     </script>
 </head>
 
