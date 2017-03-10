@@ -1,5 +1,5 @@
 /*******************************************************************************
- Copyright 2015 Ellucian Company L.P. and its affiliates.
+ Copyright 2017 Ellucian Company L.P. and its affiliates.
  *******************************************************************************/
 
 modules = {
@@ -58,6 +58,7 @@ modules = {
         resource url: [plugin: 'banner-general-direct-deposit-ui', file: 'directDepositApp/common/services/notificationcenter-service.js']
         resource url: [plugin: 'banner-general-direct-deposit-ui', file: 'directDepositApp/common/services/directDeposit-service.js']
         resource url: [plugin: 'banner-general-direct-deposit-ui', file: 'directDepositApp/ddEditAccount/ddEditAccount-service.js']
+        resource url: [plugin: 'banner-general-direct-deposit-ui', file: 'directDepositApp/ddEditAccount/ddAccountDirty-service.js']
 
         // Controllers
         resource url: [plugin: 'banner-general-direct-deposit-ui', file: 'directDepositApp/ddListing/ddListing-controller.js']
