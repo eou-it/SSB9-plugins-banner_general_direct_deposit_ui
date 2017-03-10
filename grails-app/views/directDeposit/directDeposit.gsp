@@ -39,7 +39,7 @@ Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
     <script type="text/javascript">
         <g:i18n_setup/>
     </script>
-    <script>
+    <script type="text/javascript">
         sessionStorage.setItem('genAppCallingPage', document.referrer);
     </script>
 </head>
