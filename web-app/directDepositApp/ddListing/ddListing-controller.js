@@ -1,11 +1,11 @@
 /*******************************************************************************
- Copyright 2015 Ellucian Company L.P. and its affiliates.
+ Copyright 2017 Ellucian Company L.P. and its affiliates.
  *******************************************************************************/
 generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope', '$state', '$stateParams', '$modal',
     '$filter', '$q', '$timeout', 'ddListingService', 'ddEditAccountService', 'directDepositService',
-    'notificationCenterService',
+    'notificationCenterService', 'ddAccountDirtyService',
     function ($scope, $rootScope, $state, $stateParams, $modal, $filter, $q, $timeout, ddListingService, ddEditAccountService,
-              directDepositService, notificationCenterService){
+              directDepositService, notificationCenterService, ddAccountDirtyService){
 
         // CONSTANTS
         var REMAINING_NONE = directDepositService.REMAINING_NONE,
@@ -135,6 +135,8 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                     $scope.hasApAccount = !!$scope.apAccount;
                     $scope.accountLoaded = true;
 
+                    if($scope.hasApAccount) { ddAccountDirtyService.initializeAccounts([$scope.apAccount]); }
+
                     // Flag whether AP account exists in rootScope, as certain styling for elements
                     // not using this controller (e.g. breadcrumb panel) depends on knowing this.
                     $rootScope.apAccountExists = $scope.hasApAccount;
@@ -168,6 +170,7 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
 
                     ddEditAccountService.setupPriorities(allocations);
                     setupAmountTypes(allocations);
+                    ddAccountDirtyService.initializeAccounts(allocations);
                     $scope.updatePayrollState();
 
                     amountsAreValid();
@@ -453,14 +456,16 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                 promises.push(deferred.promise);
             }
             else {
-                if($scope.isEmployee){
+                if($scope.isEmployee) {
                     var i;
-                    for(i = 0; i < allocs.length; i++){
-                        promises.push(updateAccount($scope.distributions.proposed.allocations[i]));
+                    for(i = 0; i < allocs.length; i++) {
+                        if(ddAccountDirtyService.isAccountDirty(allocs[i])) {
+                            promises.push(updateAccount(allocs[i]));
+                        }
                     }
                 }
                 // AP account will already be updated if it has a corresponding Payroll account
-                if($scope.hasApAccount && !$scope.getMatchingPayrollForApAccount()){
+                if($scope.hasApAccount && !$scope.getMatchingPayrollForApAccount() && ddAccountDirtyService.isAccountDirty($scope.apAccount)) {
                     promises.push(updateAccount($scope.apAccount));
                 }
             }
