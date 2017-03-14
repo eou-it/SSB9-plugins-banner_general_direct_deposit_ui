@@ -40,7 +40,15 @@ Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
         <g:i18n_setup/>
     </script>
     <script type="text/javascript">
-        sessionStorage.setItem('genAppCallingPage', document.referrer);
+        // Track calling page for breadcrumbs
+        (function () {
+            var referrerUrl = document.referrer;
+
+            if (referrerUrl) {
+                // Track this page
+                sessionStorage.setItem('genAppCallingPage', referrerUrl);
+            }
+        })();
     </script>
 </head>
 
