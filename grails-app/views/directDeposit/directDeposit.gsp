@@ -40,7 +40,23 @@ Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
         <g:i18n_setup/>
     </script>
     <script type="text/javascript">
-        sessionStorage.setItem('genAppCallingPage', document.referrer);
+        // Track calling page for breadcrumbs
+        (function () {
+            // URL to exclude from updating genAppCallingPage, because it's actually just the authentication
+            // page and not a "calling page."
+            var referrerUrl = document.referrer,
+                    excludedRegex = /\/BannerGeneralSsb\/login\/auth?/,
+                    isExcluded;
+
+            if (referrerUrl) {
+                isExcluded = excludedRegex.test(referrerUrl);
+
+                if (!isExcluded) {
+                    // Track this page
+                    sessionStorage.setItem('genAppCallingPage', referrerUrl);
+                }
+            }
+        })();
     </script>
 </head>
 
