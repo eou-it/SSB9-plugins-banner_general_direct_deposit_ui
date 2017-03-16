@@ -31,11 +31,6 @@ var directDepositApp = angular.module('directDepositApp', ['ngResource','ui.rout
                 window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '');
             }
 
-            directDepositService.getRoles().$promise.then(function (response) {
-                $rootScope.isStudent = response.isStudent;
-                $rootScope.isEmployee = response.isEmployee;
-            });
-
             directDepositService.getCurrencySymbol().$promise.then(function (response) {
                 $rootScope.currencySymbol = response.currencySymbol.trim();
             });
