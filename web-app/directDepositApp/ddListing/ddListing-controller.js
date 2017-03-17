@@ -122,13 +122,13 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
 
             ddListingService.mainListingControllerScope = $scope;
 
-            var acctPromises = [ddListingService.getApListing().$promise,
-                                ddListingService.getMostRecentPayrollListing().$promise,
-                                ddListingService.getUserPayrollAllocationListing().$promise];
+            var acctPromises = [ddListingService.getApListing().$promise];
 
-            // getApListing
-            acctPromises[0].then(
-                function (response) {
+            directDepositService.getRoles().$promise.then(function (response) {
+                $scope.isEmployee = response.isEmployee;
+
+                // getApListing
+                acctPromises[0].then(function (response) {
                     // By default, set A/P account as currently active account, as it can be edited inline (in desktop
                     // view), while payroll accounts can not be.
                     $scope.apAccount = self.getApAccountFromResponse(response);
@@ -140,56 +140,62 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                     // Flag whether AP account exists in rootScope, as certain styling for elements
                     // not using this controller (e.g. breadcrumb panel) depends on knowing this.
                     $rootScope.apAccountExists = $scope.hasApAccount;
-            });
+                });
 
-            $scope.distributions = {
-                mostRecent: null,
-                proposed: null
-            };
+                if ($scope.isEmployee) {
+                    acctPromises.push(
+                        ddListingService.getMostRecentPayrollListing().$promise,
+                        ddListingService.getUserPayrollAllocationListing().$promise
+                    );
 
-            acctPromises[1].then( function (response) {
-                if(response.failure) {
-                    notificationCenterService.displayNotification(response.message, $scope.notificationErrorType);
-                } else {
-                    $scope.distributions.mostRecent = response;
-                    $scope.distributions.mostRecent.totalNetFormatted = formatCurrency($scope.distributions.mostRecent.totalNet);
-                    $scope.hasPayAccountsMostRecent = !!response.docAccts;
-                    $scope.payAccountsMostRecentLoaded = true;
+                    acctPromises[1].then(function (response) {
+                        if (response.failure) {
+                            notificationCenterService.displayNotification(response.message, $scope.notificationErrorType);
+                        } else {
+                            $scope.distributions.mostRecent = response;
+                            $scope.distributions.mostRecent.totalNetFormatted = formatCurrency($scope.distributions.mostRecent.totalNet);
+                            $scope.hasPayAccountsMostRecent = !!response.docAccts;
+                            $scope.payAccountsMostRecentLoaded = true;
+                        }
+                    });
+
+                    // getUserPayrollAllocationListing
+                    acctPromises[2].then(function (response) {
+                        if (response.failure) {
+                            notificationCenterService.displayNotification(response.message, $scope.notificationErrorType);
+                        } else {
+                            $scope.distributions.proposed = response;
+                            allocations = response.allocations;
+                            $scope.hasPayAccountsProposed = !!allocations.length;
+                            $scope.payAccountsProposedLoaded = true;
+
+                            ddEditAccountService.setupPriorities(allocations);
+                            setupAmountTypes(allocations);
+                            ddAccountDirtyService.initializeAccounts(allocations);
+                            $scope.updatePayrollState();
+
+                            amountsAreValid();
+
+                            // If any allocation is flagged for delete (happens via user checking a checkbox, which
+                            // in turn sets the deleteMe property to true), set selectedForDelete.payroll to true,
+                            // enabling the "Delete" button.
+                            $scope.$watch('distributions.proposed', function () {
+                                // Determine if any payroll allocations are selected for delete
+                                $scope.selectedForDelete.payroll = _.any(allocations, function (alloc) {
+                                    return alloc.deleteMe;
+                                });
+                            }, true);
+                        }
+                    });
                 }
-            });
 
-            // getUserPayrollAllocationListing
-            acctPromises[2].then( function (response) {
-                if(response.failure) {
-                    notificationCenterService.displayNotification(response.message, $scope.notificationErrorType);
-                } else {
-                    $scope.distributions.proposed = response;
-                    allocations = response.allocations;
-                    $scope.hasPayAccountsProposed = !!allocations.length;
-                    $scope.payAccountsProposedLoaded = true;
+                $q.all(acctPromises).then(function() {
+                    if ($scope.isEmployee) {
+                        $scope.calculateAmountsBasedOnPayHistory();
+                    }
 
-                    ddEditAccountService.setupPriorities(allocations);
-                    setupAmountTypes(allocations);
-                    ddAccountDirtyService.initializeAccounts(allocations);
-                    $scope.updatePayrollState();
-
-                    amountsAreValid();
-
-                    // If any allocation is flagged for delete (happens via user checking a checkbox, which
-                    // in turn sets the deleteMe property to true), set selectedForDelete.payroll to true,
-                    // enabling the "Delete" button.
-                    $scope.$watch('distributions.proposed', function () {
-                        // Determine if any payroll allocations are selected for delete
-                        $scope.selectedForDelete.payroll = _.any(allocations, function(alloc) {
-                            return alloc.deleteMe;
-                        });
-                    }, true);
-                }
-            });
-            
-            $q.all(acctPromises).then(function() {
-                $scope.calculateAmountsBasedOnPayHistory();
-                displayNotificationsOnStateLoad();
+                    displayNotificationsOnStateLoad();
+                });
             });
         };
 
@@ -204,7 +210,10 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
         $scope.payPanelProposedCollapsed = false;
 
         $scope.account = null; // Account currently in edit. Could be A/P or payroll.
-        $scope.distributions = null;
+        $scope.distributions = {
+            mostRecent: null,
+            proposed: null
+        };
         $scope.apAccount = null; // Currently active A/P account.
         $scope.accountLoaded = false;
         $scope.hasApAccount = false;
