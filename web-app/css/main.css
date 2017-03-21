@@ -231,21 +231,24 @@ input:disabled {
         clear: both;
     }
 }
-
+.radio-txt-input::-webkit-input-placeholder,
 .text-input-field::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     color: #869FB1;
     font-weight: bold;
 }
+.radio-txt-input:-moz-placeholder,
 .text-input-field:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
    color: #869FB1;
    font-weight: bold;
    opacity:  1;
 }
+.radio-txt-input::-moz-placeholder,
 .text-input-field::-moz-placeholder { /* Mozilla Firefox 19+ */
    color: #869FB1;
    font-weight: bold;
    opacity:  1;
 }
+.radio-txt-input:-ms-input-placeholder,
 .text-input-field:-ms-input-placeholder { /* Internet Explorer 10-11 */
    color: #869FB1;
    font-weight: bold;
@@ -311,7 +314,7 @@ input:disabled {
     position: absolute;
     float: right;
     left: 13.1em;
-    top: 6.35em;
+    top: 8.88em;
     background: #F6E5E6;
 }
 
@@ -334,8 +337,8 @@ input:disabled {
 .desktop-listing .pct-input-fail {
     position: absolute;
     float: right;
-    left: 13.1em;
-    top: 9em;
+    left: 13em;
+    top: 12.9em;
     background: #F6E5E6;
 }
 
