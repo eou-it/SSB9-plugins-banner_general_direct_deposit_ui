@@ -13,11 +13,10 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
             REMAINING_MULTIPLE = directDepositService.REMAINING_MULTIPLE,
 
             amountsAreValid = function () {
-                var result = true,
-                    allocs = $scope.distributions.proposed.allocations;
+                var result = true;
 
                 if($scope.isEmployee && $scope.hasPayAccountsProposed){
-                    result = ddListingService.validateAmountsForAllAccountsAndSetNotification(allocs);
+                    result = ddListingService.validateAmountsForAllAccountsAndSetNotification($scope.distributions.proposed.allocations);
                 }
 
                 return result;
@@ -431,7 +430,8 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                 return;
             }
 
-            var allocs = $scope.distributions.proposed.allocations,
+            var proposed = $scope.distributions.proposed,
+                allocs = proposed && proposed.allocations,
                 promises = [];
 
             if(ddEditAccountService.doReorder === 'all'){
@@ -780,7 +780,8 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
 
         // Determine if AP account also exists in proposed allocations
         $scope.getMatchingPayrollForApAccount = function() {
-            var allocs = $scope.distributions.proposed.allocations;
+            var proposed = $scope.distributions.proposed,
+                allocs = proposed && proposed.allocations;
 
             if (!(allocs && $scope.apAccount)) {
                 return undefined; // Same as what _.find returns for no hits
