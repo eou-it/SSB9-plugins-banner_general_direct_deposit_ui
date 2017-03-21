@@ -231,21 +231,24 @@ input:disabled {
         clear: both;
     }
 }
-
+.radio-txt-input::-webkit-input-placeholder,
 .text-input-field::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     color: #869FB1;
     font-weight: bold;
 }
+.radio-txt-input:-moz-placeholder,
 .text-input-field:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
    color: #869FB1;
    font-weight: bold;
    opacity:  1;
 }
+.radio-txt-input::-moz-placeholder,
 .text-input-field::-moz-placeholder { /* Mozilla Firefox 19+ */
    color: #869FB1;
    font-weight: bold;
    opacity:  1;
 }
+.radio-txt-input:-ms-input-placeholder,
 .text-input-field:-ms-input-placeholder { /* Internet Explorer 10-11 */
    color: #869FB1;
    font-weight: bold;
@@ -311,7 +314,7 @@ input:disabled {
     position: absolute;
     float: right;
     left: 13.1em;
-    top: 6.35em;
+    top: 8.88em;
     background: #F6E5E6;
 }
 
@@ -334,8 +337,8 @@ input:disabled {
 .desktop-listing .pct-input-fail {
     position: absolute;
     float: right;
-    left: 13.1em;
-    top: 9em;
+    left: 13em;
+    top: 12.9em;
     background: #F6E5E6;
 }
 
@@ -506,6 +509,15 @@ button.closebtn {
 
 
 /*  Dropdown menu  */
+.dropdown {
+    border: none;
+    box-shadow: none;
+    width: 100%;
+    padding: 0;
+    color: #4F585F;
+    text-shadow: none;
+}
+
 .form-spacing,
 .dropdown-menu > li > a.form-spacing {
     padding: 1em .75em;
@@ -607,8 +619,12 @@ button.closebtn {
     width: auto;
 }
 
-li.listing {
+.dropdown .dropdown-menu.addAcct > li.listing {
     padding: 7.5px;
+}
+
+.dropdown .dropdown-menu.addAcct > li {
+    padding-left: 0px;
 }
 
 .open > .dropdown-menu.addAcct {
@@ -627,6 +643,16 @@ li.listing {
     border-color: #FFFFFF;
     color: #4F585F;
     font-weight: bold;
+}
+
+.dropdown  .dropdown-menu.addAcct > li {
+    outline: none;
+    background: transparent;
+}
+
+.dropdown  .dropdown-menu > li.listing:hover,
+.dropdown  .dropdown-menu > li.listing.dropdown-li-focus {
+    outline: none;
 }
 
 .dropdown-menu > li > a.addAcct:hover,
@@ -654,19 +680,8 @@ li.listing > .radio-list {
     padding: 0px;
 }
 
-li.listing .radio-txt-input,
-li.listing .percent-input > input.form-control,
-li.listing .currency-input > input.form-control {
+li.listing .radio-txt-input {
     margin-top: 7px;
-}
-
-.percent-input > input.form-control,
-.currency-input > input.form-control {
-    /* form-spacing and semi-bold */
-    padding: 1em .75em;
-    line-height: 136%;
-    font-weight: bold;
-    height: initial;
 }
 
 /*  Check box  */
@@ -1362,18 +1377,3 @@ table tr td {
         z-index: 1000;
     }
 }
-
-.dropdown {
-    border: none !important;
-    box-shadow: none !important;
-    width: 100%;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: normal;
-    padding: 0;
-    color: transparent;
-    text-shadow: none;
-}
-
