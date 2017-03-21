@@ -506,6 +506,15 @@ button.closebtn {
 
 
 /*  Dropdown menu  */
+.dropdown {
+    border: none;
+    box-shadow: none;
+    width: 100%;
+    padding: 0;
+    color: #4F585F;
+    text-shadow: none;
+}
+
 .form-spacing,
 .dropdown-menu > li > a.form-spacing {
     padding: 1em .75em;
@@ -607,8 +616,12 @@ button.closebtn {
     width: auto;
 }
 
-li.listing {
+.dropdown .dropdown-menu.addAcct > li.listing {
     padding: 7.5px;
+}
+
+.dropdown .dropdown-menu.addAcct > li {
+    padding-left: 0px;
 }
 
 .open > .dropdown-menu.addAcct {
@@ -627,6 +640,16 @@ li.listing {
     border-color: #FFFFFF;
     color: #4F585F;
     font-weight: bold;
+}
+
+.dropdown  .dropdown-menu.addAcct > li {
+    outline: none;
+    background: transparent;
+}
+
+.dropdown  .dropdown-menu > li.listing:hover,
+.dropdown  .dropdown-menu > li.listing.dropdown-li-focus {
+    outline: none;
 }
 
 .dropdown-menu > li > a.addAcct:hover,
@@ -654,19 +677,8 @@ li.listing > .radio-list {
     padding: 0px;
 }
 
-li.listing .radio-txt-input,
-li.listing .percent-input > input.form-control,
-li.listing .currency-input > input.form-control {
+li.listing .radio-txt-input {
     margin-top: 7px;
-}
-
-.percent-input > input.form-control,
-.currency-input > input.form-control {
-    /* form-spacing and semi-bold */
-    padding: 1em .75em;
-    line-height: 136%;
-    font-weight: bold;
-    height: initial;
 }
 
 /*  Check box  */
@@ -1362,18 +1374,3 @@ table tr td {
         z-index: 1000;
     }
 }
-
-.dropdown {
-    border: none !important;
-    box-shadow: none !important;
-    width: 100%;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: normal;
-    padding: 0;
-    color: transparent;
-    text-shadow: none;
-}
-
