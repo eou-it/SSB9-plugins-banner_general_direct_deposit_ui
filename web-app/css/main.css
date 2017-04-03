@@ -632,6 +632,7 @@ button.closebtn {
     border-width: 1px;
     border-color: #206E9F;
     top: 3.175em;
+    width: auto;
     min-width: 100%;
 }
 
