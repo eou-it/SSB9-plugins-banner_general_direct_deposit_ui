@@ -66,18 +66,5 @@ Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
 <div id="content" class="container-fluid" aria-relevant="additions" role="main">
     <div ui-view></div>
 </div>
-<script  type="text/javascript">
-    function tellAngular() {
-        var domElt = document.getElementsByClassName('page-header');
-        scope = angular.element(domElt).scope();
-        scope.$apply(function() {
-            if(window.innerWidth > 768)
-            {
-                scope.searchView = false;
-            }
-        });
-    }
-    window.onresize = tellAngular;
-</script>
 </body>
 </html>
