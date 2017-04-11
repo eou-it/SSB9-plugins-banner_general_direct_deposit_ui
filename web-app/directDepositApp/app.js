@@ -50,6 +50,8 @@ var directDepositApp = angular.module('directDepositApp', ['ngResource','ui.rout
             };
 
             $rootScope.playAudibleMessage = null;
+
+            $rootScope.applicationName = $('meta[name=applicationName]').attr("content");
         }
     ]
 );
