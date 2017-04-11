@@ -23,6 +23,8 @@ Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
         <meta name="menuBaseURL" content="${request.contextPath}/ssb"/>
         <meta name="menuBase" content="${request.contextPath}"/>
         <meta charset="${message(code: 'default.character.encoding')}">
+        <g:set var="applicationName" value= "${grails.util.Metadata.current.getApplicationName()}"/>
+        <meta name="applicationName" content="${applicationName}">
 
         <g:if test="${message(code: 'default.language.direction')  == 'rtl'}">
             <r:require modules="directDepositAppRTL"/>
@@ -45,7 +47,7 @@ Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
             // URL to exclude from updating genAppCallingPage, because it's actually just the authentication
             // page and not a "calling page."
             var referrerUrl = document.referrer,
-                    excludedRegex = /\/BannerGeneralSsb\/login\/auth?/,
+                    excludedRegex = /\/${applicationName}\/login\/auth?/,
                     isExcluded;
 
             if (referrerUrl) {

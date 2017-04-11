@@ -2,11 +2,14 @@
  Copyright 2017 Ellucian Company L.P. and its affiliates.
  *******************************************************************************/
 
-directDepositApp.service( 'breadcrumbService', ['$filter',function ($filter) {
+directDepositApp.service( 'breadcrumbService', ['$filter', '$rootScope', function ($filter, $rootScope) {
     var constantBreadCrumb = [],
         callingUrl,
         CALLING_URL = 1,
-        GEN_LANDING_PAGE_SIGNATURE = /\/BannerGeneralSsb\/ssb\/general$/;
+        GEN_LANDING_PAGE_SIGNATURE;
+
+    $rootScope.applicationName = $('meta[name=applicationName]').attr("content");
+    GEN_LANDING_PAGE_SIGNATURE = new RegExp('/'+ $rootScope.applicationName +'/ssb/general$');
 
     this.reset = function() {
         var label;
