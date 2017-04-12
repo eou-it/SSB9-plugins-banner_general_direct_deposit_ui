@@ -44,14 +44,19 @@ Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
     <script type="text/javascript">
         // Track calling page for breadcrumbs
         (function () {
-            // URL to exclude from updating genAppCallingPage, because it's actually just the authentication
-            // page and not a "calling page."
+            // URLs to exclude from updating genAppCallingPage, because they're actually either the authentication
+            // page or App Nav, and are not "calling pages."
             var referrerUrl = document.referrer,
-                    excludedRegex = /\/${applicationName}\/login\/auth?/,
-                    isExcluded;
+                excludedRegex = [
+                    /\/${applicationName}\/login\/auth?/,
+                    /\/seamless/
+                ],
+                isExcluded;
 
             if (referrerUrl) {
-                isExcluded = excludedRegex.test(referrerUrl);
+                isExcluded = _.find(excludedRegex, function (regex) {
+                    return regex.test(referrerUrl);
+                });
 
                 if (!isExcluded) {
                     // Track this page
