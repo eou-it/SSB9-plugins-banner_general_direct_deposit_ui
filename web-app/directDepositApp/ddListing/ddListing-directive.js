@@ -37,11 +37,21 @@ generalSsbAppDirectives.directive('accountStatus', ['$filter', function ($filter
         link: function(scope, element, attrs) {
             // Observe "account" to be sure it has been (re)loaded when a change is made, e.g. when a new account created
             attrs.$observe('account', function() {
-                var isPrenote = scope.account.status === 'P',
-                    statusProp = isPrenote ? 'directDeposit.account.status.prenote' : 'directDeposit.account.status.active';
-
-                scope.statusText = $filter('i18n')(statusProp);
-                scope.statusClass = isPrenote ? 'status-prenote' : 'status-active';
+                switch (scope.account.status) {
+                    case 'P':
+                        scope.statusText = $filter('i18n')('directDeposit.account.status.prenote');
+                        scope.statusClass = 'status-prenote';
+                        break;
+                    case 'I':
+                        scope.statusText = $filter('i18n')('directDeposit.account.status.inactive');
+                        scope.statusClass = 'status-inactive';
+                        break;
+                    case 'A':
+                    default:
+                        scope.statusText = $filter('i18n')('directDeposit.account.status.active');
+                        scope.statusClass = 'status-active';
+                        break;
+                }
             });
         }
     };

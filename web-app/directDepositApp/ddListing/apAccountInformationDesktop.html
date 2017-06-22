@@ -8,7 +8,7 @@
 </td>
 <td class="break-word">{{apAccount.bankRoutingInfo.bankRoutingNum|accountNumMask}}</td>
 <td class="break-word">{{apAccount.bankAccountNum|accountNumMask}}</td>
-<td>
+<td ng-if="apAccount.status !== 'I'">
     <label class="visuallyhidden" id="select-acct-type-ap">{{'directDeposit.label.account.type.select'|i18n}}</label>
     <span><choose-account account="apAccount" class="visuallyhidden" id="account-type-ap" tabindex="-1"/></span>
     <div class="dropdown desktop-listing" role="menu">
@@ -33,5 +33,8 @@
             </li>
         </ul>
     </div>
+</td>
+<td ng-if="apAccount.status === 'I'" class="break-word">
+    {{(apAccount.accountType === 'S' ? 'directDeposit.account.type.savings' : 'directDeposit.account.type.checking')|i18n}}
 </td>
 <td class="break-word"><account-status account="apAccount"/></td>
