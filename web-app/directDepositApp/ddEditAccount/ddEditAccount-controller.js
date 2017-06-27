@@ -70,7 +70,7 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
                 notificationCenterService.removeNotification(accountNotification);
 
                 $scope.accountNumErr = true;
-                $scope.accountNumMessage = message
+                $scope.accountNumMessage = message;
                 accountNotification = notificationCenterService.addNotification($scope.accountNumMessage, "error");
                 clearMiscMessage();
             };

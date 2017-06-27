@@ -130,6 +130,12 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                 acctPromises[0].then(function (response) {
                     // By default, set A/P account as currently active account, as it can be edited inline (in desktop
                     // view), while payroll accounts can not be.
+                    $scope.apAccountList = response;
+
+                    if($scope.apAccountList.length > 1) {
+                        $stateParams.onLoadNotifications.push({message: 'directDeposit.invalid.multiple.ap.accounts', messageType: $scope.notificationErrorType});
+                    }
+
                     $scope.apAccount = self.getApAccountFromResponse(response);
                     $scope.hasApAccount = !!$scope.apAccount;
                     $scope.accountLoaded = true;
@@ -411,7 +417,7 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                 isDisable = true;
             }
             return isDisable;
-        }
+        };
 
 
         $scope.disableCancel = function() {
@@ -423,7 +429,7 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
             }
 
             return isDisable;
-        }
+        };
 
         $scope.updateAccounts = function () {
             if(!amountsAreValid()) {
@@ -539,8 +545,11 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
             return deferred.promise;
         };
 
-        $scope.toggleApAccountSelectedForDelete = function () {
-            $scope.selectedForDelete.ap = !$scope.selectedForDelete.ap;
+        $scope.toggleApAccountSelectedForDelete = function (acct) {
+            acct.deleteMe = !acct.deleteMe;
+            $scope.selectedForDelete.ap = _.some($scope.apAccountList, function(acct) {
+                return acct.deleteMe;
+            });
         };
 
         $scope.cancelNotification = function () {
@@ -617,23 +626,20 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
         };
 
         $scope.deleteApAccount = function () {
-            var accounts = [];
+            var accountsToDelete = _.where($scope.apAccountList, {deleteMe: true});
 
-            $scope.apAccount.apDelete = true;
-
-            accounts.push($scope.apAccount);
+            _.each(accountsToDelete, function(acct) {
+                acct.apDelete = true;
+            });
 
             $scope.cancelNotification();
 
-            ddEditAccountService.deleteAccounts(accounts).$promise.then(function (response) {
+            ddEditAccountService.deleteAccounts(accountsToDelete).$promise.then(function (response) {
                 var notifications = [];
 
                 if (response[0].failure) {
                     notificationCenterService.displayNotification(response[0].message, $scope.notificationErrorType);
                 } else {
-                    // Refresh account info
-                    $scope.apAccount = null;
-
                     if (response[0].acct) {
                         var msg = $filter('i18n')('directDeposit.account.label.account')+
                                     ' '+ $filter('accountNumMask')(response[0].acct);
@@ -681,8 +687,8 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
             $scope.authorizedChanges = !$scope.authorizedChanges;
         };
 
-        $scope.setApAccountType = function (acctType) {
-            $scope.apAccount.accountType = acctType;
+        $scope.setApAccountType = function (acct, acctType) {
+            acct.accountType = acctType;
             this.editForm.$setDirty();
 
             // Sync with payroll, if applicable

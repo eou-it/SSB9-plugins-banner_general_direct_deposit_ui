@@ -410,7 +410,7 @@ generalSsbAppDirectives.directive('confirmOnExit', function() {
                 if ($scope.editForm.$dirty) {
                     return "The form is dirty, do you want to stay on the page?";
                 }
-            }
+            };
             $scope.$on('$locationChangeStart', function(event, next, current) {
                 if ($scope.editForm.$dirty) {
                     if(!confirm("The form is dirty, do you want to stay on the page?")) {
