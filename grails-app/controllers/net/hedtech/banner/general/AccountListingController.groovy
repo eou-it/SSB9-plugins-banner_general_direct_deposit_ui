@@ -1,7 +1,6 @@
 package net.hedtech.banner.general
 
 import grails.converters.JSON
-import net.hedtech.banner.general.overall.DirectDepositAccountService
 import net.hedtech.banner.exceptions.ApplicationException
 import net.hedtech.banner.general.person.PersonUtility
 
@@ -30,7 +29,7 @@ class AccountListingController  {
         }
 
         JSON.use("deep") {
-            render model as JSON
+            render maskAccounts(model) as JSON
         }
     }
 
@@ -39,8 +38,14 @@ class AccountListingController  {
 
         if (person) {
             try {
+                def hrAllocs = directDepositAccountCompositeService.getUserHrAllocations(person.pidm)
+
+                if (hrAllocs.allocations) {
+                    maskAccounts(hrAllocs.allocations)
+                }
+
                 JSON.use('deep') {
-                    render directDepositAccountCompositeService.getUserHrAllocations(person.pidm) as JSON
+                    render hrAllocs as JSON
                 }
             } catch (ApplicationException e) {
                 render ControllerUtility.returnFailureMessage(e) as JSON
@@ -54,7 +59,50 @@ class AccountListingController  {
 
         model = directDepositAccountCompositeService.getLastPayDistribution(pidm)
 
+        model?.docAccts.each {
+            it.bankAccountNumber = maskBankInfo(it.bankAccountNumber)
+            it.bankRoutingNumber = maskBankInfo(it.bankRoutingNumber)
+        }
+
         render model as JSON
+    }
+
+    /**
+     * Mask all but the last four characters of val with 'x'.
+     * Examples:
+     *   "12345678" becomes "xxxx5678"
+     *   "5678" remains "5678"
+     *   "78" remains "78"
+     *
+     * @param val
+     * @return Masked value
+     */
+    static String maskBankInfo(val) {
+        return val.replaceAll("\\w(?=\\w{4})", "x")
+    }
+
+    static maskAccounts(accts) {
+        def routingInfoBeforeMasking = [:]
+
+        accts.each {
+            def rawRoutingInfo = routingInfoBeforeMasking[it.bankRoutingInfo.id]
+
+            // Save and mask routing info only once for each bankRoutingInfo object.
+            if (!rawRoutingInfo) {
+                rawRoutingInfo = routingInfoBeforeMasking[it.bankRoutingInfo.id] = [
+                    bankRoutingNum: it.bankRoutingInfo.bankRoutingNum,
+                    bankName: it.bankRoutingInfo.bankName
+                ]
+
+                it.bankRoutingInfo.bankRoutingNum = maskBankInfo(it.bankRoutingInfo.bankRoutingNum)
+            }
+
+            def acctInfo = [acctNum: it.bankAccountNum, routing: rawRoutingInfo]
+            DirectDepositUtility.setDirectDepositAccountInfoInSessionCache(it.id, acctInfo)
+            it.bankAccountNum = maskBankInfo(it.bankAccountNum)
+        }
+
+        return accts
     }
 
 }

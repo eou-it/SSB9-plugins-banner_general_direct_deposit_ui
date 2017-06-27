@@ -367,24 +367,6 @@ generalSsbAppDirectives.directive('suppressEnterKey', [function () {
     };
 }]);
 
-generalSsbAppDirectives.directive('maskInput', ['$filter', function ($filter) {
-    return {
-        restrict: 'A',
-        require: '?ngModel',
-        link: function (scope, elem, attrs, ngModel) {
-            
-            // do nothing if ng-model is not present
-            if (!ngModel) return;
-            
-            ngModel.$render = function(){
-                if(!scope.creatingNewAccount){
-                    elem.val($filter('accountNumMask')(ngModel.$modelValue));
-                }
-            };
-        }
-    };
-}]);
-
 generalSsbAppDirectives.directive('modalDisclaimer', ['$filter', function ($filter) {
     return {
         restrict: 'E',

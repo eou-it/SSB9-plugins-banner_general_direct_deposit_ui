@@ -568,8 +568,7 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                     // Display notification if an account also exists as AP
                     _.find(response, function(item) {
                         if (item.acct) {
-                            var msg = $filter('i18n')('directDeposit.account.label.account')+
-                                        ' '+ $filter('accountNumMask')(item.acct);
+                            var msg = $filter('i18n')('directDeposit.account.label.account') + ' ' + item.acct;
 
                             if (item.activeType === 'AP'){
                                 msg += ' ' + $filter('i18n')('directDeposit.still.active.AP');
@@ -635,8 +634,7 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                     $scope.apAccount = null;
 
                     if (response[0].acct) {
-                        var msg = $filter('i18n')('directDeposit.account.label.account')+
-                                    ' '+ $filter('accountNumMask')(response[0].acct);
+                        var msg = $filter('i18n')('directDeposit.account.label.account') + ' ' + response[0].acct;
 
                         if (response[0].activeType === 'PR'){
                             msg += ' '+ $filter('i18n')('directDeposit.still.active.payroll');

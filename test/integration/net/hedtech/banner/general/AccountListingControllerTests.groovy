@@ -56,7 +56,7 @@ class AccountListingControllerTests extends BaseIntegrationTestCase {
         def data = JSON.parse( dataForNullCheck )
         println data
         assertNotNull data
-        assertEquals '736900542', data.allocations[0].bankAccountNum
+        assertEquals 'xxxxx0542', data.allocations[0].bankAccountNum
     }
 
     @Test
@@ -70,6 +70,21 @@ class AccountListingControllerTests extends BaseIntegrationTestCase {
         assertNotNull data
         assertEquals 7837.31, data.totalNet, 0.001
         assertEquals 1, data.docAccts.size()
+    }
+
+    @Test
+    void testMaskBankInfoLongNumber() {
+        assertEquals 'xxxx5678', controller.maskBankInfo('12345678')
+    }
+
+    @Test
+    void testMaskBankInfoMediumNumber() {
+        assertEquals '5678', controller.maskBankInfo('5678')
+    }
+
+    @Test
+    void testMaskBankInfoShortNumber() {
+        assertEquals '78', controller.maskBankInfo('78')
     }
 
 }

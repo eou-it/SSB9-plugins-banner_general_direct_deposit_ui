@@ -6,8 +6,8 @@
     </div>
     <span id="ap-bank-name">{{apAccount.bankRoutingInfo.bankName}}</span>
 </td>
-<td class="break-word">{{apAccount.bankRoutingInfo.bankRoutingNum|accountNumMask}}</td>
-<td class="break-word">{{apAccount.bankAccountNum|accountNumMask}}</td>
+<td class="break-word">{{apAccount.bankRoutingInfo.bankRoutingNum}}</td>
+<td class="break-word">{{apAccount.bankAccountNum}}</td>
 <td>
     <label class="visuallyhidden" id="select-acct-type-ap">{{'directDeposit.label.account.type.select'|i18n}}</label>
     <span><choose-account account="apAccount" class="visuallyhidden" id="account-type-ap" tabindex="-1"/></span>

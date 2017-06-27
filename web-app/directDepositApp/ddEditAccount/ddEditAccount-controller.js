@@ -232,8 +232,9 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
             $scope.setup.authorizedChanges = false;
 
             if($scope.setup.createFromExisting === 'yes'){
-                $scope.account.bankAccountNum = $scope.otherAccountSelected.bankAccountNum;
-                $scope.account.bankRoutingInfo = $scope.otherAccountSelected.bankRoutingInfo;
+                //$scope.account.bankAccountNum = $scope.otherAccountSelected.bankAccountNum;
+                //$scope.account.bankRoutingInfo = $scope.otherAccountSelected.bankRoutingInfo;
+                $scope.account.id = $scope.otherAccountSelected.id;
                 $scope.account.accountType = $scope.otherAccountSelected.accountType;
             }
             else {
