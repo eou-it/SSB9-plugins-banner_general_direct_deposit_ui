@@ -21,7 +21,7 @@ class AccountListingController  {
 
         if (person) {
             try {
-                model = directDepositAccountService.fetchApAccountsByPidm(person.pidm)
+                model = directDepositAccountService.fetchApAccountsByPidmAsListOfMaps(person.pidm)
             } catch (ApplicationException e) {
                 render ControllerUtility.returnFailureMessage(e) as JSON
             }
