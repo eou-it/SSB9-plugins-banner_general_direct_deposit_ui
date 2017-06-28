@@ -22,7 +22,7 @@ class AccountListingController  {
 
         if (person) {
             try {
-                model = directDepositAccountService.getActiveApAccounts(person.pidm)
+                model = directDepositAccountService.getActiveApAccountsAsListOfMaps(person.pidm)
             } catch (ApplicationException e) {
                 render ControllerUtility.returnFailureMessage(e) as JSON
             }
@@ -38,11 +38,8 @@ class AccountListingController  {
 
         if (person) {
             try {
-                def hrAllocs = directDepositAccountCompositeService.getUserHrAllocations(person.pidm)
-
-                if (hrAllocs.allocations) {
-                    maskAccounts(hrAllocs.allocations)
-                }
+                def hrAllocs = directDepositAccountCompositeService.getUserHrAllocationsAsListOfMaps(person.pidm)
+                maskAccounts(hrAllocs.allocations)
 
                 JSON.use('deep') {
                     render hrAllocs as JSON
