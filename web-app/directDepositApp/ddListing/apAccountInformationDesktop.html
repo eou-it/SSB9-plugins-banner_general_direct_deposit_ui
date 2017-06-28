@@ -1,32 +1,32 @@
 <td class="break-word">
     <div class="delete-checkbox-wrapper-desktop">
         <label class="visuallyhidden" id="for-delete-ap">{{'directDeposit.label.select.for.delete'|i18n}}</label>
-        <input type="checkbox" class="delete-checkbox-desktop" ng-click="toggleApAccountSelectedForDelete()" enter-key="toggleApAccountSelectedForDelete()" aria-labelledby="for-delete-ap ap-bank-name">
+        <input type="checkbox" class="delete-checkbox-desktop" ng-click="toggleApAccountSelectedForDelete(apAcct)" enter-key="toggleApAccountSelectedForDelete(apAcct)" aria-labelledby="for-delete-ap ap-bank-name">
         <span class="lbl"></span>
     </div>
-    <span id="ap-bank-name">{{apAccount.bankRoutingInfo.bankName}}</span>
+    <span id="ap-bank-name">{{apAcct.bankRoutingInfo.bankName}}</span>
 </td>
-<td class="break-word">{{apAccount.bankRoutingInfo.bankRoutingNum|accountNumMask}}</td>
-<td class="break-word">{{apAccount.bankAccountNum|accountNumMask}}</td>
-<td>
+<td class="break-word">{{apAcct.bankRoutingInfo.bankRoutingNum|accountNumMask}}</td>
+<td class="break-word">{{apAcct.bankAccountNum|accountNumMask}}</td>
+<td ng-if="apAcct.status !== 'I'">
     <label class="visuallyhidden" id="select-acct-type-ap">{{'directDeposit.label.account.type.select'|i18n}}</label>
-    <span><choose-account account="apAccount" class="visuallyhidden" id="account-type-ap" tabindex="-1"/></span>
+    <span><choose-account account="apAcct" class="visuallyhidden" id="account-type-ap" tabindex="-1"/></span>
     <div class="dropdown desktop-listing" role="menu">
         <button dropdown-helper="begin" class="dropdown-btn ng-class: (accountTypeErr ? 'input-field-error' : null);" data-toggle="dropdown" aria-haspopup="true" aria-labelledby="select-acct-type-ap account-type-ap">
             <span class="float-l form-spacing">
-                <choose-account account="apAccount"/>
+                <choose-account account="apAcct"/>
             </span>
             <span class="icon float-r form-spacing"><span class="icon-caret-down ellucian-font caret-color"></span></span>
         </button>
         <ul menu-controls class="dropdown-menu addAcct" aria-label="{{'directDeposit.label.account.type.edit'|i18n}}">
             <li role="presentation">
-                <a ng-click="setApAccountType('C')" class="addAcct form-spacing" role="menuitem" aria-label=""
+                <a ng-click="setApAccountType(apAcct, 'C')" class="addAcct form-spacing" role="menuitem" aria-label=""
                    aria-describedby="" aria-labelledby="checking-lbl" tabindex="0">
                     {{'directDeposit.account.type.checking'|i18n}}
                 </a>
             </li>
             <li role="presentation">
-                <a dropdown-helper="end" ng-click="setApAccountType('S')" class="addAcct end-dropdown-radius form-spacing"
+                <a dropdown-helper="end" ng-click="setApAccountType(apAcct, 'S')" class="addAcct end-dropdown-radius form-spacing"
                    role="menuitem" aria-label="" aria-describedby="" aria-labelledby="savings-lbl" tabindex="0">
                     {{'directDeposit.account.type.savings'|i18n}}
                 </a>
@@ -34,4 +34,7 @@
         </ul>
     </div>
 </td>
-<td class="break-word"><account-status account="apAccount"/></td>
+<td ng-if="apAcct.status === 'I'" class="break-word">
+    <div class="dropdown-btn form-spacing disabled">{{(apAcct.accountType === 'S' ? 'directDeposit.account.type.savings' : 'directDeposit.account.type.checking')|i18n}}</div>
+</td>
+<td class="break-word"><account-status account="apAcct"/></td>

@@ -21,7 +21,7 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
         //routing and account number should only contain upper case letters, digits, or the allowed special characters ^!_@#$%&,*:./+-
         var invalidCharRegEx = /[^A-Za-z0-9\^!_@#\$%&,\*:\./\+-]/i;
         $scope.routingNumErr = false;
-        $scope.routingNumMessage;
+        $scope.routingNumMessage = null;
 
         var routingNotification = null,
 
@@ -62,7 +62,7 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
         };
 
         $scope.accountNumErr = false;
-        $scope.accountNumMessage;
+        $scope.accountNumMessage = null;
 
         var accountNotification = null,
 
@@ -70,7 +70,7 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
                 notificationCenterService.removeNotification(accountNotification);
 
                 $scope.accountNumErr = true;
-                $scope.accountNumMessage = message
+                $scope.accountNumMessage = message;
                 accountNotification = notificationCenterService.addNotification($scope.accountNumMessage, "error");
                 clearMiscMessage();
             };
@@ -240,7 +240,14 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
                 doSave = requiredFieldsValid();
             }
 
-            if($scope.typeIndicator === 'HR'){
+            if($scope.typeIndicator === 'AP') {
+                if(ddListingService.hasMultipleApAccounts()) {
+                    notificationCenterService.displayNotification('directDeposit.invalid.multiple.ap.accounts', $scope.notificationErrorType);
+                    displayMiscError($filter('i18n')('directDeposit.invalid.multiple.ap.accounts'));
+                    doSave = false;
+                }
+            }
+            else if($scope.typeIndicator === 'HR'){
                 doSave = validateAmounts() && doSave;
                 ddEditAccountService.setAmountValues($scope.account, $scope.account.amountType);
             }
@@ -353,7 +360,7 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
         };
 
         this.init = function() {
-            $scope.setup = {}
+            $scope.setup = {};
             $scope.setup.hasOtherAccounts = false;
 
             // start with a 'fresh' reorder flag

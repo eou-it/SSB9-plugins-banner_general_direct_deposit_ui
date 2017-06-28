@@ -9,7 +9,6 @@ class AccountListingController  {
 
     def directDepositAccountService
     def directDepositAccountCompositeService
-    def currencyFormatService
 
 
 
@@ -23,7 +22,7 @@ class AccountListingController  {
 
         if (person) {
             try {
-                model = directDepositAccountService.getActiveApAccounts(person.pidm)
+                model = directDepositAccountService.fetchApAccountsByPidm(person.pidm)
             } catch (ApplicationException e) {
                 render ControllerUtility.returnFailureMessage(e) as JSON
             }

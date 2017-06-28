@@ -1094,6 +1094,11 @@ a.delete-account-link {
     border: 1px solid #4EC76A;
 }
 
+.status-inactive {
+    background: #FFDCDC;
+    border: 1px solid #F79B9B;
+}
+
 
 /*  Custom modal  */
 .modal.edit-account-modal.in .modal-dialog {
@@ -1325,7 +1330,7 @@ table tr td {
 
     .account-field {
         float: left;
-        margin-right: 90px;
+        width: 30%;
         margin-bottom: 15px;
     }
 
