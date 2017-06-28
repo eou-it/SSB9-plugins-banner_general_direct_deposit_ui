@@ -339,8 +339,8 @@ generalSsbAppDirectives.directive('apListingPanelPopulated',['$filter', 'ddEditA
             var type = scope.isDesktopView ? 'Desktop' : '';
             scope.apListingPanelPopulatedTemplate = $filter('webAppResourcePath')('directDepositApp/ddListing/apListingPanelPopulated' + type + '.html');
 
-            scope.showEditAP = function(){
-                scope.showEditAccount(scope.apAccount, 'AP');
+            scope.showEditAP = function(acct){
+                scope.showEditAccount(acct, 'AP');
             };
         },
         template: '<div ng-include="apListingPanelPopulatedTemplate"></div>'

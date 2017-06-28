@@ -9,7 +9,6 @@ class AccountListingController  {
 
     def directDepositAccountService
     def directDepositAccountCompositeService
-    def currencyFormatService
 
 
 

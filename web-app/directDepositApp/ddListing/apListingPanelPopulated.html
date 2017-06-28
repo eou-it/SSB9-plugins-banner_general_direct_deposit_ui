@@ -2,7 +2,7 @@
     <div class="row">
         <div class="ap-right-col">
             <div ng-if="apAcct.status !== 'I'" class="edit-account">
-                <a class="edit-account-link" ng-click="showEditAP()" enter-key="showEditAP()"><span class="icon-edit"></span> <span>{{'directDeposit.account.label.edit'|i18n}}</span></a>
+                <a class="edit-account-link" ng-click="showEditAP(apAcct)" enter-key="showEditAP(apAcct)"><span class="icon-edit"></span> <span>{{'directDeposit.account.label.edit'|i18n}}</span></a>
             </div>
             <div class="ap-status-wrapper">
                 <account-status account="apAcct"/>

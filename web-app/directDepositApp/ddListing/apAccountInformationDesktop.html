@@ -35,6 +35,6 @@
     </div>
 </td>
 <td ng-if="apAcct.status === 'I'" class="break-word">
-    {{(apAcct.accountType === 'S' ? 'directDeposit.account.type.savings' : 'directDeposit.account.type.checking')|i18n}}
+    <div class="dropdown-btn form-spacing disabled">{{(apAcct.accountType === 'S' ? 'directDeposit.account.type.savings' : 'directDeposit.account.type.checking')|i18n}}</div>
 </td>
 <td class="break-word"><account-status account="apAcct"/></td>
