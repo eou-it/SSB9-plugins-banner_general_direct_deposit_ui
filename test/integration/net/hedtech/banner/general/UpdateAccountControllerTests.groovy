@@ -445,4 +445,43 @@ class UpdateAccountControllerTests extends BaseIntegrationTestCase {
         assertEquals(failureMessageModel.message.contains('ORA'), false)
     }
 
+    @Test
+    void testUnmaskAccountInfoFromSessionCache() {
+        def acctInfoToCache = [
+            acctNum: '12345678',
+            routing: [
+                bankRoutingNum: '87654321',
+                bankName: 'River Bank'
+            ]
+        ]
+
+        def acctSentFromUi = [
+            id: 1,
+            bankAccountNum: 'xxxx5678',
+            bankRoutingInfo: [
+                bankRoutingNum: 'xxxx4321',
+                bankName: 'River Bank'
+            ]
+        ]
+
+        def unmaskedAcct = [
+            id: 1,
+            bankAccountNum: '12345678',
+            bankRoutingInfo: [
+                bankRoutingNum: '87654321',
+                bankName: 'River Bank'
+            ]
+        ]
+
+        DirectDepositUtility.setDirectDepositAccountInfoInSessionCache(1, acctInfoToCache)
+        controller.unmaskAccountInfoFromSessionCache(acctSentFromUi)
+
+        assertEquals unmaskedAcct, acctSentFromUi
+
+        def cachedInfo = DirectDepositUtility.getDirectDepositAccountInfoFromSessionCache(1)
+
+        // The value previously set in cache has been cleared
+        assertNull cachedInfo
+    }
+
 }

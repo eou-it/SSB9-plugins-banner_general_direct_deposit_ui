@@ -23,7 +23,7 @@ class DirectDepositUtility {
         }
     }
 
-    public static setDirectDepositAccountInfoInSessionCache(acctId, acctInfo) {
+    def static setDirectDepositAccountInfoInSessionCache(acctId, acctInfo) {
         def session = RequestContextHolder.currentRequestAttributes().request.session
         def cache = session.getAttribute(DD_ACCOUNT_CACHE)
 
@@ -35,7 +35,7 @@ class DirectDepositUtility {
         cache[""+acctId] = acctInfo // For consistency in type, convert ID to string for use as key
     }
 
-    public static getDirectDepositAccountInfoFromSessionCache(acctId) {
+    def static getDirectDepositAccountInfoFromSessionCache(acctId) {
         def session = RequestContextHolder.currentRequestAttributes().request.session
         def cache = session.getAttribute(DD_ACCOUNT_CACHE)
         def acctIdStr = ""+acctId // Type of key in cache is String
@@ -43,7 +43,7 @@ class DirectDepositUtility {
         cache?."$acctIdStr"
     }
 
-    public static removeDirectDepositAccountInfoFromSessionCache(acctId) {
+    def static removeDirectDepositAccountInfoFromSessionCache(acctId) {
         def session = RequestContextHolder.currentRequestAttributes().request.session
         def cache = session.getAttribute(DD_ACCOUNT_CACHE)
 

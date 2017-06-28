@@ -83,4 +83,18 @@ class DirectDepositUtilityTests extends BaseIntegrationTestCase {
         assertEquals('I', map.nested.apIndicator)
     }
 
+    @Test
+    void testSetAndGetAndRemoveDirectDepositAccountInfoInSessionCache() {
+        DirectDepositUtility.setDirectDepositAccountInfoInSessionCache(1, [id: '333'])
+        def cachedInfo = DirectDepositUtility.getDirectDepositAccountInfoFromSessionCache(1)
+
+        assertNotNull cachedInfo
+        assertEquals '333', cachedInfo.id
+
+        DirectDepositUtility.removeDirectDepositAccountInfoFromSessionCache('1')
+        cachedInfo = DirectDepositUtility.getDirectDepositAccountInfoFromSessionCache(1)
+
+        assertNull cachedInfo
+    }
+
 }

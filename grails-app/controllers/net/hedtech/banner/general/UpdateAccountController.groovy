@@ -187,13 +187,12 @@ class UpdateAccountController {
         if (cachedAcctInfo) {
             acct.bankAccountNum = cachedAcctInfo.acctNum
             acct.bankRoutingInfo = [
-                    bankRoutingNum: cachedAcctInfo.routing.bankRoutingNum,
-                    bankName:       cachedAcctInfo.routing.bankName
+                bankRoutingNum: cachedAcctInfo.routing.bankRoutingNum,
+                bankName:       cachedAcctInfo.routing.bankName
             ]
 
             DirectDepositUtility.removeDirectDepositAccountInfoFromSessionCache(acct.id)
         }
-
     }
 
     /**

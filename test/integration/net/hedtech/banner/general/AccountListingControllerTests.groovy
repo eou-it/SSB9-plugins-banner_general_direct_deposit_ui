@@ -44,7 +44,7 @@ class AccountListingControllerTests extends BaseIntegrationTestCase {
         def data = JSON.parse( dataForNullCheck )
         println data
         assertNotNull data
-        assertEquals '38167543', data[0].bankAccountNum
+        assertEquals 'xxxx7543', data[0].bankAccountNum
     }
 
     @Test
@@ -85,6 +85,34 @@ class AccountListingControllerTests extends BaseIntegrationTestCase {
     @Test
     void testMaskBankInfoShortNumber() {
         assertEquals '78', controller.maskBankInfo('78')
+    }
+
+    @Test
+    void testMaskAccounts() {
+        def accounts = [
+            [
+                id: 1,
+                bankAccountNum: '12345678',
+                bankRoutingInfo: [
+                    bankRoutingNum: '87654321'
+                ]
+            ]
+        ]
+
+        def maskedAccounts = controller.maskAccounts(accounts)
+
+        assertEquals 1, maskedAccounts.size()
+
+        def account = maskedAccounts[0]
+
+        assertEquals 'xxxx5678', account.bankAccountNum
+        assertEquals 'xxxx4321', account.bankRoutingInfo.bankRoutingNum
+
+        def cachedAccount = DirectDepositUtility.getDirectDepositAccountInfoFromSessionCache(1)
+
+        assertNotNull cachedAccount
+        assertEquals '12345678', cachedAccount.acctNum
+        assertEquals '87654321', cachedAccount.routing.bankRoutingNum
     }
 
 }
