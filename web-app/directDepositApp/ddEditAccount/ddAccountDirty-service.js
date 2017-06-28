@@ -22,7 +22,6 @@ directDepositApp.service('ddAccountDirtyService', [function () {
             a.amount !== acct.amount ||
             a.percent !== acct.percent ||
             a.accountType !== acct.accountType ||
-            a.amountType !== acct.amountType ||
             a.priority !== acct.priority;
     };
 }]);

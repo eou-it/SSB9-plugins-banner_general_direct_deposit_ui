@@ -1,16 +1,16 @@
-<div class="panel-body">
+<div ng-repeat="apAcct in apAccountList" class="panel-body">
     <div class="row">
         <div class="ap-right-col">
-            <div class="edit-account">
-                <a class="edit-account-link" ng-click="showEditAP()" enter-key="showEditAP()"><span class="icon-edit"></span> <span>{{'directDeposit.account.label.edit'|i18n}}</span></a>
+            <div ng-if="apAcct.status !== 'I'" class="edit-account">
+                <a class="edit-account-link" ng-click="showEditAP(apAcct)" enter-key="showEditAP(apAcct)"><span class="icon-edit"></span> <span>{{'directDeposit.account.label.edit'|i18n}}</span></a>
             </div>
             <div class="ap-status-wrapper">
-                <account-status account="apAccount"/>
+                <account-status account="apAcct"/>
             </div>
         </div>
         <div class="delete-checkbox-wrapper">
             <label class="visuallyhidden" id="for-delete-ap">{{'directDeposit.label.select.for.delete'|i18n}}</label>
-            <input type="checkbox" ng-click="toggleApAccountSelectedForDelete()" enter-key="toggleApAccountSelectedForDelete()" aria-labelledby="for-delete-ap ap-bank-name">
+            <input type="checkbox" ng-click="toggleApAccountSelectedForDelete(apAcct)" enter-key="toggleApAccountSelectedForDelete(apAcct)" aria-labelledby="for-delete-ap ap-bank-name">
             <div class="lbl"></div>
         </div>
         <div class="entry">
