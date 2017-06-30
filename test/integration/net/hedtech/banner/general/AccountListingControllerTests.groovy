@@ -88,47 +88,4 @@ class AccountListingControllerTests extends BaseIntegrationTestCase {
         assertEquals 1, data.docAccts.size()
     }
 
-    @Test
-    void testMaskBankInfoLongNumber() {
-        assertEquals 'xxxx5678', controller.maskBankInfo('12345678')
-    }
-
-    @Test
-    void testMaskBankInfoMediumNumber() {
-        assertEquals '5678', controller.maskBankInfo('5678')
-    }
-
-    @Test
-    void testMaskBankInfoShortNumber() {
-        assertEquals '78', controller.maskBankInfo('78')
-    }
-
-    @Test
-    void testMaskAccounts() {
-        def accounts = [
-            [
-                id: 1,
-                bankAccountNum: '12345678',
-                bankRoutingInfo: [
-                    bankRoutingNum: '87654321'
-                ]
-            ]
-        ]
-
-        def maskedAccounts = controller.maskAccounts(accounts)
-
-        assertEquals 1, maskedAccounts.size()
-
-        def account = maskedAccounts[0]
-
-        assertEquals 'xxxx5678', account.bankAccountNum
-        assertEquals 'xxxx4321', account.bankRoutingInfo.bankRoutingNum
-
-        def cachedAccount = DirectDepositUtility.getDirectDepositAccountInfoFromSessionCache(1)
-
-        assertNotNull cachedAccount
-        assertEquals '12345678', cachedAccount.acctNum
-        assertEquals '87654321', cachedAccount.routing.bankRoutingNum
-    }
-
 }
