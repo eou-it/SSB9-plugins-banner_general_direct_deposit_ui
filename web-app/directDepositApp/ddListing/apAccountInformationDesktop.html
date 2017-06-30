@@ -1,3 +1,6 @@
+<!--*******************************************************************************
+Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
+*******************************************************************************-->
 <td class="break-word">
     <div class="delete-checkbox-wrapper-desktop">
         <label class="visuallyhidden" id="for-delete-ap">{{'directDeposit.label.select.for.delete'|i18n}}</label>
@@ -6,8 +9,8 @@
     </div>
     <span id="ap-bank-name">{{apAcct.bankRoutingInfo.bankName}}</span>
 </td>
-<td class="break-word">{{apAcct.bankRoutingInfo.bankRoutingNum|accountNumMask}}</td>
-<td class="break-word">{{apAcct.bankAccountNum|accountNumMask}}</td>
+<td class="break-word">{{apAcct.bankRoutingInfo.bankRoutingNum}}</td>
+<td class="break-word">{{apAcct.bankAccountNum}}</td>
 <td ng-if="apAcct.status !== 'I'">
     <label class="visuallyhidden" id="select-acct-type-ap">{{'directDeposit.label.account.type.select'|i18n}}</label>
     <span><choose-account account="apAcct" class="visuallyhidden" id="account-type-ap" tabindex="-1"/></span>

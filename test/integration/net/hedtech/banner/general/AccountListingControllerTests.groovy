@@ -1,3 +1,7 @@
+/*******************************************************************************
+ Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
+ *******************************************************************************/
+
 package net.hedtech.banner.general
 
 import grails.converters.JSON
@@ -44,7 +48,7 @@ class AccountListingControllerTests extends BaseIntegrationTestCase {
         def data = JSON.parse( dataForNullCheck )
         println data
         assertNotNull data
-        assertEquals '38167543', data[0].bankAccountNum
+        assertEquals 'xxxx7543', data[0].bankAccountNum
     }
 
     @Test
@@ -58,9 +62,9 @@ class AccountListingControllerTests extends BaseIntegrationTestCase {
         println data
         assertNotNull data
         assertEquals 3, data.size()
-        assertTrue data.bankAccountNum.contains('67674850')
-        assertTrue data.bankAccountNum.contains('67674852')
-        assertTrue data.bankAccountNum.contains('902837244')
+        assertTrue data.bankAccountNum.contains('xxxx4850')
+        assertTrue data.bankAccountNum.contains('xxxx4852')
+        assertTrue data.bankAccountNum.contains('xxxxx7244')
     }
 
     @Test
@@ -72,7 +76,7 @@ class AccountListingControllerTests extends BaseIntegrationTestCase {
         def data = JSON.parse( dataForNullCheck )
         println data
         assertNotNull data
-        assertEquals '736900542', data.allocations[0].bankAccountNum
+        assertEquals 'xxxxx0542', data.allocations[0].bankAccountNum
     }
 
     @Test

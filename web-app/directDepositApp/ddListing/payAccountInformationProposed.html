@@ -1,3 +1,6 @@
+<!--*******************************************************************************
+Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
+*******************************************************************************-->
 <div class="delete-checkbox-wrapper no-margin">
     <label class="visuallyhidden" id="for-delete{{$index}}">{{'directDeposit.label.select.for.delete'|i18n}}</label>
     <input type="checkbox" ng-model="alloc.deleteMe" no-dirty-check aria-labelledby="for-delete{{$index}} pro-bank-name{{$index}}">
@@ -13,10 +16,10 @@
     <div class="row flex-div no-margin">
         <div class="col-xs-9 no-padding">
             <div class="col-sm-4 hr-account-field no-padding">
-                {{'directDeposit.account.label.routing'|i18n}}: {{alloc.bankRoutingInfo.bankRoutingNum|accountNumMask}}
+                {{'directDeposit.account.label.routing'|i18n}}: {{alloc.bankRoutingInfo.bankRoutingNum}}
             </div>
             <div class="col-sm-4 hr-account-field no-padding">
-                {{'directDeposit.account.label.account'|i18n}}: {{alloc.bankAccountNum|accountNumMask}}
+                {{'directDeposit.account.label.account'|i18n}}: {{alloc.bankAccountNum}}
             </div>
             <div class="col-sm-4 hr-account-field no-padding">
                 {{'directDeposit.account.label.accountType'|i18n}}: <account-type account="alloc"/>

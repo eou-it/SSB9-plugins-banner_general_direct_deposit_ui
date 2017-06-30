@@ -1,3 +1,7 @@
+/*******************************************************************************
+ Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
+ *******************************************************************************/
+
 package net.hedtech.banner.general
 
 import grails.converters.JSON
@@ -60,7 +64,7 @@ class UpdateAccountControllerTests extends BaseIntegrationTestCase {
 
         assertNotNull dataList
         assertEquals 4, dataList.size()
-        assertEquals '0822051515', dataList[1].bankAccountNum
+        assertEquals 'xxxxxx1515', dataList[1].bankAccountNum
     }
 
     @Test
@@ -88,7 +92,7 @@ class UpdateAccountControllerTests extends BaseIntegrationTestCase {
         def dataForNullCheck = controller.response.contentAsString
         def data = JSON.parse( dataForNullCheck )
         assertNotNull data
-        assertEquals '0822051515', data.bankAccountNum
+        assertEquals 'xxxxxx1515', data.bankAccountNum
     }
 
     @Test
@@ -244,8 +248,8 @@ class UpdateAccountControllerTests extends BaseIntegrationTestCase {
         def data = JSON.parse( dataForNullCheck ).sort {it.priority}
 
         assertNotNull data
-        assertEquals '95003546', data[0].bankAccountNum
-        assertEquals '736900542', data[1].bankAccountNum
+        assertEquals 'xxxx3546', data[0].bankAccountNum
+        assertEquals 'xxxxx0542', data[1].bankAccountNum
     }
 
     @Test
@@ -372,8 +376,8 @@ class UpdateAccountControllerTests extends BaseIntegrationTestCase {
 
         assertNotNull data
         assertEquals data[0][0], true
-        assertEquals '95003546', data[1].bankAccountNum
-        assertEquals '736900542', data[2].bankAccountNum
+        assertEquals 'xxxx3546', data[1].bankAccountNum
+        assertEquals 'xxxxx0542', data[2].bankAccountNum
     }
 
     @Test
@@ -443,6 +447,48 @@ class UpdateAccountControllerTests extends BaseIntegrationTestCase {
         def failureMessageModel = controller.response.json
         assert(failureMessageModel.failure)
         assertEquals(failureMessageModel.message.contains('ORA'), false)
+    }
+
+    @Test
+    void testUnmaskAccountInfoFromSessionCache() {
+        def acctInfoToCache = [
+            acctNum: '12345678',
+            routing: [
+                id: 10,
+                bankRoutingNum: '87654321',
+                bankName: 'River Bank'
+            ]
+        ]
+
+        def acctSentFromUi = [
+            id: 1,
+            bankAccountNum: 'xxxx5678',
+            bankRoutingInfo: [
+                id: 10,
+                bankRoutingNum: 'xxxx4321',
+                bankName: 'River Bank'
+            ]
+        ]
+
+        def unmaskedAcct = [
+            id: 1,
+            bankAccountNum: '12345678',
+            bankRoutingInfo: [
+                id: 10,
+                bankRoutingNum: '87654321',
+                bankName: 'River Bank'
+            ]
+        ]
+
+        DirectDepositUtility.setDirectDepositAccountInfoInSessionCache(1, acctInfoToCache)
+        controller.unmaskAccountInfoFromSessionCache(acctSentFromUi)
+
+        assertEquals unmaskedAcct, acctSentFromUi
+
+        def cachedInfo = DirectDepositUtility.getDirectDepositAccountInfoFromSessionCache(1)
+
+        // The value previously set in cache has been cleared
+        assertNull cachedInfo
     }
 
 }

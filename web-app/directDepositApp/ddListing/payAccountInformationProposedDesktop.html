@@ -1,3 +1,6 @@
+<!--*******************************************************************************
+Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
+*******************************************************************************-->
 <td class="break-word">
     <div class="delete-checkbox-wrapper-desktop">
         <label class="visuallyhidden" id="for-delete{{$index}}">{{'directDeposit.label.select.for.delete'|i18n}}</label>
@@ -6,8 +9,8 @@
     </div>
     <span id="pro-bank-name{{$index}}">{{alloc.bankRoutingInfo.bankName}}</span>
 </td>
-<td class="break-word">{{alloc.bankRoutingInfo.bankRoutingNum|accountNumMask}}</td>
-<td class="max-width-account break-word">{{alloc.bankAccountNum|accountNumMask}}</td>
+<td class="break-word">{{alloc.bankRoutingInfo.bankRoutingNum}}</td>
+<td class="max-width-account break-word">{{alloc.bankAccountNum}}</td>
 <td>
     <label class="visuallyhidden" id="select-acct-type{{$index}}">{{'directDeposit.label.account.type.select'|i18n}}</label>
     <span><choose-account account="alloc" class="visuallyhidden" id="account-type{{$index}}" tabindex="-1"/></span>

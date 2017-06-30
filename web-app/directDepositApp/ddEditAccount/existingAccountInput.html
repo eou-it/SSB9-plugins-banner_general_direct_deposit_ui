@@ -1,5 +1,5 @@
 <!--*******************************************************************************
-Copyright 2015 Ellucian Company L.P. and its affiliates.
+Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
 *******************************************************************************-->
 <label class="input-field-label">{{'directDeposit.label.choose.option'|i18n}}:</label><br>
 <input enter-key="setCreateFromExisting('yes')" ng-model="setup.createFromExisting" class="edit-radio" type="radio" name="create-option" value="yes" aria-labelledby="create-opt-existing"><span class="lbl radio-list" id="create-opt-existing">{{'directDeposit.label.create.from.exisiting'|i18n}}</span>
@@ -19,7 +19,7 @@ Copyright 2015 Ellucian Company L.P. and its affiliates.
                    ng-click="selectOtherAcct(existingAcct)" class="addAcct form-spacing force-break-word" id="exist-lbl{{$index}}"
                    role="menuitem" aria-label="" aria-describedby="" aria-labelledby="exist-lbl{{$index}}" tabindex="0">
                    {{existingAcct.bankRoutingInfo.bankName}}<br>
-                   <span class="no-bold">{{'directDeposit.account.label.account'|i18n}}: {{existingAcct.bankAccountNum|accountNumMask}}</span>
+                   <span class="no-bold">{{'directDeposit.account.label.account'|i18n}}: {{existingAcct.bankAccountNum}}</span>
                 </a>
             </li>
         </ul>
@@ -27,7 +27,7 @@ Copyright 2015 Ellucian Company L.P. and its affiliates.
     <div ng-show="typeIndicator==='HR'" class="row">
         <div class="pad-left">
             <span class="semi-bold">{{otherAccountSelected.bankRoutingInfo.bankName}}</span><br>
-            {{'directDeposit.account.label.account'|i18n}}: {{otherAccountSelected.bankAccountNum|accountNumMask}}<br>
+            {{'directDeposit.account.label.account'|i18n}}: {{otherAccountSelected.bankAccountNum}}<br>
         </div>
         <div class="col-xs-6 col-sm-4 col-md-4 xs-fix">
             <label ng-class="(amountErr && !(amountAmtFocused || amountPctFocused)? 'input-field-label field-error' : 'input-field-label')" >{{'directDeposit.account.label.amount'|i18n}}</label><br>

@@ -1,3 +1,7 @@
+/*******************************************************************************
+ Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
+ *******************************************************************************/
+
 package net.hedtech.banner.general
 
 import grails.converters.JSON
@@ -20,6 +24,10 @@ class UpdateAccountController {
     def createAccount() {
         def map = request?.JSON ?: params
         map.pidm = ControllerUtility.getPrincipalPidm()
+
+        // Unmask account info, as needed, for create (needed, for example, if an accounts payable account is
+        // being created based on a payroll account).
+        unmaskAccountInfoFromSessionCache(map)
 
         // default values for a new Direct Deposit account
         map.id = null
@@ -44,10 +52,16 @@ class UpdateAccountController {
 
                 //newPosition is set so we need to do some reodering as we insert
                 if(map.newPosition) {
-                    r.list = directDepositAccountCompositeService.rePrioritizeAccounts(map, map.newPosition)
+                    def reprioritizedAccounts = directDepositAccountCompositeService.rePrioritizeAccounts(map, map.newPosition)
+                    def marshalledAccounts = directDepositAccountService.marshallAccountsToMinimalStateForUi(reprioritizedAccounts)
+
+                    r.list = DirectDepositUtility.maskAccounts(marshalledAccounts)
                     render r as JSON
                 } else {
-                    render directDepositAccountCompositeService.addorUpdateAccount(map) as JSON
+                    def newAccount = directDepositAccountCompositeService.addorUpdateAccount(map)
+                    def marshalledAccount = directDepositAccountService.marshallAccountsToMinimalStateForUi(newAccount)
+
+                    render DirectDepositUtility.maskAccounts([marshalledAccount]).first() as JSON
                 }
             }
         } catch (ApplicationException e) {
@@ -63,9 +77,17 @@ class UpdateAccountController {
             removeKeyValuePairsNotWantedForUpdate(map)
             fixJSONObjectForCast(map)
 
+            // Account and routing numbers will be masked, and are not updatable anyway,
+            // so exclude them from the update.
+            map.remove('bankAccountNum')
+            map.remove('bankRoutingInfo')
+
             directDepositAccountService.validateAccountAmounts(map)
 
-            render directDepositAccountService.update(map) as JSON
+            def updatedAccount = directDepositAccountService.update(map)
+            def marshalledAccount = directDepositAccountService.marshallAccountsToMinimalStateForUi(updatedAccount)
+
+            render DirectDepositUtility.maskAccounts([marshalledAccount]).first() as JSON
 
         } catch (ApplicationException e) {
             render ControllerUtility.returnFailureMessage(e) as JSON
@@ -79,8 +101,13 @@ class UpdateAccountController {
             // Do some cleanup to prepare for update
             removeKeyValuePairsNotWantedForUpdate(map)
             fixJSONObjectForCast(map)
+            unmaskAccountInfoFromSessionCache(map)
 
-            render directDepositAccountCompositeService.rePrioritizeAccounts(map, map.newPosition) as JSON
+            def prioritizedAccounts = directDepositAccountCompositeService.rePrioritizeAccounts(map, map.newPosition)
+            def marshalledAccounts = directDepositAccountService.marshallAccountsToMinimalStateForUi(prioritizedAccounts)
+            def maskedAccounts = DirectDepositUtility.maskAccounts(marshalledAccounts)
+
+            render maskedAccounts as JSON
 
         } catch (ApplicationException e) {
             def arrayResult = [];
@@ -106,8 +133,21 @@ class UpdateAccountController {
     def reorderAllAccounts() {
         def map = request?.JSON ?: params
 
+        map.each {unmaskAccountInfoFromSessionCache(it)}
+
         try {
-            render directDepositAccountCompositeService.reorderAccounts(map) as JSON
+            def reorderedResults = directDepositAccountCompositeService.reorderAccounts(map)
+            def maskedResults = []
+
+            // First extract the first element, which is a list of "delete operation" results
+            maskedResults.add(reorderedResults[0])
+
+            // Then mask and add in the accounts (elements 1 through n in the list)
+            def marshalledAccounts = directDepositAccountService.marshallAccountsToMinimalStateForUi(reorderedResults.drop(1))
+            def maskedAccounts = DirectDepositUtility.maskAccounts(marshalledAccounts)
+            maskedResults.addAll(directDepositAccountService.marshallAccountsToMinimalStateForUi(maskedAccounts))
+
+            render maskedResults as JSON
 
         } catch (ApplicationException e) {
             def arrayResult = [];
@@ -165,6 +205,22 @@ class UpdateAccountController {
 
         } catch (ApplicationException e) {
             render ControllerUtility.returnFailureMessage(e) as JSON
+        }
+    }
+
+    def unmaskAccountInfoFromSessionCache(acct) {
+        // Unmask account info. Values needed for unmasking are stored in the session.
+        def cachedAcctInfo = DirectDepositUtility.getDirectDepositAccountInfoFromSessionCache(acct.id)
+
+        if (cachedAcctInfo) {
+            acct.bankAccountNum = cachedAcctInfo.acctNum
+            acct.bankRoutingInfo = [
+                id:             cachedAcctInfo.routing.id,
+                bankRoutingNum: cachedAcctInfo.routing.bankRoutingNum,
+                bankName:       cachedAcctInfo.routing.bankName
+            ]
+
+            DirectDepositUtility.removeDirectDepositAccountInfoFromSessionCache(acct.id)
         }
     }
 

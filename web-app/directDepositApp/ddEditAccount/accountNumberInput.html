@@ -1,5 +1,5 @@
 <!--*******************************************************************************
-Copyright 2015 Ellucian Company L.P. and its affiliates.
+Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
 *******************************************************************************-->
 <div class="row semi-bold dd-popover-client">
     <div class="edit-flex-div1">
@@ -11,7 +11,7 @@ Copyright 2015 Ellucian Company L.P. and its affiliates.
                 </div>
                 <div class="pos-relative input-layer">
                     <input ng-model="account.bankRoutingInfo.bankRoutingNum" ng-blur="routNumFocused=false; validateRoutingNum()" ng-focus="routNumFocused=true" ng-disabled="!creatingNewAccount"
-                         ng-class="[(routingNumErr && !routNumFocused ? 'input-field-error' : null)]" mask-input class="text-input-field semi-bold form-spacing" id="routing-number" type="text"
+                         ng-class="[(routingNumErr && !routNumFocused ? 'input-field-error' : null)]" class="text-input-field semi-bold form-spacing" id="routing-number" type="text"
                          placeholder="{{'directDeposit.account.label.bank.routing.num'|i18n}}" />
                     <span ng-if="routingNumErr && !routNumFocused" class="icon input-fail">
                         <span class="icon-error ellucian-font"></span>
@@ -26,8 +26,8 @@ Copyright 2015 Ellucian Company L.P. and its affiliates.
                     <sample-check-pop-over ng-show="checkBrowserLocale('en-US')" class="dd-popover" popover-img="{{'images/sample_check_290x166.png'|webAppResourcePath}}" popover-alt="{{'directDeposit.sample.check.alt.text'|i18n}}"></sample-check-pop-over>
                     <div class="pos-relative input-layer">
                         <input data-ng-model="account.bankAccountNum" ng-blur="acctNumFocused=false; validateAccountNum()" ng-focus="acctNumFocused=true" ng-disabled="!creatingNewAccount"
-                            ng-class="['text-input-field', 'semi-bold', 'form-spacing', (accountNumErr && !acctNumFocused ? 'input-field-error' : null)]" mask-input
-                            id="account-number" title="{{(creatingNewAccount?null:account.bankAccountNum|accountNumMask)}}" type="text" placeholder="{{'directDeposit.account.label.account.num'|i18n}}"/>
+                            ng-class="['text-input-field', 'semi-bold', 'form-spacing', (accountNumErr && !acctNumFocused ? 'input-field-error' : null)]"
+                            id="account-number" title="{{(creatingNewAccount?null:account.bankAccountNum)}}" type="text" placeholder="{{'directDeposit.account.label.account.num'|i18n}}"/>
                         <span ng-if="accountNumErr && !acctNumFocused" class="icon input-fail">
                             <span class="icon-error ellucian-font"></span>
                         </span>

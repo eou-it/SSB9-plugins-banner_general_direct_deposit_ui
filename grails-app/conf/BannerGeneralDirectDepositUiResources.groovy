@@ -66,7 +66,6 @@ modules = {
 
         // Filters
         resource url: [plugin: 'banner-general-direct-deposit-ui', file: 'directDepositApp/common/filters/i18n-filter.js']
-        resource url: [plugin: 'banner-general-direct-deposit-ui', file: 'directDepositApp/common/filters/accountNumMask-filter.js']
         resource url: [plugin: 'banner-general-direct-deposit-ui', file: 'directDepositApp/common/filters/webAppResourcePath-filter.js']
 
         // Directives
