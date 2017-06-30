@@ -1,3 +1,7 @@
+/*******************************************************************************
+ Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
+ *******************************************************************************/
+
 package net.hedtech.banner.general
 
 import net.hedtech.banner.security.XssSanitizer
