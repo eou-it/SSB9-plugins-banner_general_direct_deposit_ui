@@ -119,7 +119,6 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
             };
             addAlertRoleToNotificationCenter();
 
-            ddListingService.mainListingControllerScope = $scope;
 
             var acctPromises = [ddListingService.getApListing().$promise];
 
@@ -133,7 +132,8 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                     } else {
                         $scope.apAccountList = response;
 
-                        if (ddListingService.hasMultipleApAccounts()) {
+                        // only show A/P error message on initial page load
+                        if (!ddListingService.mainListingControllerScope && $scope.apAccountList.length > 1) {
                             $stateParams.onLoadNotifications.push({
                                 message: 'directDeposit.invalid.multiple.ap.accounts',
                                 messageType: $scope.notificationErrorType
@@ -207,6 +207,8 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                     if ($scope.isEmployee) {
                         $scope.calculateAmountsBasedOnPayHistory();
                     }
+
+                    ddListingService.mainListingControllerScope = $scope;
 
                     displayNotificationsOnStateLoad();
                 });
@@ -492,10 +494,15 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
 
             var hasDirtyApAccount = _.some($scope.apAccountList, function (acct) {
                 return ddAccountDirtyService.isAccountDirty(acct);
-            });
+            }),
+                notifications = [];
 
             if (hasDirtyApAccount && ddListingService.hasMultipleApAccounts()) {
                 notificationCenterService.displayNotification('directDeposit.invalid.multiple.ap.accounts', $scope.notificationErrorType);
+                notifications.push({
+                    message: 'directDeposit.invalid.multiple.ap.accounts',
+                    messageType: $scope.notificationErrorType
+                });
             }
             else {
                 // AP account will already be updated if it has a corresponding Payroll account
@@ -521,11 +528,11 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                 $q.all(promises).then(
                     // SUCCESSFULLY RESOLVE
                     function () {
-                        var notifications = [{
+                        notifications.push({
                             message: 'default.save.success.message',
                             messageType: $scope.notificationSuccessType,
                             flashType: $scope.flashNotification
-                        }];
+                        });
 
                         $state.go('directDepositListing',
                             {onLoadNotifications: notifications},
