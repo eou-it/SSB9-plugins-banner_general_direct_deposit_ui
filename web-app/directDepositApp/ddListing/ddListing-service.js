@@ -45,10 +45,10 @@ directDepositApp.service('ddListingService', ['directDepositService', '$resource
         this.init = false;
     };
 
-    this.flag = true;
-    this.returnTrueOnce = function(){
-        var result = this.flag;
-        this.flag = false;
+    this.firstTimeCtrlInitialized = true;
+    this.isFirstTimeCtrlInitialized = function(){
+        var result = this.firstTimeCtrlInitialized;
+        this.firstTimeCtrlInitialized = false;
         return result;
     };
 

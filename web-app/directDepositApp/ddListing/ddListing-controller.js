@@ -135,7 +135,7 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                         $scope.apAccountList = response;
 
                         // only show A/P error message on initial page load
-                        if (ddListingService.returnTrueOnce() && $scope.apAccountList.length > 1) {
+                        if (ddListingService.isFirstTimeCtrlInitialized() && $scope.apAccountList.length > 1) {
                             $stateParams.onLoadNotifications.push({
                                 message: 'directDeposit.invalid.multiple.ap.accounts',
                                 messageType: $scope.notificationErrorType
@@ -209,7 +209,7 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                     if ($scope.isEmployee) {
                         $scope.calculateAmountsBasedOnPayHistory();
                     }
-                    
+
                     displayNotificationsOnStateLoad();
                 });
             });
