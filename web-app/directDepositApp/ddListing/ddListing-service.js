@@ -45,6 +45,13 @@ directDepositApp.service('ddListingService', ['directDepositService', '$resource
         this.init = false;
     };
 
+    this.flag = true;
+    this.returnTrueOnce = function(){
+        var result = this.flag;
+        this.flag = false;
+        return result;
+    };
+
     this.getApAccount = function() {
         return this.mainListingControllerScope.apAccount;
     };
