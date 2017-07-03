@@ -91,6 +91,8 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
             // if the listing controller has already been initialized, then abort
             if(ddListingService.isInit()) return;
 
+            ddListingService.mainListingControllerScope = $scope;
+
             var addAlertRoleToNotificationCenter = function(){
                 var work = function(){
                     // check if notification center is in DOM yet
@@ -133,7 +135,7 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                         $scope.apAccountList = response;
 
                         // only show A/P error message on initial page load
-                        if (!ddListingService.mainListingControllerScope && $scope.apAccountList.length > 1) {
+                        if (ddListingService.isFirstTimeCtrlInitialized() && $scope.apAccountList.length > 1) {
                             $stateParams.onLoadNotifications.push({
                                 message: 'directDeposit.invalid.multiple.ap.accounts',
                                 messageType: $scope.notificationErrorType
@@ -207,8 +209,6 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                     if ($scope.isEmployee) {
                         $scope.calculateAmountsBasedOnPayHistory();
                     }
-
-                    ddListingService.mainListingControllerScope = $scope;
 
                     displayNotificationsOnStateLoad();
                 });
