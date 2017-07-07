@@ -5,14 +5,8 @@
 package net.hedtech.banner.general
 
 import grails.converters.JSON
-
-import net.hedtech.banner.DateUtility
 import net.hedtech.banner.exceptions.ApplicationException
-import net.hedtech.banner.general.crossproduct.BankRoutingInfo
-
-import org.codehaus.groovy.grails.plugins.web.taglib.ValidationTagLib
 import org.codehaus.groovy.grails.web.json.JSONObject
-import org.codehaus.groovy.runtime.InvokerHelper
 
 class UpdateAccountController {
 
@@ -161,11 +155,10 @@ class UpdateAccountController {
         def map = request?.JSON ?: params
 
         try {
-            def accounts = [:]
             def model = [:]
-            accounts = directDepositAccountService.setupAccountsForDelete(map)
+            def accounts = directDepositAccountService.setupAccountsForDelete(map)
             def result = directDepositAccountService.delete(accounts.toBeDeleted)
-            
+
             model.messages = accounts.messages
             model.messages.add(result)
             
