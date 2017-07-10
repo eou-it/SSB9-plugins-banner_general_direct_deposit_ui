@@ -105,7 +105,7 @@ class UpdateAccountControllerTests extends BaseIntegrationTestCase {
         controller.request.contentType = "text/json"
         controller.request.json = """{
             id: ${existingAccts[1].id},
-            version:0,
+            version:${existingAccts[1].version},
             class:"net.hedtech.banner.general.overall.DirectDepositAccount",
             accountType:"S",
             addressSequenceNum:1,
@@ -132,7 +132,6 @@ class UpdateAccountControllerTests extends BaseIntegrationTestCase {
             lastModified:"2016-02-26T19:48:41Z",
             lastModifiedBy:"mye000001",
             percent:100,
-            pidm:${pidm},
             priority:2,
             status:"A"
         }""".toString()
@@ -150,26 +149,28 @@ class UpdateAccountControllerTests extends BaseIntegrationTestCase {
         loginSSB 'HOSH00018', '111111'
 
         def pidm = ControllerUtility.getPrincipalPidm()
-        def existingAccts = controller.directDepositAccountService.getActiveApAccounts(pidm) //36732
-        
+        def existingAccts = controller.directDepositAccountService.getActiveApAccounts(pidm)
+        existingAccts.each {
+            it.discard()
+            it.bankRoutingInfo.discard()
+        }
+        DirectDepositUtility.maskAccounts(existingAccts)
+
         controller.request.contentType = "text/json"
         controller.request.json = """[{
             id: ${existingAccts[0].id},
-            class:"net.hedtech.banner.general.overall.DirectDepositAccount",
             accountType:"C",
             addressSequenceNum:1,
             addressTypeCode:"PR",
             amount:null,
             apAchTransactionTypeCode:null,
             apIndicator:"A",
-            bankAccountNum:"9876543",
+            bankAccountNum:"xxx6543",
             bankRoutingInfo:{
-                class:"net.hedtech.banner.general.crossproduct.BankRoutingInfo",
-                bankName:"First National Bank",
-                bankRoutingNum:"234798944",
-                dataOrigin:null,
-                lastModified:"1999-08-17T03:34:22Z",
-                lastModifiedBy:"PAYROLL"
+                id: ${existingAccts[0].bankRoutingInfo.id},
+                version: ${existingAccts[0].bankRoutingInfo.version},
+                bankName:"Chase Manhattan Bank",
+                bankRoutingNum:"xxxx8944"
             },
             dataOrigin:"Banner",
             documentType:"D",
@@ -181,10 +182,10 @@ class UpdateAccountControllerTests extends BaseIntegrationTestCase {
             lastModified:"2016-02-26T19:48:41Z",
             lastModifiedBy:"mye000001",
             percent:100,
-            pidm:${pidm},
             priority:3,
             status:"P",
-            apDelete:true
+            apDelete:true,
+            deleteMe:true
         }]""".toString()
 
         controller.deleteAccounts()
@@ -194,6 +195,52 @@ class UpdateAccountControllerTests extends BaseIntegrationTestCase {
         assertNotNull data
         assertEquals 1, data[0].size()
         assertEquals true, data[0][0]
+    }
+
+    @Test
+    void testDeleteDualAccount() {
+        loginSSB 'GDP000002', '111111'
+
+        def pidm = ControllerUtility.getPrincipalPidm()
+        def existingAccts = controller.directDepositAccountService.getActiveApAccounts(pidm)
+        existingAccts.each {
+            it.discard()
+            it.bankRoutingInfo.discard()
+        }
+        DirectDepositUtility.maskAccounts(existingAccts)
+
+        controller.request.contentType = "text/json"
+        controller.request.json = """[{
+            id: ${existingAccts[0].id},
+            accountType:"C",
+            amount:null,
+            apIndicator:"A",
+            bankAccountNum:"xxx6543",
+            bankRoutingInfo:{
+                id: ${existingAccts[0].bankRoutingInfo.id},
+                version: ${existingAccts[0].bankRoutingInfo.version},
+                bankName:"Chase Manhattan Bank",
+                bankRoutingNum:"xxxx8944"
+            },
+            documentType:"D",
+            hrIndicator:"I",
+            intlAchTransactionIndicator:"N",
+            isoCode:null,
+            percent:100,
+            priority:3,
+            status:"A",
+            apDelete:true,
+            deleteMe:true
+        }]""".toString()
+
+        controller.deleteAccounts()
+        def dataForNullCheck = controller.response.contentAsString
+        def data = JSON.parse( dataForNullCheck )
+
+        assertNotNull data
+        assertEquals 'PR', data[0].activeType
+        assertEquals 'xxx6543', data[0].acct
+        assertTrue data[1][0]
     }
 
     @Test
@@ -208,7 +255,6 @@ class UpdateAccountControllerTests extends BaseIntegrationTestCase {
             "id": ${existingAccts[0].id},
             "version": 0,
             "dataOrigin": "Banner",
-            "pidm": ${pidm},
             "status": "A",
             "documentType": "D",
             "priority": 1,
@@ -264,7 +310,6 @@ class UpdateAccountControllerTests extends BaseIntegrationTestCase {
                 "id": ${existingAccts[1].id},
                 "version": 0,
                 "dataOrigin": "Banner",
-                "pidm": ${pidm},
                 "status": "A",
                 "documentType": "D",
                 "priority": 1,
@@ -300,7 +345,6 @@ class UpdateAccountControllerTests extends BaseIntegrationTestCase {
                 "id": ${existingAccts[0].id},
                 "version": 0,
                 "dataOrigin": "Banner",
-                "pidm": ${pidm},
                 "status": "A",
                 "documentType": "D",
                 "priority": 2,
@@ -375,7 +419,7 @@ class UpdateAccountControllerTests extends BaseIntegrationTestCase {
         def data = JSON.parse( dataForNullCheck )
 
         assertNotNull data
-        assertEquals data[0][0], true
+        assertTrue data[0][0]
         assertEquals 'xxxx3546', data[1].bankAccountNum
         assertEquals 'xxxxx0542', data[2].bankAccountNum
     }

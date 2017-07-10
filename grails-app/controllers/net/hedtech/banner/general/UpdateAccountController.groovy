@@ -91,6 +91,8 @@ class UpdateAccountController {
     def reorderAccounts() {
         def map = request?.JSON ?: params
 
+        map.pidm = ControllerUtility.getPrincipalPidm()
+
         try {
             // Do some cleanup to prepare for update
             removeKeyValuePairsNotWantedForUpdate(map)
@@ -127,7 +129,10 @@ class UpdateAccountController {
     def reorderAllAccounts() {
         def map = request?.JSON ?: params
 
-        map.each {unmaskAccountInfoFromSessionCache(it)}
+        map.each {
+            unmaskAccountInfoFromSessionCache(it)
+            it.pidm = ControllerUtility.getPrincipalPidm()
+        }
 
         try {
             def reorderedResults = directDepositAccountCompositeService.reorderAccounts(map)
@@ -154,11 +159,19 @@ class UpdateAccountController {
     def deleteAccounts() {
         def map = request?.JSON ?: params
 
+        map.each {
+            unmaskAccountInfoFromSessionCache(it)
+            it.pidm = ControllerUtility.getPrincipalPidm()
+        }
+
         try {
             def model = [:]
             def accounts = directDepositAccountService.setupAccountsForDelete(map)
             def result = directDepositAccountService.delete(accounts.toBeDeleted)
 
+            accounts.messages.each {
+                it.acct = DirectDepositUtility.maskBankInfo(it.acct)
+            }
             model.messages = accounts.messages
             model.messages.add(result)
             
