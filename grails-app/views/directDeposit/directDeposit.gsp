@@ -23,8 +23,8 @@ Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
         <meta name="menuBaseURL" content="${request.contextPath}/ssb"/>
         <meta name="menuBase" content="${request.contextPath}"/>
         <meta charset="${message(code: 'default.character.encoding')}">
-        <g:set var="applicationName" value= "${grails.util.Metadata.current.getApplicationName()}"/>
-        <meta name="applicationName" content="${applicationName}">
+        <g:set var="applicationContextRoot" value= "${application.contextPath}"/>
+        <meta name="applicationContextRoot" content="${applicationContextRoot}">
 
         <g:if test="${message(code: 'default.language.direction')  == 'rtl'}">
             <r:require modules="directDepositAppRTL"/>
@@ -48,7 +48,7 @@ Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
             // page or App Nav, and are not "calling pages."
             var referrerUrl = document.referrer,
                 excludedRegex = [
-                    /\/${applicationName}\/login\/auth?/,
+                    /\${applicationContextRoot}\/login\/auth?/,
                     /\/seamless/
                 ],
                 isExcluded;
