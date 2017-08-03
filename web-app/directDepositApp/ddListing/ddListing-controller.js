@@ -64,17 +64,27 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
          * Select the one AP account that will be displayed to user, according to business rules.
          */
         this.getApAccountFromResponse = function(response) {
-            var account = null;
-
-            if (response.length) {
-                // Probably only one account has been returned, but if more than one, return the one with the
-                // highest priority (i.e. lowest integer value).
-                _.each(response, function(acctFromResponse) {
-                    if (account === null || acctFromResponse.priority < account.priority) {
+            var account = null,
+                getHighestPriorityAccount = function(acctFromResponse) {
+                    if (!account || acctFromResponse.priority < account.priority) {
                         account = acctFromResponse;
                     }
-                });
+                };
 
+            // Probably only one account has been returned, but if more than one, return the active one with the
+            // highest priority (i.e. lowest integer value).  If none are active, then return the inactive one
+            // with the highest priority.
+
+            // Find highest priority active account
+            _.each(response.filter(function(acctFromResponse) {
+                return acctFromResponse.status !== 'I';
+            }), getHighestPriorityAccount);
+
+            if (!account) {
+                // Find highest priority inactive account
+                _.each(response.filter(function (acctFromResponse) {
+                    return acctFromResponse.status === 'I';
+                }), getHighestPriorityAccount);
             }
 
             return account;
