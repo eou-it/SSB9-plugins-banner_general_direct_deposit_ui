@@ -392,7 +392,12 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
                     amountType: 'remaining'
                 };
 
-                $scope.setup.hasOtherAccounts = editAcctProperties.otherAccounts.length > 0;
+                // Determine if other accounts exist.  For the purposes this will be used for, we do not
+                // include inactive accounts in this consideration.
+                $scope.setup.hasOtherAccounts = editAcctProperties.otherAccounts.filter(function(acct) {
+                                                    return acct.status !== 'I';
+                                                }).length > 0;
+
                 $scope.setup.otherAccounts = editAcctProperties.otherAccounts;
                 $scope.setup.createFromExisting;
 
