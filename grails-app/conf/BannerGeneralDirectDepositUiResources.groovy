@@ -3,11 +3,11 @@
  *******************************************************************************/
 
 modules = {
-    /* Override UI Bootstrap 0.10.0 to use version 0.13.3
+    /* Override UI Bootstrap ui-bootstrap-tpls to use version 0.13.3
      * Override AngularUI Router 0.2.10 to use version 0.2.15 */
     overrides {
         'angularApp' {
-            resource id: [plugin: 'banner-ui-ss', file: 'js/angular/ui-bootstrap-tpls-0.10.0.min.js'], url: [plugin: 'banner-general-direct-deposit-ui', file: 'js/angular/ui-bootstrap-tpls-0.13.3.min.js']
+            resource id: [plugin: 'banner-ui-ss', file: 'js/angular/ui-bootstrap-tpls.min.js'], url: [plugin: 'banner-general-direct-deposit-ui', file: 'js/angular/ui-bootstrap-tpls-0.13.3.min.js']
             resource id: [plugin: 'banner-ui-ss', file: 'js/angular/angular-ui-router.min.js'], url: [plugin: 'banner-general-direct-deposit-ui', file: 'js/angular/angular-ui-router.min.js']
         }
     }
@@ -17,13 +17,13 @@ modules = {
     }
 
     'commonComponents' {
-        resource url:[plugin: 'banner-general-direct-deposit-ui', file: 'js/xe-components/xe-ui-components.js']
+        resource url:[file: 'js/xe-components/xe-ui-components.js']
     }
     'commonComponentsLTR' {
-        resource url:[plugin: 'banner-general-direct-deposit-ui', file: 'css/xe-components/xe-ui-components.css']
+        resource url:[file: 'css/xe-components/xe-ui-components.css']
     }
     'commonComponentsRTL' {
-        resource url:[plugin: 'banner-general-direct-deposit-ui', file: 'css/xe-components/xe-ui-components-rtl.css']
+        resource url:[file: 'css/xe-components/xe-ui-components-rtl.css']
     }
 
     'bootstrapLTR' {
