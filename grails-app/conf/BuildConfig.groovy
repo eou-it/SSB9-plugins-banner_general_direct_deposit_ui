@@ -28,7 +28,7 @@ grails.war.resources = { stagingDir ->
     grails.plugin.location.'banner-general-common-ui-ss'      = "../banner_general_common_ui_ss.git"
     grails.plugin.location.'domain-extension'                 = "../domain_extension.git"
     grails.plugin.location.'web-app-extensibility'            = "../web-app-extensibility.git"
-    
+
 grails.project.dependency.resolution = {
 
     inherits "global" // inherit Grails' default dependencies
@@ -50,7 +50,6 @@ grails.project.dependency.resolution = {
         compile ':cache-headers:1.1.7'
         test ':code-coverage:2.0.3-3'
         runtime ":rendering:1.0.0"
-        compile ':restful-api:1.0.0'
     }
 
     dependencies {
