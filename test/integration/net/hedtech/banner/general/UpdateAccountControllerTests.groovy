@@ -37,6 +37,7 @@ class UpdateAccountControllerTests extends BaseIntegrationTestCase {
 
     @Test
     void testCreateAccount() {
+        // Implicitly tests DirectDepositAccountCompositeService.rePrioritizeAccounts
         loginSSB 'GDP000005', '111111'
 
         controller.request.contentType = "text/json"
@@ -65,6 +66,117 @@ class UpdateAccountControllerTests extends BaseIntegrationTestCase {
         assertNotNull dataList
         assertEquals 4, dataList.size()
         assertEquals 'xxxxxx1515', dataList[1].bankAccountNum
+    }
+
+    @Test
+    void testCreateAccountAtLastPriorityWithExistingRemainingAccountAndCheckLastModified() {
+        // Implicitly tests DirectDepositAccountCompositeService.rePrioritizeAccounts
+        def USER = 'GDP000005'
+        def GRAILS = 'GRAILS'
+        loginSSB USER, '111111'
+
+        def pidm = ControllerUtility.getPrincipalPidm()
+
+        controller.request.contentType = "text/json"
+        controller.request.json = '''{
+            pidm:null,
+            status:null,
+            apIndicator:"I",
+            hrIndicator:"A",
+            bankAccountNum:"0822051515",
+            amount:null,
+            percent:10,
+            accountType:"C",
+            bankRoutingInfo:{
+                bankName:"First Fidelity",
+                bankRoutingNum:"123478902",
+            },
+            amountType:"amount",
+            priority:4,
+            newPosition:4
+        }'''
+
+        controller.createAccount()
+        def dataForNullCheck = controller.response.contentAsString
+        def updatedAccts = controller.directDepositAccountCompositeService.getUserHrAllocations(pidm).allocations //36743
+
+        // "lastModified" user ID and timestamp should change only on explicitly modified records.  Reprioritization
+        // should not change those values in records whose position did not change.
+        assertEquals 1,            updatedAccts[0].priority
+        assertEquals '736900542',  updatedAccts[0].bankAccountNum
+        assertEquals GRAILS,       updatedAccts[0].lastModifiedBy
+
+        assertEquals 2,            updatedAccts[1].priority
+        assertEquals '95003546',   updatedAccts[1].bankAccountNum
+        assertEquals GRAILS,       updatedAccts[1].lastModifiedBy
+
+        // Although designated for priority 4, this account is put at 3 due to existing "Remaining" account
+        assertEquals 3,            updatedAccts[2].priority
+        assertEquals '0822051515', updatedAccts[2].bankAccountNum
+        assertEquals USER,         updatedAccts[2].lastModifiedBy
+
+        assertEquals 4,            updatedAccts[3].priority
+        assertEquals '67674852',   updatedAccts[3].bankAccountNum
+        assertEquals USER,         updatedAccts[3].lastModifiedBy
+
+        assertTrue('Allocation "modified by" times differ.', Math.abs(updatedAccts[0].lastModified.getTime() - updatedAccts[1].lastModified.getTime()) < 2000)
+        assertTrue('Allocation "modified by" times are similar.', Math.abs(updatedAccts[1].lastModified.getTime() - updatedAccts[2].lastModified.getTime()) > 2000)
+        assertTrue('Allocation "modified by" times differ.', Math.abs(updatedAccts[2].lastModified.getTime() - updatedAccts[3].lastModified.getTime()) < 2000)
+    }
+
+    @Test
+    void testCreateAccountAtPriorityTwoAndCheckLastModified() {
+        // Implicitly tests DirectDepositAccountCompositeService.rePrioritizeAccounts
+        def USER = 'GDP000005'
+        def GRAILS = 'GRAILS'
+        loginSSB USER, '111111'
+
+        def pidm = ControllerUtility.getPrincipalPidm()
+
+        controller.request.contentType = "text/json"
+        controller.request.json = '''{
+            pidm:null,
+            status:null,
+            apIndicator:"I",
+            hrIndicator:"A",
+            bankAccountNum:"0822051515",
+            amount:null,
+            percent:10,
+            accountType:"C",
+            bankRoutingInfo:{
+                bankName:"First Fidelity",
+                bankRoutingNum:"123478902",
+            },
+            amountType:"amount",
+            priority:2,
+            newPosition:2
+        }'''
+
+        controller.createAccount()
+        def dataForNullCheck = controller.response.contentAsString
+        def updatedAccts = controller.directDepositAccountCompositeService.getUserHrAllocations(pidm).allocations //36743
+
+        // "lastModified" user ID and timestamp should change only on explicitly modified records.  Reprioritization
+        // should not change those values in records whose position did not change.
+        assertEquals 1,            updatedAccts[0].priority
+        assertEquals '736900542',  updatedAccts[0].bankAccountNum
+        assertEquals GRAILS,     updatedAccts[0].lastModifiedBy
+
+        assertEquals 2,            updatedAccts[1].priority
+        assertEquals '0822051515', updatedAccts[1].bankAccountNum
+        assertEquals USER,         updatedAccts[1].lastModifiedBy
+
+        assertEquals 3,            updatedAccts[2].priority
+        assertEquals '95003546',   updatedAccts[2].bankAccountNum
+        assertEquals USER,         updatedAccts[2].lastModifiedBy
+
+        assertEquals 4,            updatedAccts[3].priority
+        assertEquals '67674852',   updatedAccts[3].bankAccountNum
+        assertEquals USER,         updatedAccts[3].lastModifiedBy
+
+        assertTrue('Allocation "modified by" times are similar.', Math.abs(updatedAccts[0].lastModified.getTime() - updatedAccts[1].lastModified.getTime()) > 2000)
+        assertTrue('Allocation "modified by" times differ.', Math.abs(updatedAccts[1].lastModified.getTime() - updatedAccts[2].lastModified.getTime()) < 2000)
+        assertTrue('Allocation "modified by" times differ.', Math.abs(updatedAccts[2].lastModified.getTime() - updatedAccts[3].lastModified.getTime()) < 2000)
     }
 
     @Test
@@ -299,6 +411,78 @@ class UpdateAccountControllerTests extends BaseIntegrationTestCase {
     }
 
     @Test
+    void testReorderAccountsAndCheckLastModified() {
+        // Implicitly tests DirectDepositAccountCompositeService.rePrioritizeAccounts
+        def USER = 'GDP000005'
+        def GRAILS = 'GRAILS'
+        loginSSB USER, '111111'
+
+        def pidm = ControllerUtility.getPrincipalPidm()
+        def existingAccts = controller.directDepositAccountCompositeService.getUserHrAllocations(pidm).allocations //36743
+
+        // Changing from priority 1 to 2 (see newPosition)
+        controller.request.contentType = "text/json"
+        controller.request.json = """{
+            "id": ${existingAccts[0].id},
+            "version": 0,
+            "dataOrigin": "Banner",
+            "status": "A",
+            "documentType": "D",
+            "priority": 1,
+            "apIndicator": "I",
+            "hrIndicator": "A",
+            "lastModified": "2016-04-08T16:14:01Z",
+            "lastModifiedBy": "mye000005",
+            "bankAccountNum": "736900542",
+            "bankRoutingInfo": {
+                "class": "net.hedtech.banner.general.crossproduct.BankRoutingInfo",
+                "id": 2,
+                "version": 0,
+                "bankName": "Chase Manhattan Bank",
+                "bankRoutingNum": "748972234",
+                "dataOrigin": null,
+                "lastModified": "1999-08-17T03:34:22Z",
+                "lastModifiedBy": "PAYROLL"
+            },
+            "amount": 77,
+            "percent": null,
+            "accountType": "C",
+            "addressTypeCode": null,
+            "addressSequenceNum": null,
+            "intlAchTransactionIndicator": "N",
+            "isoCode": null,
+            "apAchTransactionTypeCode": null,
+            "iatAddressTypeCode": null,
+            "iatAddessSequenceNum": null,
+            "amountType": "amount",
+            "calculatedAmount": "\$77.00",
+            "allocation": "\$77.00",
+            "newPosition": 2
+        }""".toString()
+
+        controller.reorderAccounts()
+        def dataForNullCheck = controller.response.contentAsString
+        def updatedAccts = controller.directDepositAccountCompositeService.getUserHrAllocations(pidm).allocations //36743
+
+        // "lastModified" user ID and timestamp should change only on explicitly modified records.  Reprioritization
+        // should not change those values in records whose position did not change.
+        assertEquals 1,            updatedAccts[0].priority
+        assertEquals '95003546',  updatedAccts[0].bankAccountNum
+        assertEquals USER,     updatedAccts[0].lastModifiedBy
+
+        assertEquals 2,            updatedAccts[1].priority
+        assertEquals '736900542', updatedAccts[1].bankAccountNum
+        assertEquals USER,         updatedAccts[1].lastModifiedBy
+
+        assertEquals 3,            updatedAccts[2].priority
+        assertEquals '67674852',   updatedAccts[2].bankAccountNum
+        assertEquals GRAILS,         updatedAccts[2].lastModifiedBy
+
+        assertTrue('Allocation "modified by" times differ.', Math.abs(updatedAccts[0].lastModified.getTime() - updatedAccts[1].lastModified.getTime()) < 2000)
+        assertTrue('Allocation "modified by" times are similar.', Math.abs(updatedAccts[1].lastModified.getTime() - updatedAccts[2].lastModified.getTime()) > 2000)
+    }
+
+    @Test
     void testReorderAllAccounts() {
         loginSSB 'GDP000005', '111111'
 
@@ -422,6 +606,726 @@ class UpdateAccountControllerTests extends BaseIntegrationTestCase {
         assertTrue data[0][0]
         assertEquals 'xxxx3546', data[1].bankAccountNum
         assertEquals 'xxxxx0542', data[2].bankAccountNum
+    }
+
+    @Test
+    void testReorderAllAccountsBySwappingFirstTwoAndCheckingLastModified() {
+        def USER = 'GDP000005'
+        def GRAILS = 'GRAILS'
+        loginSSB USER, '111111'
+
+        def pidm = ControllerUtility.getPrincipalPidm()
+        def existingAccts = controller.directDepositAccountCompositeService.getUserHrAllocations(pidm).allocations //36743
+
+        controller.request.contentType = "text/json"
+        controller.request.json = """[{
+                "id": ${existingAccts[1].id},
+                "version": 0,
+                "dataOrigin": "Banner",
+                "status": "A",
+                "documentType": "D",
+                "priority": 1,
+                "apIndicator": "I",
+                "hrIndicator": "A",
+                "lastModified": "2016-04-07T19:54:44Z",
+                "lastModifiedBy": "mye000005",
+                "bankAccountNum": "95003546",
+                "bankRoutingInfo": {
+                    "class": "net.hedtech.banner.general.crossproduct.BankRoutingInfo",
+                    "id": 6,
+                    "version": 5,
+                    "bankName": "First National Bank",
+                    "bankRoutingNum": "234798944",
+                    "dataOrigin": "GRAILS",
+                    "lastModified": "2010-01-01T05:00:00Z",
+                    "lastModifiedBy": "GRAILS"
+                },
+                "amount": null,
+                "percent": 50,
+                "accountType": "S",
+                "addressTypeCode": null,
+                "addressSequenceNum": null,
+                "intlAchTransactionIndicator": "N",
+                "isoCode": null,
+                "apAchTransactionTypeCode": null,
+                "iatAddressTypeCode": null,
+                "iatAddessSequenceNum": null,
+                "amountType": "percentage",
+                "calculatedAmount": "\$1,397.74",
+                "allocation": "50%"
+            }, {
+                "id": ${existingAccts[0].id},
+                "version": 0,
+                "dataOrigin": "Banner",
+                "status": "A",
+                "documentType": "D",
+                "priority": 2,
+                "apIndicator": "I",
+                "hrIndicator": "A",
+                "lastModified": "2016-04-07T19:54:44Z",
+                "lastModifiedBy": "mye000005",
+                "bankAccountNum": "736900542",
+                "bankRoutingInfo": {
+                    "class": "net.hedtech.banner.general.crossproduct.BankRoutingInfo",
+                    "id": 2,
+                    "version": 0,
+                    "bankName": "Chase Manhattan Bank",
+                    "bankRoutingNum": "748972234",
+                    "dataOrigin": null,
+                    "lastModified": "1999-08-17T03:34:22Z",
+                    "lastModifiedBy": "PAYROLL"
+                },
+                "amount": 77,
+                "percent": null,
+                "accountType": "C",
+                "addressTypeCode": null,
+                "addressSequenceNum": null,
+                "intlAchTransactionIndicator": "N",
+                "isoCode": null,
+                "apAchTransactionTypeCode": null,
+                "iatAddressTypeCode": null,
+                "iatAddessSequenceNum": null,
+                "amountType": "amount",
+                "calculatedAmount": "\$77.00",
+                "allocation": "\$77.00"
+            }, {
+                "id": ${existingAccts[2].id},
+                "version": 0,
+                "dataOrigin": "Banner",
+                "pidm": ${pidm},
+                "status": "A",
+                "documentType": "D",
+                "priority": 3,
+                "apIndicator": "I",
+                "hrIndicator": "A",
+                "lastModified": "2016-04-07T19:54:44Z",
+                "lastModifiedBy": "mye000005",
+                "bankAccountNum": "67674852",
+                "bankRoutingInfo": {
+                    "class": "net.hedtech.banner.general.crossproduct.BankRoutingInfo",
+                    "id": 6,
+                    "version": 5,
+                    "bankName": "First National Bank",
+                    "bankRoutingNum": "234798944",
+                    "dataOrigin": "GRAILS",
+                    "lastModified": "2010-01-01T05:00:00Z",
+                    "lastModifiedBy": "GRAILS"
+                },
+                "amount": null,
+                "percent": 100,
+                "accountType": "C",
+                "addressTypeCode": null,
+                "addressSequenceNum": null,
+                "intlAchTransactionIndicator": "N",
+                "isoCode": null,
+                "apAchTransactionTypeCode": null,
+                "iatAddressTypeCode": null,
+                "iatAddessSequenceNum": null,
+                "amountType": "remaining",
+                "calculatedAmount": "\$1,320.73",
+                "allocation": "Remaining"
+        }]""".toString()
+
+        controller.reorderAllAccounts()
+        def dataForNullCheck = controller.response.contentAsString
+        def data = JSON.parse( dataForNullCheck )
+
+        assertNotNull data
+
+        def updatedAccts = controller.directDepositAccountCompositeService.getUserHrAllocations(pidm).allocations //36743
+
+        // "lastModified" user ID and timestamp should change only on explicitly modified records.  Reprioritization
+        // should not change those values in records whose position did not change.
+        assertEquals 1,           updatedAccts[0].priority
+        assertEquals '95003546',  updatedAccts[0].bankAccountNum
+        assertEquals USER,        updatedAccts[0].lastModifiedBy
+
+        assertEquals 2,           updatedAccts[1].priority
+        assertEquals '736900542', updatedAccts[1].bankAccountNum
+        assertEquals USER,        updatedAccts[1].lastModifiedBy
+
+        assertEquals 3,           updatedAccts[2].priority
+        assertEquals '67674852',  updatedAccts[2].bankAccountNum
+        assertEquals GRAILS,    updatedAccts[2].lastModifiedBy
+
+        assertTrue('Allocation "modified by" times differ.', Math.abs(updatedAccts[0].lastModified.getTime() - updatedAccts[1].lastModified.getTime()) < 2000)
+        assertTrue('Allocation "modified by" times are similar.', Math.abs(updatedAccts[1].lastModified.getTime() - updatedAccts[2].lastModified.getTime()) > 2000)
+    }
+
+    @Test
+    void testReorderAllAccountsBySwappingLastTwoAndCheckingLastModified() {
+        def USER = 'GDP000005'
+        def GRAILS = 'GRAILS'
+        loginSSB USER, '111111'
+
+        def pidm = ControllerUtility.getPrincipalPidm()
+        def existingAccts = controller.directDepositAccountCompositeService.getUserHrAllocations(pidm).allocations //36743
+
+        controller.request.contentType = "text/json"
+        controller.request.json = """[{
+                "id": ${existingAccts[0].id},
+                "version": 0,
+                "dataOrigin": "Banner",
+                "status": "A",
+                "documentType": "D",
+                "priority": 1,
+                "apIndicator": "I",
+                "hrIndicator": "A",
+                "lastModified": "2016-04-07T19:54:44Z",
+                "lastModifiedBy": "mye000005",
+                "bankAccountNum": "736900542",
+                "bankRoutingInfo": {
+                    "class": "net.hedtech.banner.general.crossproduct.BankRoutingInfo",
+                    "id": 2,
+                    "version": 0,
+                    "bankName": "Chase Manhattan Bank",
+                    "bankRoutingNum": "748972234",
+                    "dataOrigin": null,
+                    "lastModified": "1999-08-17T03:34:22Z",
+                    "lastModifiedBy": "PAYROLL"
+                },
+                "amount": 77,
+                "percent": null,
+                "accountType": "C",
+                "addressTypeCode": null,
+                "addressSequenceNum": null,
+                "intlAchTransactionIndicator": "N",
+                "isoCode": null,
+                "apAchTransactionTypeCode": null,
+                "iatAddressTypeCode": null,
+                "iatAddessSequenceNum": null,
+                "amountType": "amount",
+                "calculatedAmount": "\$77.00",
+                "allocation": "\$77.00"
+            }, {
+                "id": ${existingAccts[2].id},
+                "version": 0,
+                "dataOrigin": "Banner",
+                "pidm": ${pidm},
+                "status": "A",
+                "documentType": "D",
+                "priority": 2,
+                "apIndicator": "I",
+                "hrIndicator": "A",
+                "lastModified": "2016-04-07T19:54:44Z",
+                "lastModifiedBy": "mye000005",
+                "bankAccountNum": "67674852",
+                "bankRoutingInfo": {
+                    "class": "net.hedtech.banner.general.crossproduct.BankRoutingInfo",
+                    "id": 6,
+                    "version": 5,
+                    "bankName": "First National Bank",
+                    "bankRoutingNum": "234798944",
+                    "dataOrigin": "GRAILS",
+                    "lastModified": "2010-01-01T05:00:00Z",
+                    "lastModifiedBy": "GRAILS"
+                },
+                "amount": null,
+                "percent": 100,
+                "accountType": "C",
+                "addressTypeCode": null,
+                "addressSequenceNum": null,
+                "intlAchTransactionIndicator": "N",
+                "isoCode": null,
+                "apAchTransactionTypeCode": null,
+                "iatAddressTypeCode": null,
+                "iatAddessSequenceNum": null,
+                "amountType": "remaining",
+                "calculatedAmount": "\$1,320.73",
+                "allocation": "Remaining"
+            }, {
+                "id": ${existingAccts[1].id},
+                "version": 0,
+                "dataOrigin": "Banner",
+                "status": "A",
+                "documentType": "D",
+                "priority": 3,
+                "apIndicator": "I",
+                "hrIndicator": "A",
+                "lastModified": "2016-04-07T19:54:44Z",
+                "lastModifiedBy": "mye000005",
+                "bankAccountNum": "95003546",
+                "bankRoutingInfo": {
+                    "class": "net.hedtech.banner.general.crossproduct.BankRoutingInfo",
+                    "id": 6,
+                    "version": 5,
+                    "bankName": "First National Bank",
+                    "bankRoutingNum": "234798944",
+                    "dataOrigin": "GRAILS",
+                    "lastModified": "2010-01-01T05:00:00Z",
+                    "lastModifiedBy": "GRAILS"
+                },
+                "amount": null,
+                "percent": 50,
+                "accountType": "S",
+                "addressTypeCode": null,
+                "addressSequenceNum": null,
+                "intlAchTransactionIndicator": "N",
+                "isoCode": null,
+                "apAchTransactionTypeCode": null,
+                "iatAddressTypeCode": null,
+                "iatAddessSequenceNum": null,
+                "amountType": "percentage",
+                "calculatedAmount": "\\\$1,397.74",
+                "allocation": "50%"
+        }]""".toString()
+
+        controller.reorderAllAccounts()
+        def dataForNullCheck = controller.response.contentAsString
+        def data = JSON.parse( dataForNullCheck )
+
+        assertNotNull data
+
+        def updatedAccts = controller.directDepositAccountCompositeService.getUserHrAllocations(pidm).allocations //36743
+
+        // "lastModified" user ID and timestamp should change only on explicitly modified records.  Reprioritization
+        // should not change those values in records whose position did not change.
+        assertEquals 1,           updatedAccts[0].priority
+        assertEquals '736900542', updatedAccts[0].bankAccountNum
+        assertEquals GRAILS,    updatedAccts[0].lastModifiedBy
+
+        assertEquals 2,           updatedAccts[1].priority
+        assertEquals '67674852',  updatedAccts[1].bankAccountNum
+        assertEquals USER,        updatedAccts[1].lastModifiedBy
+
+        assertEquals 3,           updatedAccts[2].priority
+        assertEquals '95003546',  updatedAccts[2].bankAccountNum
+        assertEquals USER,        updatedAccts[2].lastModifiedBy
+
+        assertTrue('Allocation "modified by" times are similar.', Math.abs(updatedAccts[0].lastModified.getTime() - updatedAccts[1].lastModified.getTime()) > 2000)
+        assertTrue('Allocation "modified by" times differ.', Math.abs(updatedAccts[1].lastModified.getTime() - updatedAccts[2].lastModified.getTime()) < 2000)
+    }
+
+    @Test
+    void testReorderAllAccountsBySwappingFirstWithLastAndCheckingLastModified() {
+        def USER = 'GDP000005'
+        def GRAILS = 'GRAILS'
+        loginSSB USER, '111111'
+
+        def pidm = ControllerUtility.getPrincipalPidm()
+        def existingAccts = controller.directDepositAccountCompositeService.getUserHrAllocations(pidm).allocations //36743
+
+        controller.request.contentType = "text/json"
+        controller.request.json = """[{
+                "id": ${existingAccts[2].id},
+                "version": 0,
+                "dataOrigin": "Banner",
+                "pidm": ${pidm},
+                "status": "A",
+                "documentType": "D",
+                "priority": 1,
+                "apIndicator": "I",
+                "hrIndicator": "A",
+                "lastModified": "2016-04-07T19:54:44Z",
+                "lastModifiedBy": "mye000005",
+                "bankAccountNum": "67674852",
+                "bankRoutingInfo": {
+                    "class": "net.hedtech.banner.general.crossproduct.BankRoutingInfo",
+                    "id": 6,
+                    "version": 5,
+                    "bankName": "First National Bank",
+                    "bankRoutingNum": "234798944",
+                    "dataOrigin": "GRAILS",
+                    "lastModified": "2010-01-01T05:00:00Z",
+                    "lastModifiedBy": "GRAILS"
+                },
+                "amount": null,
+                "percent": 100,
+                "accountType": "C",
+                "addressTypeCode": null,
+                "addressSequenceNum": null,
+                "intlAchTransactionIndicator": "N",
+                "isoCode": null,
+                "apAchTransactionTypeCode": null,
+                "iatAddressTypeCode": null,
+                "iatAddessSequenceNum": null,
+                "amountType": "remaining",
+                "calculatedAmount": "\$1,320.73",
+                "allocation": "Remaining"
+            }, {
+                "id": ${existingAccts[1].id},
+                "version": 0,
+                "dataOrigin": "Banner",
+                "status": "A",
+                "documentType": "D",
+                "priority": 2,
+                "apIndicator": "I",
+                "hrIndicator": "A",
+                "lastModified": "2016-04-07T19:54:44Z",
+                "lastModifiedBy": "mye000005",
+                "bankAccountNum": "95003546",
+                "bankRoutingInfo": {
+                    "class": "net.hedtech.banner.general.crossproduct.BankRoutingInfo",
+                    "id": 6,
+                    "version": 5,
+                    "bankName": "First National Bank",
+                    "bankRoutingNum": "234798944",
+                    "dataOrigin": "GRAILS",
+                    "lastModified": "2010-01-01T05:00:00Z",
+                    "lastModifiedBy": "GRAILS"
+                },
+                "amount": null,
+                "percent": 50,
+                "accountType": "S",
+                "addressTypeCode": null,
+                "addressSequenceNum": null,
+                "intlAchTransactionIndicator": "N",
+                "isoCode": null,
+                "apAchTransactionTypeCode": null,
+                "iatAddressTypeCode": null,
+                "iatAddessSequenceNum": null,
+                "amountType": "percentage",
+                "calculatedAmount": "\\\$1,397.74",
+                "allocation": "50%"
+            }, {
+                "id": ${existingAccts[0].id},
+                "version": 0,
+                "dataOrigin": "Banner",
+                "status": "A",
+                "documentType": "D",
+                "priority": 3,
+                "apIndicator": "I",
+                "hrIndicator": "A",
+                "lastModified": "2016-04-07T19:54:44Z",
+                "lastModifiedBy": "mye000005",
+                "bankAccountNum": "736900542",
+                "bankRoutingInfo": {
+                    "class": "net.hedtech.banner.general.crossproduct.BankRoutingInfo",
+                    "id": 2,
+                    "version": 0,
+                    "bankName": "Chase Manhattan Bank",
+                    "bankRoutingNum": "748972234",
+                    "dataOrigin": null,
+                    "lastModified": "1999-08-17T03:34:22Z",
+                    "lastModifiedBy": "PAYROLL"
+                },
+                "amount": 77,
+                "percent": null,
+                "accountType": "C",
+                "addressTypeCode": null,
+                "addressSequenceNum": null,
+                "intlAchTransactionIndicator": "N",
+                "isoCode": null,
+                "apAchTransactionTypeCode": null,
+                "iatAddressTypeCode": null,
+                "iatAddessSequenceNum": null,
+                "amountType": "amount",
+                "calculatedAmount": "\\\$77.00",
+                "allocation": "\\\$77.00"
+        }]""".toString()
+
+        controller.reorderAllAccounts()
+        def dataForNullCheck = controller.response.contentAsString
+        def data = JSON.parse( dataForNullCheck )
+
+        assertNotNull data
+
+        def updatedAccts = controller.directDepositAccountCompositeService.getUserHrAllocations(pidm).allocations //36743
+
+        // "lastModified" user ID and timestamp should change only on explicitly modified records.  Reprioritization
+        // should not change those values in records whose position did not change.
+        assertEquals 1,           updatedAccts[0].priority
+        assertEquals '67674852',  updatedAccts[0].bankAccountNum
+        assertEquals USER,        updatedAccts[0].lastModifiedBy
+
+        assertEquals 2,           updatedAccts[1].priority
+        assertEquals '95003546',  updatedAccts[1].bankAccountNum
+        assertEquals GRAILS,    updatedAccts[1].lastModifiedBy
+
+        assertEquals 3,           updatedAccts[2].priority
+        assertEquals '736900542', updatedAccts[2].bankAccountNum
+        assertEquals USER,        updatedAccts[2].lastModifiedBy
+
+        assertTrue('Allocation "modified by" times are similar.', Math.abs(updatedAccts[0].lastModified.getTime() - updatedAccts[1].lastModified.getTime()) > 2000)
+        assertTrue('Allocation "modified by" times are similar.', Math.abs(updatedAccts[1].lastModified.getTime() - updatedAccts[2].lastModified.getTime()) > 2000)
+        assertTrue('Allocation "modified by" times differ.', Math.abs(updatedAccts[0].lastModified.getTime() - updatedAccts[2].lastModified.getTime()) < 2000)
+    }
+
+    @Test
+    void testReorderAllAccountsByMovingFirstToLastAndCheckingLastModified() {
+        def USER = 'GDP000005'
+        loginSSB USER, '111111'
+
+        def pidm = ControllerUtility.getPrincipalPidm()
+        def existingAccts = controller.directDepositAccountCompositeService.getUserHrAllocations(pidm).allocations //36743
+
+        controller.request.contentType = "text/json"
+        controller.request.json = """[{
+                "id": ${existingAccts[1].id},
+                "version": 0,
+                "dataOrigin": "Banner",
+                "status": "A",
+                "documentType": "D",
+                "priority": 1,
+                "apIndicator": "I",
+                "hrIndicator": "A",
+                "lastModified": "2016-04-07T19:54:44Z",
+                "lastModifiedBy": "mye000005",
+                "bankAccountNum": "95003546",
+                "bankRoutingInfo": {
+                    "class": "net.hedtech.banner.general.crossproduct.BankRoutingInfo",
+                    "id": 6,
+                    "version": 5,
+                    "bankName": "First National Bank",
+                    "bankRoutingNum": "234798944",
+                    "dataOrigin": "GRAILS",
+                    "lastModified": "2010-01-01T05:00:00Z",
+                    "lastModifiedBy": "GRAILS"
+                },
+                "amount": null,
+                "percent": 50,
+                "accountType": "S",
+                "addressTypeCode": null,
+                "addressSequenceNum": null,
+                "intlAchTransactionIndicator": "N",
+                "isoCode": null,
+                "apAchTransactionTypeCode": null,
+                "iatAddressTypeCode": null,
+                "iatAddessSequenceNum": null,
+                "amountType": "percentage",
+                "calculatedAmount": "\\\$1,397.74",
+                "allocation": "50%"
+            }, {
+                "id": ${existingAccts[2].id},
+                "version": 0,
+                "dataOrigin": "Banner",
+                "pidm": ${pidm},
+                "status": "A",
+                "documentType": "D",
+                "priority": 2,
+                "apIndicator": "I",
+                "hrIndicator": "A",
+                "lastModified": "2016-04-07T19:54:44Z",
+                "lastModifiedBy": "mye000005",
+                "bankAccountNum": "67674852",
+                "bankRoutingInfo": {
+                    "class": "net.hedtech.banner.general.crossproduct.BankRoutingInfo",
+                    "id": 6,
+                    "version": 5,
+                    "bankName": "First National Bank",
+                    "bankRoutingNum": "234798944",
+                    "dataOrigin": "GRAILS",
+                    "lastModified": "2010-01-01T05:00:00Z",
+                    "lastModifiedBy": "GRAILS"
+                },
+                "amount": null,
+                "percent": 100,
+                "accountType": "C",
+                "addressTypeCode": null,
+                "addressSequenceNum": null,
+                "intlAchTransactionIndicator": "N",
+                "isoCode": null,
+                "apAchTransactionTypeCode": null,
+                "iatAddressTypeCode": null,
+                "iatAddessSequenceNum": null,
+                "amountType": "remaining",
+                "calculatedAmount": "\\\$1,320.73",
+                "allocation": "Remaining"
+            }, {
+                "id": ${existingAccts[0].id},
+                "version": 0,
+                "dataOrigin": "Banner",
+                "status": "A",
+                "documentType": "D",
+                "priority": 3,
+                "apIndicator": "I",
+                "hrIndicator": "A",
+                "lastModified": "2016-04-07T19:54:44Z",
+                "lastModifiedBy": "mye000005",
+                "bankAccountNum": "736900542",
+                "bankRoutingInfo": {
+                    "class": "net.hedtech.banner.general.crossproduct.BankRoutingInfo",
+                    "id": 2,
+                    "version": 0,
+                    "bankName": "Chase Manhattan Bank",
+                    "bankRoutingNum": "748972234",
+                    "dataOrigin": null,
+                    "lastModified": "1999-08-17T03:34:22Z",
+                    "lastModifiedBy": "PAYROLL"
+                },
+                "amount": 77,
+                "percent": null,
+                "accountType": "C",
+                "addressTypeCode": null,
+                "addressSequenceNum": null,
+                "intlAchTransactionIndicator": "N",
+                "isoCode": null,
+                "apAchTransactionTypeCode": null,
+                "iatAddressTypeCode": null,
+                "iatAddessSequenceNum": null,
+                "amountType": "amount",
+                "calculatedAmount": "\\\$77.00",
+                "allocation": "\\\$77.00"
+        }]""".toString()
+
+        controller.reorderAllAccounts()
+        def dataForNullCheck = controller.response.contentAsString
+        def data = JSON.parse( dataForNullCheck )
+
+        assertNotNull data
+
+        def updatedAccts = controller.directDepositAccountCompositeService.getUserHrAllocations(pidm).allocations //36743
+
+        // "lastModified" user ID and timestamp should change only on explicitly modified records.  Reprioritization
+        // should not change those values in records whose position did not change.
+        assertEquals 1,           updatedAccts[0].priority
+        assertEquals '95003546',  updatedAccts[0].bankAccountNum
+        assertEquals USER,        updatedAccts[0].lastModifiedBy
+
+        assertEquals 2,           updatedAccts[1].priority
+        assertEquals '67674852',  updatedAccts[1].bankAccountNum
+        assertEquals USER,        updatedAccts[1].lastModifiedBy
+
+        assertEquals 3,           updatedAccts[2].priority
+        assertEquals '736900542', updatedAccts[2].bankAccountNum
+        assertEquals USER,        updatedAccts[2].lastModifiedBy
+
+        assertTrue('Allocation "modified by" times differ.', Math.abs(updatedAccts[0].lastModified.getTime() - updatedAccts[1].lastModified.getTime()) < 2000)
+        assertTrue('Allocation "modified by" times differ.', Math.abs(updatedAccts[1].lastModified.getTime() - updatedAccts[2].lastModified.getTime()) < 2000)
+    }
+
+    @Test
+    void testReorderAllAccountsByMovingLastToFirstAndCheckingLastModified() {
+        def USER = 'GDP000005'
+        def GRAILS = 'GRAILS'
+        loginSSB USER, '111111'
+
+        def pidm = ControllerUtility.getPrincipalPidm()
+        def existingAccts = controller.directDepositAccountCompositeService.getUserHrAllocations(pidm).allocations //36743
+
+        controller.request.contentType = "text/json"
+        controller.request.json = """[{
+                "id": ${existingAccts[2].id},
+                "version": 0,
+                "dataOrigin": "Banner",
+                "pidm": ${pidm},
+                "status": "A",
+                "documentType": "D",
+                "priority": 1,
+                "apIndicator": "I",
+                "hrIndicator": "A",
+                "lastModified": "2016-04-07T19:54:44Z",
+                "lastModifiedBy": "mye000005",
+                "bankAccountNum": "67674852",
+                "bankRoutingInfo": {
+                    "class": "net.hedtech.banner.general.crossproduct.BankRoutingInfo",
+                    "id": 6,
+                    "version": 5,
+                    "bankName": "First National Bank",
+                    "bankRoutingNum": "234798944",
+                    "dataOrigin": "GRAILS",
+                    "lastModified": "2010-01-01T05:00:00Z",
+                    "lastModifiedBy": "GRAILS"
+                },
+                "amount": null,
+                "percent": 100,
+                "accountType": "C",
+                "addressTypeCode": null,
+                "addressSequenceNum": null,
+                "intlAchTransactionIndicator": "N",
+                "isoCode": null,
+                "apAchTransactionTypeCode": null,
+                "iatAddressTypeCode": null,
+                "iatAddessSequenceNum": null,
+                "amountType": "remaining",
+                "calculatedAmount": "\\\\\$1,320.73",
+                "allocation": "Remaining"
+            }, {
+                "id": ${existingAccts[0].id},
+                "version": 0,
+                "dataOrigin": "Banner",
+                "status": "A",
+                "documentType": "D",
+                "priority": 2,
+                "apIndicator": "I",
+                "hrIndicator": "A",
+                "lastModified": "2016-04-07T19:54:44Z",
+                "lastModifiedBy": "mye000005",
+                "bankAccountNum": "736900542",
+                "bankRoutingInfo": {
+                    "class": "net.hedtech.banner.general.crossproduct.BankRoutingInfo",
+                    "id": 2,
+                    "version": 0,
+                    "bankName": "Chase Manhattan Bank",
+                    "bankRoutingNum": "748972234",
+                    "dataOrigin": null,
+                    "lastModified": "1999-08-17T03:34:22Z",
+                    "lastModifiedBy": "PAYROLL"
+                },
+                "amount": 77,
+                "percent": null,
+                "accountType": "C",
+                "addressTypeCode": null,
+                "addressSequenceNum": null,
+                "intlAchTransactionIndicator": "N",
+                "isoCode": null,
+                "apAchTransactionTypeCode": null,
+                "iatAddressTypeCode": null,
+                "iatAddessSequenceNum": null,
+                "amountType": "amount",
+                "calculatedAmount": "\\\$77.00",
+                "allocation": "\\\$77.00"
+            }, {
+                "id": ${existingAccts[1].id},
+                "version": 0,
+                "dataOrigin": "Banner",
+                "status": "A",
+                "documentType": "D",
+                "priority": 3,
+                "apIndicator": "I",
+                "hrIndicator": "A",
+                "lastModified": "2016-04-07T19:54:44Z",
+                "lastModifiedBy": "mye000005",
+                "bankAccountNum": "95003546",
+                "bankRoutingInfo": {
+                    "class": "net.hedtech.banner.general.crossproduct.BankRoutingInfo",
+                    "id": 6,
+                    "version": 5,
+                    "bankName": "First National Bank",
+                    "bankRoutingNum": "234798944",
+                    "dataOrigin": "GRAILS",
+                    "lastModified": "2010-01-01T05:00:00Z",
+                    "lastModifiedBy": "GRAILS"
+                },
+                "amount": null,
+                "percent": 50,
+                "accountType": "S",
+                "addressTypeCode": null,
+                "addressSequenceNum": null,
+                "intlAchTransactionIndicator": "N",
+                "isoCode": null,
+                "apAchTransactionTypeCode": null,
+                "iatAddressTypeCode": null,
+                "iatAddessSequenceNum": null,
+                "amountType": "percentage",
+                "calculatedAmount": "\\\\\$1,397.74",
+                "allocation": "50%"
+        }]""".toString()
+
+        controller.reorderAllAccounts()
+        def dataForNullCheck = controller.response.contentAsString
+        def data = JSON.parse( dataForNullCheck )
+
+        assertNotNull data
+
+        def updatedAccts = controller.directDepositAccountCompositeService.getUserHrAllocations(pidm).allocations //36743
+
+        // "lastModified" user ID and timestamp should change only on explicitly modified records.  Reprioritization
+        // should not change those values in records whose position did not change.
+        assertEquals 1,           updatedAccts[0].priority
+        assertEquals '67674852',  updatedAccts[0].bankAccountNum
+        assertEquals USER,        updatedAccts[0].lastModifiedBy
+
+        assertEquals 2,           updatedAccts[1].priority
+        assertEquals '736900542', updatedAccts[1].bankAccountNum
+        assertEquals USER,        updatedAccts[1].lastModifiedBy
+
+        assertEquals 3,           updatedAccts[2].priority
+        assertEquals '95003546',  updatedAccts[2].bankAccountNum
+        assertEquals USER,        updatedAccts[2].lastModifiedBy
+
+        assertTrue('Allocation "modified by" times differ.', Math.abs(updatedAccts[0].lastModified.getTime() - updatedAccts[1].lastModified.getTime()) < 2000)
+        assertTrue('Allocation "modified by" times differ.', Math.abs(updatedAccts[1].lastModified.getTime() - updatedAccts[2].lastModified.getTime()) < 2000)
     }
 
     @Test
