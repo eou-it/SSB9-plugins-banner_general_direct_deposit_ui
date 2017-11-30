@@ -1,5 +1,5 @@
 /*********************************************************************************
- Copyright 2015 Ellucian.
+ Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
  *********************************************************************************/
 
 grails.project.dependency.resolver = "maven"
