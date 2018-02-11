@@ -3,7 +3,7 @@ Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
 *******************************************************************************--}%
 <!DOCTYPE html>
 <!--[if IE 9 ]>    <html xmlns:ng="http://angularjs.org" ng-app="directDepositApp" id="ng-app" class="ie9"> <![endif]-->
-<html xmlns:ng="http://angularjs.org" ng-app="directDepositApp" id="ng-app">
+<html xmlns:ng="http://angularjs.org"  id="ng-app">
 <head>
     <script type="text/javascript">
         var superUser=${session['SUPER_USER_INDICATOR'] ?: 'undefined'};
@@ -70,7 +70,7 @@ Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
 <body ng-class="{'direct-deposit': true, employee: isEmployee, student: isStudent, desktop: isDesktopView, 'no-ap': !apAccountExists}">
 
 <div class="body-overlay"></div>
-<div id="content" class="container-fluid" aria-relevant="additions" role="main">
+<div id="content" ng-app="directDepositApp" class="container-fluid" aria-relevant="additions" role="main">
     <div ui-view></div>
 </div>
 </body>
