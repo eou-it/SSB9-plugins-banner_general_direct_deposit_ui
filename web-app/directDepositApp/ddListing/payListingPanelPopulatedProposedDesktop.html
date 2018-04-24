@@ -12,7 +12,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="allocation in distributions.proposed.allocations" pay-account-info-proposed-desktop></tr>
+        <tr ng-repeat="allocation in distributions.proposed.allocations" pay-account-info-proposed-desktop alloc="allocation" accounts-updatable="areAccountsUpdatable"></tr>
         <tr ng-if="!hasPayrollRemainingAmount">
             <td class="break-word" colspan="4">
                 <span class="desktop-listing-check">{{'directDeposit.label.live.check'|i18n}}</span>

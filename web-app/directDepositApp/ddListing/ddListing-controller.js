@@ -1,5 +1,5 @@
 /*******************************************************************************
- Copyright 2017 Ellucian Company L.P. and its affiliates.
+ Copyright 2017-2018 Ellucian Company L.P. and its affiliates.
  *******************************************************************************/
 generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope', '$state', '$stateParams', '$modal',
     '$filter', '$q', '$timeout', 'ddListingService', 'ddEditAccountService', 'directDepositService',
@@ -134,8 +134,11 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
 
             var acctPromises = [ddListingService.getApListing().$promise];
 
-            directDepositService.getRoles().$promise.then(function (response) {
-                $scope.isEmployee = response.isEmployee;
+            directDepositService.getConfiguration().$promise.then(function (response) {
+                var roles = response.roles || {};
+
+                $scope.isEmployee = roles.isEmployee;
+                $scope.areAccountsUpdatable = response.areAccountsUpdatable;
 
                 // getApListing
                 acctPromises[0].then(function (response) {
@@ -228,6 +231,7 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
 
         // CONTROLLER VARIABLES
         // --------------------
+        $scope.areAccountsUpdatable = false;
         $scope.payAccountsMostRecentLoaded = false;
         $scope.payAccountsProposedLoaded = false;
         $scope.hasPayAccountsMostRecent = false;

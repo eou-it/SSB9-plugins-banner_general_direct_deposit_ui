@@ -1,8 +1,8 @@
 <!--*******************************************************************************
-Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
+Copyright 2015-2018 Ellucian Company L.P. and its affiliates.
 *******************************************************************************-->
 <td class="break-word">
-    <div class="delete-checkbox-wrapper-desktop">
+    <div ng-if="areAccountsUpdatable" class="delete-checkbox-wrapper-desktop">
         <label class="visuallyhidden" id="for-delete-ap">{{'directDeposit.label.select.for.delete'|i18n}}</label>
         <input type="checkbox" class="delete-checkbox-desktop" ng-click="toggleApAccountSelectedForDelete(apAcct)" enter-key="toggleApAccountSelectedForDelete(apAcct)" aria-labelledby="for-delete-ap ap-bank-name">
         <span class="lbl"></span>
@@ -11,7 +11,7 @@ Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
 </td>
 <td class="break-word">{{apAcct.bankRoutingInfo.bankRoutingNum}}</td>
 <td class="break-word">{{apAcct.bankAccountNum}}</td>
-<td ng-if="apAcct.status !== 'I'">
+<td ng-if="apAcct.status !== 'I' && areAccountsUpdatable">
     <label class="visuallyhidden" id="select-acct-type-ap">{{'directDeposit.label.account.type.select'|i18n}}</label>
     <span><choose-account account="apAcct" class="visuallyhidden" id="account-type-ap" tabindex="-1"/></span>
     <div class="dropdown desktop-listing" role="menu">
@@ -36,6 +36,9 @@ Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
             </li>
         </ul>
     </div>
+</td>
+<td ng-if="apAcct.status !== 'I' && !areAccountsUpdatable" class="break-word">
+    <choose-account account="apAcct"/>
 </td>
 <td ng-if="apAcct.status === 'I'" class="break-word">
     <div class="dropdown-btn form-spacing disabled">{{(apAcct.accountType === 'S' ? 'directDeposit.account.type.savings' : 'directDeposit.account.type.checking')|i18n}}</div>

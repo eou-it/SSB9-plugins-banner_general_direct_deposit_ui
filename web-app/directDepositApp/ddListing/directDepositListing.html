@@ -1,5 +1,5 @@
 <!--*******************************************************************************
-Copyright 2015 Ellucian Company L.P. and its affiliates.
+Copyright 2015-2018 Ellucian Company L.P. and its affiliates.
 *******************************************************************************-->
 
 <div role="tablist" hide-popover>
@@ -44,11 +44,11 @@ Copyright 2015 Ellucian Company L.P. and its affiliates.
                     <div ng-show="payAccountsProposedLoaded">
                         <div class="pay-listing-panel-wrapper-proposed">
                             <div class="proposed-pay-listing-subheader clearfix">
-                                <a class="add-account-link" ng-if="!hasMaxPayrollAccounts" ng-click="showAddAccount('HR')" enter-key="showAddAccount('HR')" tabindex="0"><span class="icon-add-CO"></span> <span>{{'directDeposit.account.label.add.new'|i18n}}</span></a>
-                                <a class="add-account-link disabled" ng-if="hasMaxPayrollAccounts" dd-pop-over popover-msg="directDeposit.max.payroll.accounts.text" popover-position="left" popover-width="200px"
+                                <a class="add-account-link" ng-if="areAccountsUpdatable && !hasMaxPayrollAccounts" ng-click="showAddAccount('HR')" enter-key="showAddAccount('HR')" tabindex="0"><span class="icon-add-CO"></span> <span>{{'directDeposit.account.label.add.new'|i18n}}</span></a>
+                                <a class="add-account-link disabled" ng-if="areAccountsUpdatable && hasMaxPayrollAccounts" dd-pop-over popover-msg="directDeposit.max.payroll.accounts.text" popover-position="left" popover-width="200px"
                                    enter-key="togglePopover()" tabindex="0" aria-disabled="true"><span class="icon-add-CO"></span> <span>{{'directDeposit.account.label.add.new'|i18n}}</span></a>
                                 <a class="delete-account-link" ng-if="selectedForDelete.payroll" ng-click="confirmPayrollDelete()" enter-key="confirmPayrollDelete()" tabindex="0"><span class="icon-delete-CO"></span> <span>{{'directDeposit.account.label.delete'|i18n}}</span></a>
-                                <a class="delete-account-link disabled" ng-if="!selectedForDelete.payroll" aria-disabled="true" ng-click="confirmPayrollDelete()" enter-key="confirmPayrollDelete()" tabindex="0"><span class="icon-delete-CO"></span> <span>{{'directDeposit.account.label.delete'|i18n}}</span></a>
+                                <a class="delete-account-link disabled" ng-if="areAccountsUpdatable && !selectedForDelete.payroll" aria-disabled="true" ng-click="confirmPayrollDelete()" enter-key="confirmPayrollDelete()" tabindex="0"><span class="icon-delete-CO"></span> <span>{{'directDeposit.account.label.delete'|i18n}}</span></a>
                             </div>
                             <div ng-if="hasPayAccountsProposed">
                                 <pay-listing-panel-populated-proposed/>
@@ -66,7 +66,7 @@ Copyright 2015 Ellucian Company L.P. and its affiliates.
     <div id="apTab" class="row tile">
         <div class="col-md-12 no-padding panel-group panel-accordion">
             <div class="notification-box-wrapper" ng-show="accountLoaded">
-                <div ng-if="hasApAccount">
+                <div ng-if="areAccountsUpdatable && hasApAccount">
                     <notification-box notification-text="{{'directDeposit.notification.only.one.accounts.payable.allocation.can.exist.tap'|i18n}}"/>
                 </div>
             </div>
@@ -82,10 +82,10 @@ Copyright 2015 Ellucian Company L.P. and its affiliates.
                  aria-expanded="{{!panelCollapsed}}" aria-hidden="{{panelCollapsed}}" role="tabpanel">
                 <div ng-show="accountLoaded">
                     <div class="ap-listing-panel clearfix">
-                        <a class="add-account-link" ng-if="!hasApAccount" ng-click="showAddAccount('AP')" enter-key="showAddAccount('AP')" tabindex="0"><span class="icon-add-CO"></span> <span>{{'directDeposit.account.label.add.new'|i18n}}</span></a>
-                        <a class="add-account-link disabled" ng-if="hasApAccount" aria-disabled="true" ng-click="showAddAccount('AP')" enter-key="showAddAccount('AP')" tabindex="0"><span class="icon-add-CO"></span> <span>{{'directDeposit.account.label.add.new'|i18n}}</span></a>
+                        <a class="add-account-link" ng-if="areAccountsUpdatable && !hasApAccount" ng-click="showAddAccount('AP')" enter-key="showAddAccount('AP')" tabindex="0"><span class="icon-add-CO"></span> <span>{{'directDeposit.account.label.add.new'|i18n}}</span></a>
+                        <a class="add-account-link disabled" ng-if="areAccountsUpdatable && hasApAccount" aria-disabled="true" ng-click="showAddAccount('AP')" enter-key="showAddAccount('AP')" tabindex="0"><span class="icon-add-CO"></span> <span>{{'directDeposit.account.label.add.new'|i18n}}</span></a>
                         <a class="delete-account-link" ng-if="selectedForDelete.ap" ng-click="confirmAPDelete()" enter-key="confirmAPDelete()" tabindex="0"><span class="icon-delete-CO"></span> <span>{{'directDeposit.account.label.delete'|i18n}}</span></a>
-                        <a class="delete-account-link disabled" ng-if="!selectedForDelete.ap" aria-disabled="true" ng-click="confirmAPDelete()" enter-key="confirmAPDelete()" tabindex="0"><span class="icon-delete-CO"></span> <span>{{'directDeposit.account.label.delete'|i18n}}</span></a>
+                        <a class="delete-account-link disabled" ng-if="areAccountsUpdatable && !selectedForDelete.ap" aria-disabled="true" ng-click="confirmAPDelete()" enter-key="confirmAPDelete()" tabindex="0"><span class="icon-delete-CO"></span> <span>{{'directDeposit.account.label.delete'|i18n}}</span></a>
                     </div>
                     <div ng-if="hasApAccount">
                         <ap-listing-panel-populated/>
@@ -103,7 +103,7 @@ Copyright 2015 Ellucian Company L.P. and its affiliates.
     <div ng-if="isDesktopView && (hasApAccount || hasPayAccountsProposed)" id="footerChunk"></div>
 </div>
 <div class="dird-footer-container">
-    <div footer id="buttonFooter" ng-if="isDesktopView && (hasApAccount || hasPayAccountsProposed)">
+    <div footer id="buttonFooter" ng-if="areAccountsUpdatable && isDesktopView && (hasApAccount || hasPayAccountsProposed)">
         <span class="desktop-save">
             <input type="checkbox" class="main-nav-check" id="disclaimer-check" aria-label="{{'directDeposit.label.disclaimer.ack'|i18n}}"
                    aria-describedby="disclaimerTxt" ng-checked="authorizedChanges" ng-click="toggleAuthorizedChanges()"/><span class="lbl"></span>

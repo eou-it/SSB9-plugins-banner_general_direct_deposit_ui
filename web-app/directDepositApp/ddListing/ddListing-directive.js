@@ -1,5 +1,5 @@
 /*******************************************************************************
- Copyright 2015 Ellucian Company L.P. and its affiliates.
+ Copyright 2015-2018 Ellucian Company L.P. and its affiliates.
  *******************************************************************************/
 
 generalSsbAppDirectives.directive('apAccountInfo', ['$filter', function ($filter) {
@@ -125,15 +125,16 @@ generalSsbAppDirectives.directive('payAccountInfoProposedDesktop',['directDeposi
 
     return{
         restrict: 'A',
+        scope: {
+            alloc: '=',
+            accountsUpdatable: '='
+        },
         templateUrl: $filter('webAppResourcePath')('directDepositApp/ddListing/payAccountInformationProposedDesktop.html'),
         controller: 'ddListingController',
         link: function(scope, elem, attrs, ctrl){
-            scope.alloc = scope.allocation;
-            
+            scope.areAccountsUpdatable = scope.accountsUpdatable;
             scope.amtDropdownOpen = false;
-
             scope.previousAmount = null; // Holds previous amount info in case it needs to be restored
-
             scope.preserveNotifications = false;
 
             scope.setAllocationAcctType = function(type){
