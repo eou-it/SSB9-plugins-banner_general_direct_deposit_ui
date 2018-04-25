@@ -125,14 +125,10 @@ generalSsbAppDirectives.directive('payAccountInfoProposedDesktop',['directDeposi
 
     return{
         restrict: 'A',
-        scope: {
-            alloc: '=',
-            accountsUpdatable: '='
-        },
         templateUrl: $filter('webAppResourcePath')('directDepositApp/ddListing/payAccountInformationProposedDesktop.html'),
         controller: 'ddListingController',
         link: function(scope, elem, attrs, ctrl){
-            scope.areAccountsUpdatable = scope.accountsUpdatable;
+            scope.alloc = scope.allocation;
             scope.amtDropdownOpen = false;
             scope.previousAmount = null; // Holds previous amount info in case it needs to be restored
             scope.preserveNotifications = false;

@@ -138,7 +138,10 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                 var roles = response.roles || {};
 
                 $scope.isEmployee = roles.isEmployee;
-                $scope.areAccountsUpdatable = response.areAccountsUpdatable;
+
+                // Set in rootScope as this value needs to be accessed application-wide,
+                // e.g. in scopes created by ngRepeat.
+                $rootScope.areAccountsUpdatable = response.areAccountsUpdatable;
 
                 // getApListing
                 acctPromises[0].then(function (response) {
@@ -231,7 +234,6 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
 
         // CONTROLLER VARIABLES
         // --------------------
-        $scope.areAccountsUpdatable = false;
         $scope.payAccountsMostRecentLoaded = false;
         $scope.payAccountsProposedLoaded = false;
         $scope.hasPayAccountsMostRecent = false;
@@ -357,7 +359,6 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                 showSaveCancelMessage();
 
             } else {
-                //  $rootScope.$broadcast('addNewEvent', callback);
                 // If this is an AP account and an AP account already exists, this functionality is disabled.
                 if (typeInd === 'AP' && $scope.hasApAccount) {
                     return;
