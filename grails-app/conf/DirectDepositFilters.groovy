@@ -1,4 +1,8 @@
-import net.hedtech.banner.general.DirectDepositUtility
+/*******************************************************************************
+ Copyright 2018 Ellucian Company L.P. and its affiliates.
+ *******************************************************************************/
+
+import net.hedtech.banner.SanitizeUtility
 import org.apache.log4j.Logger
 
 class DirectDepositFilters {
@@ -11,9 +15,9 @@ class DirectDepositFilters {
                 def requestParams = request?.JSON ?: params
 
                 if (requestParams in List) {
-                    requestParams.each {item -> DirectDepositUtility.sanitizeMap(item)}
+                    requestParams.each {item -> SanitizeUtility.sanitizeMap(item)}
                 } else if (requestParams in Map) {
-                    DirectDepositUtility.sanitizeMap(requestParams)
+                    SanitizeUtility.sanitizeMap(requestParams)
                 } else {
                     log.error(new Exception('Unknown request parameter type. Expected Map or Array.'))
                     return false
