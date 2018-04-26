@@ -1,5 +1,5 @@
 /*******************************************************************************
- Copyright 2017 Ellucian Company L.P. and its affiliates.
+ Copyright 2017-2018 Ellucian Company L.P. and its affiliates.
  *******************************************************************************/
 generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope', '$state', '$stateParams', '$modal',
     '$filter', '$q', '$timeout', 'ddListingService', 'ddEditAccountService', 'directDepositService',
@@ -134,8 +134,14 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
 
             var acctPromises = [ddListingService.getApListing().$promise];
 
-            directDepositService.getRoles().$promise.then(function (response) {
-                $scope.isEmployee = response.isEmployee;
+            directDepositService.getConfiguration().$promise.then(function (response) {
+                var roles = response.roles || {};
+
+                $scope.isEmployee = roles.isEmployee;
+
+                // Set in rootScope as this value needs to be accessed application-wide,
+                // e.g. in scopes created by ngRepeat.
+                $rootScope.areAccountsUpdatable = response.areAccountsUpdatable;
 
                 // getApListing
                 acctPromises[0].then(function (response) {
@@ -353,7 +359,6 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                 showSaveCancelMessage();
 
             } else {
-                //  $rootScope.$broadcast('addNewEvent', callback);
                 // If this is an AP account and an AP account already exists, this functionality is disabled.
                 if (typeInd === 'AP' && $scope.hasApAccount) {
                     return;

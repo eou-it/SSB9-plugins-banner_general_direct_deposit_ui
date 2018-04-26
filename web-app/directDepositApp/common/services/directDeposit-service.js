@@ -1,12 +1,10 @@
 /*******************************************************************************
- Copyright 2015 Ellucian Company L.P. and its affiliates.
+ Copyright 2015-2018 Ellucian Company L.P. and its affiliates.
  *******************************************************************************/
 
 directDepositApp.service('directDepositService', ['$rootScope', '$resource', function ($rootScope, $resource) {
 
-    var fetchRoles = $resource('../ssb/:controller/:action',
-            {controller: 'General', action: 'getRoles'}, {query: {method:'GET', isArray:false}}),
-        fetchConfig = $resource('../ssb/:controller/:action',
+    var fetchConfig = $resource('../ssb/:controller/:action',
             {controller: 'DirectDepositConfiguration', action: 'getConfig'}),
         fetchCurrencySymbol = $resource('../ssb/:controller/:action',
             {controller: 'UpdateAccount', action: 'getCurrency'});
@@ -18,10 +16,6 @@ directDepositApp.service('directDepositService', ['$rootScope', '$resource', fun
     this.REMAINING_MULTIPLE = 2;
     this.AUDIBLE_MSG_UPDATED = 'audible-msg-updated';
 
-
-    this.getRoles = function () {
-        return fetchRoles.query();
-    };
 
     this.config = null;
 

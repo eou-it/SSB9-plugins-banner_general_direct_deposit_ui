@@ -799,6 +799,10 @@ span.radio-list.no-padding {
     margin-left: 47px;
 }
 
+.entry-noedit {
+    margin-left: 15px;
+}
+
 .proposed-entry {
     margin-left: 32px;
 }
