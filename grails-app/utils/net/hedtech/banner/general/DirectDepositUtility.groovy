@@ -1,31 +1,14 @@
 /*******************************************************************************
- Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
+ Copyright 2015-2018 Ellucian Company L.P. and its affiliates.
  *******************************************************************************/
 
 package net.hedtech.banner.general
 
-import net.hedtech.banner.security.XssSanitizer
 import org.springframework.web.context.request.RequestContextHolder
 
 class DirectDepositUtility {
 
     private static final DD_ACCOUNT_CACHE = "DD_ACCOUNT_CACHE"
-
-    /**
-     * Recursively sanitize all values in map to eliminate cross-site scripting (XSS) vulnerabilities.
-     * @param map
-     */
-    def static sanitizeMap(Map map) {
-        map.each { element ->
-            def v = element.value
-
-            if (v in Map) {
-                sanitizeMap(v)
-            } else if (v in String) {
-                element.value = XssSanitizer.sanitize(v)
-            }
-        }
-    }
 
     static setDirectDepositAccountInfoInSessionCache(acctId, acctInfo) {
         def session = RequestContextHolder.currentRequestAttributes().request.session
