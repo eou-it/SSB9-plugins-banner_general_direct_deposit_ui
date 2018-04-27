@@ -15,6 +15,16 @@ class UpdateAccountController {
     def directDepositAccountCompositeService
     def directDepositConfigurationService
 
+    def beforeInterceptor = [action:this.&readOnlyCheck, except:'getCurrency']
+
+    private readOnlyCheck() {
+        // Disallow updates if in read-only mode
+        if (!directDepositAccountCompositeService.areAccountsUpdatable()) {
+            log.error('Invalid attempt to update account when in READ-ONLY mode.')
+            return false
+        }
+    }
+
     def createAccount() {
         def map = request?.JSON ?: params
         map.pidm = ControllerUtility.getPrincipalPidm()
@@ -214,7 +224,7 @@ class UpdateAccountController {
         }
     }
 
-    def unmaskAccountInfoFromSessionCache(acct) {
+    private unmaskAccountInfoFromSessionCache(acct) {
         // Unmask account info. Values needed for unmasking are stored in the session.
         def cachedAcctInfo = DirectDepositUtility.getDirectDepositAccountInfoFromSessionCache(acct.id)
 
