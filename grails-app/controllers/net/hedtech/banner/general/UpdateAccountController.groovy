@@ -20,7 +20,7 @@ class UpdateAccountController {
     private readOnlyCheck() {
         // Disallow updates if in read-only mode
         if (!directDepositAccountCompositeService.areAccountsUpdatable()) {
-            log.error(new Exception('Invalid attempt to update account when in READ-ONLY mode.'))
+            log.error('Invalid attempt to update account when in READ-ONLY mode.')
             return false
         }
     }
