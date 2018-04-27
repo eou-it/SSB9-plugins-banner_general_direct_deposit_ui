@@ -5,6 +5,7 @@
 package net.hedtech.banner.general
 
 import grails.converters.JSON
+import groovy.sql.Sql
 import net.hedtech.banner.exceptions.ApplicationException
 import net.hedtech.banner.general.overall.DirectDepositAccount
 import net.hedtech.banner.testing.BaseIntegrationTestCase
@@ -33,6 +34,34 @@ class UpdateAccountControllerTests extends BaseIntegrationTestCase {
     public void tearDown() {
         super.tearDown()
         super.logout()
+    }
+
+
+    @Test
+    void testReadOnlyCheckWithUpdatableOn() {
+        loginSSB 'GDP000005', '111111'
+
+        def isReadOnly = controller.readOnlyCheck()
+
+        assertNull isReadOnly
+    }
+
+    @Test
+    void testReadOnlyCheckWithUpdatableOff() {
+        loginSSB 'GDP000005', '111111'
+
+        def sql
+        try {
+            sql = new Sql(sessionFactory.getCurrentSession().connection())
+            sql.executeUpdate("update PTRINST set PTRINST_DD_WEB_UPDATE_IND = \'N\'")
+        } finally {
+            sql?.close() // note that the test will close the connection, since it's our current session's connection
+        }
+
+        def isReadOnly = controller.readOnlyCheck()
+
+        assertNotNull isReadOnly
+        assertFalse isReadOnly
     }
 
     @Test

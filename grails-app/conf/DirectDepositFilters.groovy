@@ -10,7 +10,7 @@ class DirectDepositFilters {
 
     def filters = {
         // Sanitize all parameter values for all actions in the UpdateAccount controller.
-        sanitizeFilter(controller:'updateAccount', action:'*') {
+        sanitizeFilter(controller:'updateAccount', action:'*', actionExclude:'getCurrency') {
             before = {
                 def requestParams = request?.JSON ?: params
 
