@@ -1387,3 +1387,13 @@ table tr td {
         z-index: 1000;
     }
 }
+
+/* Catches mobile devices up through iPad landscape */
+@media screen and (max-width:1024px) {
+    /* Fix iOS-only issue where background scrolls when user touches an <input> element to scroll */
+    body.modal-open {
+        overflow: hidden;
+        position: fixed;
+        width: 100%;
+    }
+}
