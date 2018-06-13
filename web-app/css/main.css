@@ -1317,7 +1317,7 @@ table tr td {
     }
 }
 
-@media screen and (max-width:767px) {
+@media screen and (max-width:768px) {
     .edit-flex-div1 {
         display: inline;
     }
@@ -1327,7 +1327,7 @@ table tr td {
     }
 }
 
-@media screen and (min-width:768px) {
+@media screen and (min-width:769px) {
     .account-heading {
         margin-bottom: 15px;
     }
@@ -1374,7 +1374,7 @@ table tr td {
 }
 
 /*Tablet device*/
-@media screen and (min-width: 768px) and (max-width: 1024px) {
+@media screen and (min-width: 769px) and (max-width: 1024px) {
     .payroll-status-wrapper {
         top: 28px;
     }
@@ -1388,7 +1388,7 @@ table tr td {
     }
 }
 
-/* Catches mobile devices up through iPad landscape */
+/* Mobile devices up through iPad landscape */
 @media screen and (max-width:1024px) {
     /* Fix iOS-only issue where background scrolls when user touches an <input> element to scroll */
     body.modal-open {
