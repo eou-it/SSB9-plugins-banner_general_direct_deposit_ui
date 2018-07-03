@@ -31,7 +31,7 @@ class UpdateAccountController {
 
         // Unmask account info, as needed, for create (needed, for example, if an accounts payable account is
         // being created based on a payroll account).
-        unmaskAccountInfoFromSessionCache(map)
+        def unmaskedAcctIds = unmaskAccountInfoFromSessionCache([map])
 
         // default values for a new Direct Deposit account
         map.id = null
@@ -59,11 +59,17 @@ class UpdateAccountController {
                     def reprioritizedAccounts = directDepositAccountCompositeService.rePrioritizeAccounts(map, map.newPosition)
                     def marshalledAccounts = directDepositAccountService.marshallAccountsToMinimalStateForUi(reprioritizedAccounts)
 
+                    // Now that the operation has been completed successfully, clear old masking data in preparation for new
+                    clearAccountMaskingInfoFromSessionCache(unmaskedAcctIds)
+
                     r.list = DirectDepositUtility.maskAccounts(marshalledAccounts)
                     render r as JSON
                 } else {
                     def newAccount = directDepositAccountCompositeService.addorUpdateAccount(map)
                     def marshalledAccount = directDepositAccountService.marshallAccountsToMinimalStateForUi(newAccount)
+
+                    // Now that the operation has been completed successfully, clear old masking data in preparation for new
+                    clearAccountMaskingInfoFromSessionCache(unmaskedAcctIds)
 
                     render DirectDepositUtility.maskAccounts([marshalledAccount]).first() as JSON
                 }
@@ -107,10 +113,14 @@ class UpdateAccountController {
             // Do some cleanup to prepare for update
             removeKeyValuePairsNotWantedForUpdate(map)
             fixJSONObjectForCast(map)
-            unmaskAccountInfoFromSessionCache(map)
+            def unmaskedAcctIds = unmaskAccountInfoFromSessionCache([map])
 
             def prioritizedAccounts = directDepositAccountCompositeService.rePrioritizeAccounts(map, map.newPosition)
             def marshalledAccounts = directDepositAccountService.marshallAccountsToMinimalStateForUi(prioritizedAccounts)
+
+            // Now that the operation has been completed successfully, clear old masking data in preparation for new
+            clearAccountMaskingInfoFromSessionCache(unmaskedAcctIds)
+
             def maskedAccounts = DirectDepositUtility.maskAccounts(marshalledAccounts)
 
             render maskedAccounts as JSON
@@ -138,11 +148,10 @@ class UpdateAccountController {
     
     def reorderAllAccounts() {
         def map = request?.JSON ?: params
+        def unmaskedAcctIds = unmaskAccountInfoFromSessionCache(map)
+        def pidm = ControllerUtility.getPrincipalPidm()
 
-        map.each {
-            unmaskAccountInfoFromSessionCache(it)
-            it.pidm = ControllerUtility.getPrincipalPidm()
-        }
+        map.each { it.pidm = pidm }
 
         try {
             def reorderedResults = directDepositAccountCompositeService.reorderAccounts(map)
@@ -153,6 +162,10 @@ class UpdateAccountController {
 
             // Then mask and add in the accounts (elements 1 through n in the list)
             def marshalledAccounts = directDepositAccountService.marshallAccountsToMinimalStateForUi(reorderedResults.drop(1))
+
+            // Now that the operation has been completed successfully, clear old masking data in preparation for new
+            clearAccountMaskingInfoFromSessionCache(unmaskedAcctIds)
+
             def maskedAccounts = DirectDepositUtility.maskAccounts(marshalledAccounts)
             maskedResults.addAll(directDepositAccountService.marshallAccountsToMinimalStateForUi(maskedAccounts))
 
@@ -168,16 +181,18 @@ class UpdateAccountController {
 
     def deleteAccounts() {
         def map = request?.JSON ?: params
+        def unmaskedAcctIds = unmaskAccountInfoFromSessionCache(map)
+        def pidm = ControllerUtility.getPrincipalPidm()
 
-        map.each {
-            unmaskAccountInfoFromSessionCache(it)
-            it.pidm = ControllerUtility.getPrincipalPidm()
-        }
+        map.each { it.pidm = pidm }
 
         try {
             def model = [:]
             def accounts = directDepositAccountService.setupAccountsForDelete(map)
             def result = directDepositAccountService.delete(accounts.toBeDeleted)
+
+            // Now that the operation has been completed successfully, clear old masking data in preparation for new
+            clearAccountMaskingInfoFromSessionCache(unmaskedAcctIds)
 
             accounts.messages.each {
                 it.acct = DirectDepositUtility.maskBankInfo(it.acct)
@@ -224,19 +239,42 @@ class UpdateAccountController {
         }
     }
 
-    private unmaskAccountInfoFromSessionCache(acct) {
-        // Unmask account info. Values needed for unmasking are stored in the session.
-        def cachedAcctInfo = DirectDepositUtility.getDirectDepositAccountInfoFromSessionCache(acct.id)
+    /**
+     * Unmask account information in list of accounts.
+     * Preserve unmasked account IDs in a list to be returned, so that they can be cleared out from the session cache at
+     * an appropriate time.  As an example, we may need to wait until all operations using the cache have been
+     * successfully completed before clearing masked accounts from the cache.  This is because if such an operation
+     * fails *and* the cache has already been cleared, then the frontend can be left holding masked account info which
+     * now has no map of masked data on the backend to unmask it.
+     * @param accts List of accounts
+     * @return List of unmasked account IDs
+     */
+    private unmaskAccountInfoFromSessionCache(accts) {
+        def cachedAcctInfo
+        def unmaskedAcctIds = []
 
-        if (cachedAcctInfo) {
-            acct.bankAccountNum = cachedAcctInfo.acctNum
-            acct.bankRoutingInfo = [
-                id:             cachedAcctInfo.routing.id,
-                bankRoutingNum: cachedAcctInfo.routing.bankRoutingNum,
-                bankName:       cachedAcctInfo.routing.bankName
-            ]
+        accts.each { acct ->
+            // Unmask account info. Values needed for unmasking are stored in the session.
+            cachedAcctInfo = DirectDepositUtility.getDirectDepositAccountInfoFromSessionCache(acct.id)
 
-            DirectDepositUtility.removeDirectDepositAccountInfoFromSessionCache(acct.id)
+            if (cachedAcctInfo) {
+                acct.bankAccountNum = cachedAcctInfo.acctNum
+                acct.bankRoutingInfo = [
+                        id            : cachedAcctInfo.routing.id,
+                        bankRoutingNum: cachedAcctInfo.routing.bankRoutingNum,
+                        bankName      : cachedAcctInfo.routing.bankName
+                ]
+
+                unmaskedAcctIds << acct.id
+            }
+        }
+
+        unmaskedAcctIds
+    }
+
+    private clearAccountMaskingInfoFromSessionCache(acctIds) {
+        acctIds.each {
+            DirectDepositUtility.removeDirectDepositAccountInfoFromSessionCache(it)
         }
     }
 

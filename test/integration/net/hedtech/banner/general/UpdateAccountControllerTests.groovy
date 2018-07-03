@@ -1427,7 +1427,7 @@ class UpdateAccountControllerTests extends BaseIntegrationTestCase {
     }
 
     @Test
-    void testUnmaskAccountInfoFromSessionCache() {
+    void testUnmaskAccountInfoFromSessionCacheWithSingleAccount() {
         def acctInfoToCache = [
             acctNum: '12345678',
             routing: [
@@ -1458,14 +1458,150 @@ class UpdateAccountControllerTests extends BaseIntegrationTestCase {
         ]
 
         DirectDepositUtility.setDirectDepositAccountInfoInSessionCache(1, acctInfoToCache)
-        controller.unmaskAccountInfoFromSessionCache(acctSentFromUi)
+        def unmaskedAcctIds = controller.unmaskAccountInfoFromSessionCache([acctSentFromUi])
 
+        // Account has now been unmasked
         assertEquals unmaskedAcct, acctSentFromUi
 
         def cachedInfo = DirectDepositUtility.getDirectDepositAccountInfoFromSessionCache(1)
 
-        // The value previously set in cache has been cleared
+        // The value previously set in cache has not yet been cleared
+        assertNotNull cachedInfo
+
+        // One account was unmasked
+        assertEquals 1, unmaskedAcctIds.size()
+
+        // Clear the now unmasked items from the cache...
+        controller.clearAccountMaskingInfoFromSessionCache(unmaskedAcctIds)
+
+        // ...and the item is no longer in the cache
+        cachedInfo = DirectDepositUtility.getDirectDepositAccountInfoFromSessionCache(1)
         assertNull cachedInfo
+
+    }
+
+    @Test
+    void testUnmaskAccountInfoFromSessionCacheWithMultipleAccounts() {
+        def acctInfoToCache = [
+                [
+                    acctNum: '12345678',
+                    routing: [
+                        id: 10,
+                        bankRoutingNum: '87654321',
+                        bankName: 'River Bank'
+                    ]
+                ],
+                [
+                    acctNum: '23456789',
+                    routing: [
+                        id: 20,
+                        bankRoutingNum: '98765432',
+                        bankName: 'Outer Bank'
+                    ]
+                ],
+                [
+                    acctNum: '34567890',
+                    routing: [
+                        id: 30,
+                        bankRoutingNum: '09876543',
+                        bankName: 'Bank Shot'
+                    ]
+                ]
+        ]
+
+        def acctsSentFromUi = [
+                [
+                        id: 1,
+                        bankAccountNum: 'xxxx5678',
+                        bankRoutingInfo: [
+                                id: 10,
+                                bankRoutingNum: 'xxxx4321',
+                                bankName: 'River Bank'
+                        ]
+                ],
+                [
+                        id: 2,
+                        bankAccountNum: 'xxxx6789',
+                        bankRoutingInfo: [
+                                id: 20,
+                                bankRoutingNum: 'xxxx5432',
+                                bankName: 'Outer Bank'
+                        ]
+                ],
+                [
+                        id: 3,
+                        bankAccountNum: 'xxxx7890',
+                        bankRoutingInfo: [
+                                id: 30,
+                                bankRoutingNum: 'xxxx6543',
+                                bankName: 'Bank Shot'
+                        ]
+                ]
+        ]
+
+        def unmaskedAccts = [
+                [
+                        id: 1,
+                        bankAccountNum: '12345678',
+                        bankRoutingInfo: [
+                                id: 10,
+                                bankRoutingNum: '87654321',
+                                bankName: 'River Bank'
+                        ]
+                ],
+                [
+                        id: 2,
+                        bankAccountNum: '23456789',
+                        bankRoutingInfo: [
+                                id: 20,
+                                bankRoutingNum: '98765432',
+                                bankName: 'Outer Bank'
+                        ]
+                ],
+                [
+                        id: 3,
+                        bankAccountNum: '34567890',
+                        bankRoutingInfo: [
+                                id: 30,
+                                bankRoutingNum: '09876543',
+                                bankName: 'Bank Shot'
+                        ]
+                ]
+        ]
+
+        DirectDepositUtility.setDirectDepositAccountInfoInSessionCache(1, acctInfoToCache[0])
+        DirectDepositUtility.setDirectDepositAccountInfoInSessionCache(2, acctInfoToCache[1])
+        DirectDepositUtility.setDirectDepositAccountInfoInSessionCache(3, acctInfoToCache[2])
+        def unmaskedAcctIds = controller.unmaskAccountInfoFromSessionCache(acctsSentFromUi)
+
+        // Accounts have now been unmasked
+        assertEquals unmaskedAccts, acctsSentFromUi
+
+        def cachedInfo = DirectDepositUtility.getDirectDepositAccountInfoFromSessionCache(1)
+
+        // The value previously set in cache has not yet been cleared
+        assertNotNull cachedInfo
+
+        cachedInfo = DirectDepositUtility.getDirectDepositAccountInfoFromSessionCache(2)
+        assertNotNull cachedInfo
+
+        cachedInfo = DirectDepositUtility.getDirectDepositAccountInfoFromSessionCache(3)
+        assertNotNull cachedInfo
+
+        // Three accounts were unmasked
+        assertEquals 3, unmaskedAcctIds.size()
+
+        // Clear the now unmasked items from the cache...
+        controller.clearAccountMaskingInfoFromSessionCache(unmaskedAcctIds)
+
+        // ...and the items are no longer in the cache
+        cachedInfo = DirectDepositUtility.getDirectDepositAccountInfoFromSessionCache(1)
+        assertNull cachedInfo
+        cachedInfo = DirectDepositUtility.getDirectDepositAccountInfoFromSessionCache(2)
+        assertNull cachedInfo
+        cachedInfo = DirectDepositUtility.getDirectDepositAccountInfoFromSessionCache(3)
+        assertNull cachedInfo
+
     }
 
 }
