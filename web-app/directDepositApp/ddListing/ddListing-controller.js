@@ -28,7 +28,7 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
 
             accountsAreUnique = function () {
                 if(isEmployeeWithPayAccountsProposed()){
-                    return ddEditAccountService.validateAllAccountsAreUnique($scope.distributions.proposed.allocations);
+                    return ddEditAccountService.validateAllAccountsAreUnique($scope.distributions.proposed.allocations).$promise;
                 }
 
                 return $q.when({failure: false}); // If the above case wasn't used, return a resolved promise
@@ -581,10 +581,11 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                     }
                 };
 
-            accountsAreUnique().$promise.then(function (response) {
+            accountsAreUnique().then(function (response) {
                 if (response.failure) {
                     notificationCenterService.displayNotification(response.message, "error");
                 } else {
+                    $scope.cancelNotification(); // Clear old notifications
                     doUpdate();
                 }
             });
