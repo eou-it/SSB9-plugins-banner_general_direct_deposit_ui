@@ -1,5 +1,5 @@
 /*******************************************************************************
- Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
+ Copyright 2015-2018 Ellucian Company L.P. and its affiliates.
  *******************************************************************************/
 
 package net.hedtech.banner.general
@@ -1602,6 +1602,153 @@ class UpdateAccountControllerTests extends BaseIntegrationTestCase {
         cachedInfo = DirectDepositUtility.getDirectDepositAccountInfoFromSessionCache(3)
         assertNull cachedInfo
 
+    }
+
+    @Test
+    void testValidateAccountsAreUniqueWithAllUniqueAccounts() {
+        def acctInfoToCache = [
+                [
+                    acctNum: '12345678',
+                    routing: [
+                        id: 10,
+                        bankRoutingNum: '87654321',
+                        bankName: 'River Bank'
+                    ]
+                ],
+                [
+                    acctNum: '12345678',
+                    routing: [
+                        id: 20,
+                        bankRoutingNum: '87654321',
+                        bankName: 'River Bank'
+                    ]
+                ],
+                [
+                    acctNum: '34567890',
+                    routing: [
+                        id: 30,
+                        bankRoutingNum: '09876543',
+                        bankName: 'Bank Shot'
+                    ]
+                ]
+        ]
+
+        DirectDepositUtility.setDirectDepositAccountInfoInSessionCache(1, acctInfoToCache[0])
+        DirectDepositUtility.setDirectDepositAccountInfoInSessionCache(2, acctInfoToCache[1])
+        DirectDepositUtility.setDirectDepositAccountInfoInSessionCache(3, acctInfoToCache[2])
+
+        controller.request.contentType = "text/json"
+        controller.request.json = """[{
+            id: "1",
+            accountType:"C",
+            apIndicator:"A",
+            hrIndicator:"I",
+            bankAccountNum:"xxxx5678",
+            bankRoutingInfo:{
+                bankRoutingNum:"xxxx4321"
+            }
+        },
+        {
+            id: "2",
+            accountType:"S",
+            apIndicator:"A",
+            hrIndicator:"I",
+            bankAccountNum:"xxxx5678",
+            bankRoutingInfo:{
+                bankRoutingNum:"xxxx4321"
+            }
+        },
+        {
+            id: "3",
+            accountType:"C",
+            apIndicator:"A",
+            hrIndicator:"I",
+            bankAccountNum:"xxx7890",
+            bankRoutingInfo:{
+                bankRoutingNum:"xxxx6543"
+            }
+        }]""".toString()
+
+        controller.validateAccountsAreUnique()
+
+        def failureMessageModel = controller.response.json
+
+        assertNotNull failureMessageModel
+        assertEquals false, failureMessageModel.failure
+    }
+
+    @Test
+    void testValidateAccountsAreUniqueWithDuplicateAccounts() {
+        def acctInfoToCache = [
+                [
+                    acctNum: '12345678',
+                    routing: [
+                        id: 10,
+                        bankRoutingNum: '87654321',
+                        bankName: 'River Bank'
+                    ]
+                ],
+                [
+                    acctNum: '12345678',
+                    routing: [
+                        id: 20,
+                        bankRoutingNum: '87654321',
+                        bankName: 'River Bank'
+                    ]
+                ],
+                [
+                    acctNum: '34567890',
+                    routing: [
+                        id: 30,
+                        bankRoutingNum: '09876543',
+                        bankName: 'Bank Shot'
+                    ]
+                ]
+        ]
+
+        DirectDepositUtility.setDirectDepositAccountInfoInSessionCache(1, acctInfoToCache[0])
+        DirectDepositUtility.setDirectDepositAccountInfoInSessionCache(2, acctInfoToCache[1])
+        DirectDepositUtility.setDirectDepositAccountInfoInSessionCache(3, acctInfoToCache[2])
+
+        controller.request.contentType = "text/json"
+        controller.request.json = """[{
+            id: "1",
+            accountType:"S",
+            apIndicator:"A",
+            hrIndicator:"I",
+            bankAccountNum:"xxxx5678",
+            bankRoutingInfo:{
+                bankRoutingNum:"xxxx4321"
+            }
+        },
+        {
+            id: "2",
+            accountType:"S",
+            apIndicator:"A",
+            hrIndicator:"I",
+            bankAccountNum:"xxxx5678",
+            bankRoutingInfo:{
+                bankRoutingNum:"xxxx4321"
+            }
+        },
+        {
+            id: "3",
+            accountType:"C",
+            apIndicator:"A",
+            hrIndicator:"I",
+            bankAccountNum:"xxx7890",
+            bankRoutingInfo:{
+                bankRoutingNum:"xxxx6543"
+            }
+        }]""".toString()
+
+        controller.validateAccountsAreUnique()
+
+        def failureMessageModel = controller.response.json
+
+        assertNotNull failureMessageModel
+        assertEquals true, failureMessageModel.failure
+        assertEquals("Record already exists for this Bank Account.", failureMessageModel.message)
     }
 
 }

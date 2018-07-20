@@ -1,5 +1,5 @@
 /*******************************************************************************
- Copyright 2015 Ellucian Company L.P. and its affiliates.
+ Copyright 2015-2018 Ellucian Company L.P. and its affiliates.
  *******************************************************************************/
 
 directDepositApp.service('ddEditAccountService', ['directDepositService', '$resource',
@@ -21,7 +21,10 @@ directDepositApp.service('ddEditAccountService', ['directDepositService', '$reso
             {controller: 'UpdateAccount', action: 'deleteAccounts'}, {delete: {method:'POST', isArray:true}}),
 
         bankInfo = $resource('../ssb/:controller/:action',
-            {controller: 'UpdateAccount', action: 'getBankInfo'}, {query: {method:'GET', isArray:false}});
+            {controller: 'UpdateAccount', action: 'getBankInfo'}, {query: {method:'GET', isArray:false}}),
+
+        validateAccountsUnique = $resource('../ssb/:controller/:action',
+            {controller: 'UpdateAccount', action: 'validateAccountsAreUnique'}, {query: {method:'POST', isArray:false}});
 
     this.saveAccount = function (account, createNew) {
         if(createNew){
@@ -68,6 +71,10 @@ directDepositApp.service('ddEditAccountService', ['directDepositService', '$reso
     
     this.validateAccountNum = function (accountNum) {
         return validAccount.query({bankAccountNum: accountNum});
+    };
+
+    this.validateAllAccountsAreUnique = function (accounts) {
+        return validateAccountsUnique.query(accounts);
     };
 
     this.setAccountType = function (acct, acctType) {
