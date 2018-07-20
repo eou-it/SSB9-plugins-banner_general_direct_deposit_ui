@@ -12,14 +12,26 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
             REMAINING_ONE = directDepositService.REMAINING_ONE,
             REMAINING_MULTIPLE = directDepositService.REMAINING_MULTIPLE,
 
+            isEmployeeWithPayAccountsProposed = function () {
+                return ($scope.isEmployee && $scope.hasPayAccountsProposed);
+            },
+
             amountsAreValid = function () {
                 var result = true;
 
-                if($scope.isEmployee && $scope.hasPayAccountsProposed){
+                if(isEmployeeWithPayAccountsProposed()){
                     result = ddListingService.validateAmountsForAllAccountsAndSetNotification($scope.distributions.proposed.allocations);
                 }
 
                 return result;
+            },
+
+            accountsAreUnique = function () {
+                if(isEmployeeWithPayAccountsProposed()){
+                    return ddEditAccountService.validateAllAccountsAreUnique($scope.distributions.proposed.allocations);
+                }
+
+                return $q.when({failure: false}); // If the above case wasn't used, return a resolved promise
             },
 
             formatCurrency = function(amount) {
@@ -464,106 +476,119 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
 
             var proposed = $scope.distributions.proposed,
                 allocs = proposed && proposed.allocations,
-                promises = [];
+                promises = [],
+                deferred,
+                i,
+                hasDirtyApAccount,
+                notifications = [],
 
-            if (ddEditAccountService.doReorder === 'all') {
-                var deferred = $q.defer();
+                doUpdate = function() {
+                    if (ddEditAccountService.doReorder === 'all') {
+                        deferred = $q.defer();
 
-                _.each(allocs, function (alloc) {
-                    ddEditAccountService.setAmountValues(alloc, alloc.amountType);
-                });
-
-                // Temporarily hide priority during this transition. This is because the persisted priority,
-                // often different from that displayed to the user, will be set in the account object to save
-                // it to the database. However, this results in its being briefly displayed to the user,
-                // which could be disconcerting.
-                ddListingService.shouldDisplayPriority = false;
-
-                ddEditAccountService.reorderAccounts().$promise.then(function (response) {
-                    ddListingService.shouldDisplayPriority = true; // Set priority display back to normal state
-
-                    if (response[0].failure) {
-                        notificationCenterService.displayNotification(response[0].message, $scope.notificationErrorType);
-
-                        deferred.reject();
-                    }
-                    else {
-                        ddEditAccountService.doReorder = false;
-
-                        deferred.resolve();
-                    }
-                });
-
-                promises.push(deferred.promise);
-            }
-            else {
-                if ($scope.isEmployee) {
-                    var i;
-                    for (i = 0; i < allocs.length; i++) {
-                        if (ddAccountDirtyService.isAccountDirty(allocs[i])) {
-                            promises.push(updateAccount(allocs[i]));
-                        }
-                    }
-                }
-            }
-
-            var hasDirtyApAccount = _.some($scope.apAccountList, function (acct) {
-                return ddAccountDirtyService.isAccountDirty(acct);
-            }),
-                notifications = [];
-
-            if (hasDirtyApAccount && ddListingService.hasMultipleApAccounts()) {
-                notificationCenterService.displayNotification('directDeposit.invalid.multiple.ap.accounts', $scope.notificationErrorType);
-                notifications.push({
-                    message: 'directDeposit.invalid.multiple.ap.accounts',
-                    messageType: $scope.notificationErrorType
-                });
-            }
-            else {
-                // AP account will already be updated if it has a corresponding Payroll account
-                if ($scope.hasApAccount && !$scope.getMatchingPayrollForApAccount() && ddAccountDirtyService.isAccountDirty($scope.apAccount)) {
-                    promises.push(updateAccount($scope.apAccount));
-                }
-            }
-
-            if (promises.length > 0) {
-                // Handle all promises for updated accounts.
-                //
-                // NOTE 1: REGARDING REFRESH
-                // When all updates are done, a refresh would not be necessary, as the input fields
-                // (e.g. Account Type dropdown) will have been already "updated" when the user made the
-                // change.  The *exception* to this, and the reason we do indeed refresh here, is because the
-                // "Net Pay Distribution" values may need to be recalculated, depending on the change the user made.
-                //
-                // NOTE 2: REGARDING NOTIFICATIONS
-                // If all updates succeed, a page refresh (read $state.go) will be done, with a single "success" message
-                // passed in with the $state.go call.
-                // If ANY updates fail, the "failure" messages are already displayed.  No page refresh is done, so they
-                // will remain displayed to the user.
-                $q.all(promises).then(
-                    // SUCCESSFULLY RESOLVE
-                    function () {
-                        notifications.push({
-                            message: 'default.save.success.message',
-                            messageType: $scope.notificationSuccessType,
-                            flashType: $scope.flashNotification
+                        _.each(allocs, function (alloc) {
+                            ddEditAccountService.setAmountValues(alloc, alloc.amountType);
                         });
 
-                        $state.go('directDepositListing',
-                            {onLoadNotifications: notifications},
-                            {reload: true, inherit: false, notify: true}
-                        );
-                    },
-                    // REJECTED RESOLVE
-                    function () {
-                        $scope.authorizedChanges = false;
-                        ddEditAccountService.setupPriorities($scope.distributions.proposed.allocations);
+                        // Temporarily hide priority during this transition. This is because the persisted priority,
+                        // often different from that displayed to the user, will be set in the account object to save
+                        // it to the database. However, this results in its being briefly displayed to the user,
+                        // which could be disconcerting.
+                        ddListingService.shouldDisplayPriority = false;
+
+                        ddEditAccountService.reorderAccounts().$promise.then(function (response) {
+                            ddListingService.shouldDisplayPriority = true; // Set priority display back to normal state
+
+                            if (response[0].failure) {
+                                notificationCenterService.displayNotification(response[0].message, $scope.notificationErrorType);
+
+                                deferred.reject();
+                            }
+                            else {
+                                ddEditAccountService.doReorder = false;
+
+                                deferred.resolve();
+                            }
+                        });
+
+                        promises.push(deferred.promise);
                     }
-                );
-            }
-            else {
-                $scope.authorizedChanges = false;
-            }
+                    else {
+                        if ($scope.isEmployee) {
+                            for (i = 0; i < allocs.length; i++) {
+                                if (ddAccountDirtyService.isAccountDirty(allocs[i])) {
+                                    promises.push(updateAccount(allocs[i]));
+                                }
+                            }
+                        }
+                    }
+
+                    hasDirtyApAccount = _.some($scope.apAccountList, function (acct) {
+                        return ddAccountDirtyService.isAccountDirty(acct);
+                    });
+
+                    if (hasDirtyApAccount && ddListingService.hasMultipleApAccounts()) {
+                        notificationCenterService.displayNotification('directDeposit.invalid.multiple.ap.accounts', $scope.notificationErrorType);
+                        notifications.push({
+                            message: 'directDeposit.invalid.multiple.ap.accounts',
+                            messageType: $scope.notificationErrorType
+                        });
+                    }
+                    else {
+                        // AP account will already be updated if it has a corresponding Payroll account
+                        if ($scope.hasApAccount && !$scope.getMatchingPayrollForApAccount() && ddAccountDirtyService.isAccountDirty($scope.apAccount)) {
+                            promises.push(updateAccount($scope.apAccount));
+                        }
+                    }
+
+                    if (promises.length > 0) {
+                        // Handle all promises for updated accounts.
+                        //
+                        // NOTE 1: REGARDING REFRESH
+                        // When all updates are done, a refresh would not be necessary, as the input fields
+                        // (e.g. Account Type dropdown) will have been already "updated" when the user made the
+                        // change.  The *exception* to this, and the reason we do indeed refresh here, is because the
+                        // "Net Pay Distribution" values may need to be recalculated, depending on the change the user made.
+                        //
+                        // NOTE 2: REGARDING NOTIFICATIONS
+                        // If all updates succeed, a page refresh (read $state.go) will be done, with a single "success" message
+                        // passed in with the $state.go call.
+                        // If ANY updates fail, the "failure" messages are already displayed.  No page refresh is done, so they
+                        // will remain displayed to the user.
+                        $q.all(promises).then(
+                            // SUCCESSFULLY RESOLVE
+                            function () {
+                                notifications.push({
+                                    message: 'default.save.success.message',
+                                    messageType: $scope.notificationSuccessType,
+                                    flashType: $scope.flashNotification
+                                });
+
+                                $state.go('directDepositListing',
+                                    {onLoadNotifications: notifications},
+                                    {reload: true, inherit: false, notify: true}
+                                );
+                            },
+                            // REJECTED RESOLVE
+                            function () {
+                                $scope.authorizedChanges = false;
+                                ddEditAccountService.setupPriorities($scope.distributions.proposed.allocations);
+                            }
+                        );
+                    }
+                    else {
+                        $scope.authorizedChanges = false;
+                    }
+                };
+
+            accountsAreUnique().$promise.then(function (response) {
+                if (response.failure) {
+                    notificationCenterService.displayNotification(response.message, "error");
+                } else {
+                    doUpdate();
+                }
+            });
+
         };
 
         var updateAccount = function (acct) {

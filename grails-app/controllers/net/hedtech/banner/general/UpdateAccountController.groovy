@@ -1,5 +1,5 @@
 /*******************************************************************************
- Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
+ Copyright 2015-2018 Ellucian Company L.P. and its affiliates.
  *******************************************************************************/
 
 package net.hedtech.banner.general
@@ -237,6 +237,32 @@ class UpdateAccountController {
         } catch (ApplicationException e) {
             render ControllerUtility.returnFailureMessage(e) as JSON
         }
+    }
+
+    def validateAccountsAreUnique() {
+        def map = request?.JSON ?: params
+        def model = [failure: false]
+        def accountSummaryList = []
+
+        unmaskAccountInfoFromSessionCache(map)
+
+        map.find { acct ->
+            def summaryStr = "${acct.bankRoutingInfo.bankRoutingNum}|${acct.bankAccountNum}|${acct.accountType}|${acct.apIndicator}|${acct.hrIndicator}"
+
+            if (summaryStr in accountSummaryList) {
+                model = [failure: true,
+                         message: message(code:'net.hedtech.banner.general.overall.DirectDepositAccount.recordAlreadyExists', default: 'Record already exists for this Bank Account.')
+                ]
+
+                return true
+            } else {
+                accountSummaryList << summaryStr
+            }
+
+            return false
+        }
+
+        render model as JSON
     }
 
     /**
