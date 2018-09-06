@@ -17,6 +17,7 @@ modules = {
     }
 
     'commonComponents' {
+        resource url:[file: 'js/d3/d3.min.js']
         resource url:[file: 'js/xe-components/xe-ui-components.js']
     }
     'commonComponentsLTR' {
