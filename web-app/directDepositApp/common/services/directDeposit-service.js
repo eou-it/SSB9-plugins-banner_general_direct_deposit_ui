@@ -7,7 +7,7 @@ directDepositApp.service('directDepositService', ['$rootScope', '$resource', fun
     var fetchConfig = $resource('../ssb/:controller/:action',
             {controller: 'DirectDepositConfiguration', action: 'getConfig'}),
         fetchCurrencySymbol = $resource('../ssb/:controller/:action',
-            {controller: 'UpdateAccount', action: 'getCurrency'});
+            {controller: 'AccountListing', action: 'getCurrency'});
 
 
     // CONSTANTS
