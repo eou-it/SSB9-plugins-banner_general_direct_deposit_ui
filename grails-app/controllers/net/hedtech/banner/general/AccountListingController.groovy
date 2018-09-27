@@ -67,4 +67,17 @@ class AccountListingController  {
         render model as JSON
     }
 
+    def getCurrency() {
+        try {
+            def symbol = [:]
+
+            symbol.currencySymbol = directDepositAccountCompositeService.getCurrencySymbol()
+
+            render symbol as JSON
+
+        } catch (ApplicationException e) {
+            render ControllerUtility.returnFailureMessage(e) as JSON
+        }
+    }
+
 }

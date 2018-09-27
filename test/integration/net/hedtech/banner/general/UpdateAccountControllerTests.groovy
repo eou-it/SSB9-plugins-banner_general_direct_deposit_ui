@@ -1358,18 +1358,6 @@ class UpdateAccountControllerTests extends BaseIntegrationTestCase {
     }
 
     @Test
-    void testGetCurrency() {
-        loginSSB 'GDP000005', '111111'
-
-        controller.getCurrency()
-        def dataForNullCheck = controller.response.contentAsString
-        def data = JSON.parse( dataForNullCheck )
-
-        assertNotNull data
-        assertEquals '$', data.currencySymbol
-    }
-
-    @Test
     void testGetBankInfo() {
         loginSSB 'GDP000005', '111111'
 

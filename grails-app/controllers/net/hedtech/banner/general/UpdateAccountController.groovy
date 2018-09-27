@@ -15,7 +15,7 @@ class UpdateAccountController {
     def directDepositAccountCompositeService
     def directDepositConfigurationService
 
-    def beforeInterceptor = [action:this.&readOnlyCheck, except:'getCurrency']
+    def beforeInterceptor = [action:this.&readOnlyCheck]
 
     private readOnlyCheck() {
         // Disallow updates if in read-only mode
@@ -130,19 +130,6 @@ class UpdateAccountController {
             arrayResult[0] = ControllerUtility.returnFailureMessage(e)
             
             render arrayResult as JSON
-        }
-    }
-
-    def getCurrency() {
-        try {
-            def symbol = [:]
-
-            symbol.currencySymbol = directDepositAccountCompositeService.getCurrencySymbol()
-
-            render symbol as JSON
-
-        } catch (ApplicationException e) {
-            render ControllerUtility.returnFailureMessage(e) as JSON
         }
     }
     

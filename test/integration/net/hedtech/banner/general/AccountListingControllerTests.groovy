@@ -92,4 +92,16 @@ class AccountListingControllerTests extends BaseIntegrationTestCase {
         assertEquals 1, data.docAccts.size()
     }
 
+    @Test
+    void testGetCurrency() {
+        loginSSB 'GDP000005', '111111'
+
+        controller.getCurrency()
+        def dataForNullCheck = controller.response.contentAsString
+        def data = JSON.parse( dataForNullCheck )
+
+        assertNotNull data
+        assertEquals '$', data.currencySymbol
+    }
+
 }
