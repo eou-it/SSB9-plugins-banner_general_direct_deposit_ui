@@ -118,7 +118,7 @@ a.breadcrumbButton.leaf-breadcrumb {
 /* Webkit (e.g. iPhone) tweak to make text darker in a disabled input */
 input:disabled {
     -webkit-opacity: 1;
-    -webkit-text-fill-color:#869FB1;
+    -webkit-text-fill-color:#5B5E65;
 }
 
 .audible-message {
@@ -204,7 +204,7 @@ input:disabled {
 }
 
 .field-error {
-    color: #CD3B3E;
+    color: #E32D27;
 }
 
 .error-font-size {
@@ -213,11 +213,7 @@ input:disabled {
 
 .text-input-field {
     border-radius: 4px;
-    background-color: #fff;
-    border:1px solid #869FB1;
-    box-shadow: 4px 4px #EDF3F6 inset;
     width: 100%;
-    color: #869FB1;
 }
 
 @media(max-width:568px){
@@ -233,53 +229,31 @@ input:disabled {
 }
 .radio-txt-input::-webkit-input-placeholder,
 .text-input-field::-webkit-input-placeholder { /* WebKit, Blink, Edge */
-    color: #869FB1;
+    color: #5B5E65;
     font-weight: bold;
 }
 .radio-txt-input:-moz-placeholder,
 .text-input-field:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-   color: #869FB1;
+   color: #5B5E65;
    font-weight: bold;
    opacity:  1;
 }
 .radio-txt-input::-moz-placeholder,
 .text-input-field::-moz-placeholder { /* Mozilla Firefox 19+ */
-   color: #869FB1;
+   color: #5B5E65;
    font-weight: bold;
    opacity:  1;
 }
 .radio-txt-input:-ms-input-placeholder,
 .text-input-field:-ms-input-placeholder { /* Internet Explorer 10-11 */
-   color: #869FB1;
+   color: #5B5E65;
    font-weight: bold;
 }
 
 .dropdown .input-field-error,
-.input-field-error,
+.input-field-error, .gssb-eds-text-field.input-field-error,
 .radio-txt-input.input-field-error {
-    background-color: #F6E5E6;
-    border:1px solid #CD3B3E;
-    box-shadow: 3px 3px #F0D3D3 inset;
-    color: #CD3B3E;
-}
-
-.input-field-error::-webkit-input-placeholder { /* WebKit, Blink, Edge */
-    color: #CD3B3E;
-    font-weight: bold;
-}
-.input-field-error:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-   color: #CD3B3E;
-   font-weight: bold;
-   opacity:  1;
-}
-.input-field-error::-moz-placeholder { /* Mozilla Firefox 19+ */
-   color: #CD3B3E;
-   font-weight: bold;
-   opacity:  1;
-}
-.input-field-error:-ms-input-placeholder { /* Internet Explorer 10-11 */
-   color: #CD3B3E;
-   font-weight: bold;
+    border:1px solid #FF3030;
 }
 
 .input-fail {
@@ -287,11 +261,6 @@ input:disabled {
     float: right;
     right: 0.75em;
     bottom: 1.0em;
-    background: #F6E5E6;
-}
-
-.icon .icon-error {
-    font-size: 16px;
 }
 
 .amt-input-fail {
@@ -342,7 +311,6 @@ input:disabled {
     background: #F6E5E6;
 }
 
-.icon-error.ellucian-font,
 .icon-caret-down.ellucian-font {
     font-family: ellucian;
 }
@@ -351,9 +319,8 @@ input:disabled {
 .radio-txt-input:focus {
     border-style: solid;
     border-width: 1px;
-    border-color: #206E9F;
-    box-shadow: 0px 2px #CBE2E8 inset;
-    color: #4F585F;
+    border-color: #026BC8;
+    color: #151618;
 }
 
 .input-bank-name {
@@ -361,8 +328,12 @@ input:disabled {
     float: right;
     right: 0.75em;
     bottom: 1.185em;
-    color: #869FB1;
+    color: #151618;
     line-height: 118%;
+}
+
+input.gssb-eds-text-field:disabled ~ .input-bank-name {
+    color: #5B5E65;
 }
 
 .dialog-hdr1 {
@@ -386,7 +357,7 @@ input:disabled {
 }
 
 button.closebtn {
-    color: #4f585f;
+    color: #151618;
     opacity: 1;
     font-size: 14px;
     font-family: open-sans-semi-bold;
@@ -415,7 +386,7 @@ button.closebtn {
     border-style: none;
     border-radius: 6px;
     background: white;
-    color: #206E9F;
+    color: #026BC8;
     line-height: normal;
     padding: 1em;
 }
@@ -477,18 +448,14 @@ button.closebtn {
     display: flex;
 }
 
-.buttons-desktop-save .save-btn {
-    color: #fff;
-    background-color: #428bca;
-    border-color: #357ebd;
+.buttons-desktop-save button {
     padding: 0.438em 1.5em;
     float: right;
     margin: 0em 0em 0em 0.625em;
 }
 
-.buttons-desktop-save .save-btn[disabled] {
-    color: #C6DFF1;
-    opacity: 0.65;
+.buttons-desktop-save button[disabled] {
+    border: 1px solid transparent;
 }
 
 .mid-dash {
@@ -500,7 +467,7 @@ button.closebtn {
 }
 
 .text-input-field:disabled {
-    background-color: #F1F4F6;
+    background-color: #F7F7F7;
 }
 
 .confirm-delete-notification {
@@ -514,8 +481,12 @@ button.closebtn {
     box-shadow: none;
     width: 100%;
     padding: 0;
-    color: #4F585F;
+    color: #5b5e65;
     text-shadow: none;
+}
+
+.dropdown.open {
+    color: #151618;
 }
 
 .form-spacing,
@@ -538,36 +509,30 @@ button.closebtn {
 
 .dropdown-btn {
     border-radius: 4px;
-    background-color: #fff;
-    border:1px solid #869FB1;
-    box-shadow: 0px -4px #DEE5E7 inset;
     width: 100%;
-    color: #869FB1;
+    font-size: 1em !important;
+    padding: unset !important;
 }
 
 .dropdown-btn:focus {
     background-color: #fff;
-    border:1px solid #869FB1;
-    box-shadow: 0px 2px #CBE2E8 inset;
-    color: #4F585F;
+    border:1px solid #151618;
+    color: #151618;
 }
 
-.dropdown-btn.disabled {
-    background: #F6F9FA; /* For browsers that do not support gradients */
-    background: -webkit-linear-gradient(#F6F9FA, #EFEFEF); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(#F6F9FA, #EFEFEF); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(#F6F9FA, #EFEFEF); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(#F6F9FA, #EFEFEF);
-    border:1px solid #869FB1;
-    box-shadow: 0px -4px #E2EAEF inset;
-    color: #869FB1;
+.dropdown-btn.disabled,
+.desktop-listing .dropdown-btn.disabled,
+button.dropdown-btn.disabled.ng-not-empty {
+    background: #F7F7F7;
+    border:1px solid #B2B3B7;
+    color: #5B5E65;
 }
 
+.desktop-listing.open > .dropdown-btn,
 .open > .dropdown-btn {
     background-color: #fff;
-    border:1px solid #206E9F;
-    box-shadow: 0px -4px #DEE5E7 inset;
-    color: #4F585F;
+    border:1px solid #026BC8;
+    color: #151618;
 }
 
 .float-r.form-spacing.down-caret:after {
@@ -576,23 +541,14 @@ button.closebtn {
     float: right;
 }
 
-.open > .dropdown-btn .caret-color,
-.dropdown-btn:focus .caret-color,
-.desktop-listing .dropdown-btn.input-field-error:focus .caret-color {
-    color: #206E9F;
-}
-
 .desktop-listing .dropdown-btn {
-    color: #4F585F;
+    color: #151618;
+    border-color: #151618;
 }
 
-.desktop-listing .dropdown-btn.disabled,
-.dropdown-btn.disabled:focus .caret-color {
-    color: #869FB1;
-}
-
-.desktop-listing .dropdown-btn.input-field-error .caret-color {
-    color: #CD3B3E;
+.desktop-listing div.faux-btn.dropdown-btn {
+    padding: 1em 0.75em !important;
+    color: #5B5E65;
 }
 
 .desktop-listing .dropdown-btn span.icon {
@@ -628,9 +584,9 @@ button.closebtn {
 }
 
 .open > .dropdown-menu.addAcct {
-    border-style: solid;
+    border-style: none solid solid;
     border-width: 1px;
-    border-color: #206E9F;
+    border-color: #026BC8;
     top: 3.175em;
     width: auto;
     min-width: 100%;
@@ -641,8 +597,8 @@ button.closebtn {
     border-width: 1px;
     border-radius: 0px;
     border-style: solid none;
-    border-color: #FFFFFF;
-    color: #4F585F;
+    border-color: #EEEEEF;
+    color: #151618;
     font-weight: bold;
 }
 
@@ -727,7 +683,7 @@ input[type=checkbox]+.lbl::before,input[type=radio]+.lbl::before {
 }
 
 input[type=checkbox]:focus+.lbl::before,input[type=radio]:focus+.lbl::before,input[type=checkbox][focus]+.lbl::before,input[type=radio][focus]+.lbl::before,input[type=checkbox].focus+.lbl::before,input[type=radio].focus+.lbl::before {
-    border: 1px solid  #316699;
+    border: 1px solid  #81C8FF;
 }
 
 /* Checked state styles */
@@ -775,11 +731,8 @@ span.radio-list.no-padding {
 
 .radio-txt-input {
     border-radius: 4px;
-    background-color: #FFF;
-    border: 1px solid #869FB1;
-    box-shadow: 4px 4px #EDF3F6 inset;
     width: 13em;
-    color: #869FB1;
+    color: #151618;
 }
 
 .misc-message {
@@ -787,6 +740,41 @@ span.radio-list.no-padding {
     display: inline-block;
 }
 
+/* EDS colors */
+.gssb-eds-text-field {
+    border: 1px solid #B2B3B7;
+    background-color: #FFFFFF;
+}
+
+.gssb-eds-text-field:focus:not([valid]) {
+    border: 1px solid #026BC8;
+    color: #151618;
+    outline: none;
+}
+
+.gssb-eds-text-field-readonly {
+    background-color: #F7F7F7;
+    border: 1px solid #151618;
+    color: #5B5E65;
+    opacity: 100%;
+}
+
+.gssb-eds-text-field:disabled,
+.gssb-eds-text-field-disabled {
+    border: 1px solid #5B5E65;
+    color: #5B5E65;
+    background-color: #F7F7F7;
+}
+
+.gssb-eds-text-field.dropdown-btn:hover {
+    border: 1px solid #026BC8;
+}
+
+input.gssb-eds-text-field.ng-not-empty,
+button.dropdown-btn.ng-not-empty {
+    border-color: #151618;
+    color: #151618;
+}
 
 /* Account Listing Page Styles */
 .pay-entry {
@@ -1261,7 +1249,7 @@ table tr:hover th:last-child, .dashboard tr:hover th:nth-of-type(8) {
 }
 
 table th span, .table>thead>tr>th span, table tr td {
-    color: #4F585F;
+    color: #151618;
     font-weight: 500;
     vertical-align: middle;
 }
