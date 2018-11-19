@@ -668,7 +668,7 @@ input[type=checkbox]+.lbl::before,input[type=radio]+.lbl::before {
     color: #ffffff;
     content: "\a0";
     background-color: #ffffff;
-    border: 1px solid #cccccc;
+    border: 1px solid #B2B3B7;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     border-radius: 0;
     display: inline-block;
@@ -690,8 +690,8 @@ input[type=checkbox]:focus+.lbl::before,input[type=radio]:focus+.lbl::before,inp
 input[type=checkbox]:checked+.lbl::before,input[type=radio]:checked+.lbl::before {
     display: inline-block;
     content: '\2713';
-    background-color: #006600;
-    border: 1px solid #006600;
+    background-color: #026BC8;
+    border: 1px solid #026BC8;
 }
 
 .edit-radio {
@@ -709,7 +709,7 @@ input[type=radio]:checked+.lbl::before {
 }
 
 input[type=radio]:checked+.lbl {
-    color: #1C8445;
+    color: #151618;
 }
 
 .radio-list {
