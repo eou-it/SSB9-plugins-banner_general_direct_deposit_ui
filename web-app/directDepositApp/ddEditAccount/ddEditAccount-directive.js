@@ -348,6 +348,30 @@ generalSsbAppDirectives.directive('dropdownState', [function () {
     };
 }]);
 
+/*
+ * place on dropdown button to bind a variable that determines whether an item in dropdown has been selected. If the
+ * item is truthy the ng-not-empty CSS class is added to the button
+ */
+generalSsbAppDirectives.directive('dropdownSelected', [function () {
+    return {
+        restrict: 'A',
+        scope: {
+            item: '=dropdownSelected'
+        },
+        link: function (scope, elem) {
+
+            scope.$watch('item', function(newVal, oldVal) {
+                if (newVal) {
+                    elem.addClass('ng-not-empty');
+                }
+                else {
+                    elem.removeClass('ng-not-empty');
+                }
+            });
+        }
+    };
+}]);
+
 // In Internet Explorer pressing the enter key while in the amount input boxes on the desktop listing page spawns
 // dropdown click events on the account type dropdown. Preventing the enter key event will stop
 // those dropdown events from generating

@@ -7,7 +7,8 @@ Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
     <label class="visuallyhidden" id="select-existing">{{'directDeposit.label.select.from.exisiting'|i18n}}</label>
     <span><select-bank-acct class="visuallyhidden" id="existing-acct" tabindex="-1"/></span>
     <div ng-show="typeIndicator==='AP'" class="dropdown" role="menu">
-        <button dropdown-helper="begin" class="dropdown-btn" data-toggle="dropdown" aria-haspopup="true" aria-labelledby="select-existing existing-acct">
+        <button dropdown-helper="begin" dropdown-selected="otherAccountSelected" class="gssb-eds-text-field dropdown-btn"
+                data-toggle="dropdown" aria-haspopup="true" aria-labelledby="select-existing existing-acct">
             <span class="float-l semi-bold form-spacing">
                 <select-bank-acct/>
             </span>
@@ -30,25 +31,25 @@ Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
             {{'directDeposit.account.label.account'|i18n}}: {{otherAccountSelected.bankAccountNum}}<br>
         </div>
         <div class="col-xs-6 col-sm-4 col-md-4 xs-fix">
-            <label ng-class="(amountErr && !(amountAmtFocused || amountPctFocused)? 'input-field-label field-error' : 'input-field-label')" >{{'directDeposit.account.label.amount'|i18n}}</label><br>
+            <label class="input-field-label">{{'directDeposit.account.label.amount'|i18n}}</label><br>
             <input ng-model="account.amountType" class="edit-radio" type="radio" name="existing-amount-type" value="remaining" checked aria-labelledby="rem-radio-label"><span class="lbl radio-list" id="rem-radio-label">{{'directDeposit.account.amount.remaining'|i18n}}</span>
             <br>
             <input ng-model="account.amountType" class="edit-radio" type="radio" name="existing-amount-type" value="amount" aria-labelledby="amt-radio-label"><span class="lbl radio-list" id="amt-radio-label">{{'directDeposit.account.amount.amount'|i18n}}</span>
             <div ng-show="account.amountType === 'amount'" class="amount-spacing ws-nowrap">
                 <label class="visuallyhidden" for="amt-text-input">{{'directDeposit.account.label.amount.amount'|i18n}}</label>
-                <input ng-model="account.amount" ng-blur="amountAmtFocused=false" ng-focus="amountAmtFocused=true" ng-class="[(amountErr === 'amt' && !amountAmtFocused ? 'input-field-error' : null)]" class="radio-txt-input semi-bold form-spacing" id="amt-text-input" type="number" step="0.01" placeholder="{{'directDeposit.label.input.amount'|i18n}}"/>
-                <span ng-if="amountErr === 'amt' && !amountAmtFocused" class="input icon amt-input-fail">
-                    <span class="icon-error ellucian-font"></span>
-                </span>
+                <input ng-model="account.amount" ng-blur="amountAmtFocused=false" ng-focus="amountAmtFocused=true"
+                       ng-class="[(amountErr === 'amt' && !amountAmtFocused ? 'input-field-error' : null)]"
+                       class="gssb-eds-text-field radio-txt-input semi-bold form-spacing" id="amt-text-input" type="number" step="0.01"
+                       placeholder="{{'directDeposit.label.input.amount'|i18n}}"/>
             </div>
             <br>
             <input ng-model="account.amountType" class="edit-radio" type="radio" name="existing-amount-type" value="percentage" aria-labelledby="pct-radio-label"><span class="lbl radio-list" id="pct-radio-label">{{'directDeposit.account.amount.percentage'|i18n}}</span>
             <div ng-show="account.amountType === 'percentage'" class="amount-spacing ws-nowrap">
                 <label class="visuallyhidden" for="pct-text-input">{{'directDeposit.account.label.amount.percent'|i18n}}</label>
-                <input ng-model="account.percent" ng-blur="amountPctFocused=false" ng-focus="amountPctFocused=true" ng-class="[(amountErr === 'pct' && !amountPctFocused ? 'input-field-error' : null)]" class="radio-txt-input semi-bold form-spacing" id="pct-text-input" type="number" step="0.01" placeholder="{{'directDeposit.label.input.percent'|i18n}}"/> %
-                <span ng-if="amountErr === 'pct' && !amountPctFocused" class="input icon pct-input-fail">
-                    <span class="icon-error ellucian-font"></span>
-                </span>
+                <input ng-model="account.percent" ng-blur="amountPctFocused=false" ng-focus="amountPctFocused=true"
+                       ng-class="[(amountErr === 'pct' && !amountPctFocused ? 'input-field-error' : null)]"
+                       class="gssb-eds-text-field radio-txt-input semi-bold form-spacing" id="pct-text-input" type="number" step="0.01"
+                       placeholder="{{'directDeposit.label.input.percent'|i18n}}"/> %
             </div>
             <p ng-show="amountErr" class="input-field-label field-error error-font-size">{{amountMessage}}</p>
         </div>
@@ -57,14 +58,15 @@ Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
             <label class="visuallyhidden" id="ex-priority-menu">{{'directDeposit.label.account.priority.edit'|i18n}}</label>
             <span class="visuallyhidden" id="ex-priority" tabindex="-1">{{account.priority}}</span>
             <div class="dropdown" role="menu">
-                <button dropdown-helper="begin" ng-if="!isRemaining()" class="dropdown-btn" data-toggle="dropdown" aria-haspopup="true" aria-labelledby="ex-priority ex-priority-menu">
+                <button dropdown-helper="begin" dropdown-selected="account.priority" ng-if="!isRemaining()" class="gssb-eds-text-field dropdown-btn"
+                        data-toggle="dropdown" aria-haspopup="true" aria-labelledby="ex-priority ex-priority-menu">
                     <span class="float-l semi-bold form-spacing">
                         {{account.priority}}
                     </span>
                     <span class="float-r form-spacing down-caret caret-color"></span>
                 </button>
-                <button dropdown-helper="begin" ng-if="isRemaining()" dd-pop-over popover-msg="directDeposit.invalid.reprioritize.remaining.popover" popover-width="225px"
-                        class="dropdown-btn disabled" data-toggle="dropdown" aria-labelledby="ex-priority ex-priority-menu">
+                <button dropdown-helper="begin" dropdown-selected="account.priority" ng-if="isRemaining()" dd-pop-over popover-msg="directDeposit.invalid.reprioritize.remaining.popover" popover-width="225px"
+                        class="gssb-eds-text-field-disabled dropdown-btn disabled" data-toggle="dropdown" aria-labelledby="ex-priority ex-priority-menu">
                     <span class="float-l semi-bold form-spacing">
                         {{account.priority}}
                     </span>
