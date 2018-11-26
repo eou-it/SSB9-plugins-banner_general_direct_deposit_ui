@@ -1,5 +1,5 @@
 /*******************************************************************************
- Copyright 2017 Ellucian Company L.P. and its affiliates.
+ Copyright 2017-2018 Ellucian Company L.P. and its affiliates.
  *******************************************************************************/
 
 modules = {
