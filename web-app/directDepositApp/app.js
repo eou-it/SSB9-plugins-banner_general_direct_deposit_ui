@@ -1,5 +1,5 @@
 /*******************************************************************************
- Copyright 2017 Ellucian Company L.P. and its affiliates.
+ Copyright 2017-2019 Ellucian Company L.P. and its affiliates.
  *******************************************************************************/
 var generalSsbAppControllers = angular.module('generalSsbAppControllers', []);
 var generalSsbAppDirectives = angular.module('generalSsbAppDirectives', []);
@@ -40,7 +40,7 @@ var directDepositApp = angular.module('directDepositApp', ['ngResource','ui.rout
             // Above, we use the isDesktop function implemented in the banner_ui_ss plugin, which thus far has
             // proven to be satisfactory.  Below we modify the implementation of isTablet from banner_ui_ss to
             // be consistent with the definition of "is tablet" elsewhere in this app.
-            var isTablet = window.matchMedia("only screen and (min-width: 769px) and (max-width:1024px)");
+            var isTablet = window.matchMedia("only screen and (min-width: 768px) and (max-width:1024px)");
             $rootScope.isTabletView = isTablet.matches;
 
             $rootScope.apAccountExists = false;

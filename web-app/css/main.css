@@ -1,5 +1,5 @@
 /********************************************************************************
-  Copyright 2015-2018 Ellucian Company L.P. and its affiliates.
+  Copyright 2015-2019 Ellucian Company L.P. and its affiliates.
 ********************************************************************************/
 /* General Styles */
 body {
@@ -1308,7 +1308,7 @@ table tr td {
     }
 }
 
-@media screen and (max-width:768px) {
+@media screen and (max-width:767px) {
     .edit-flex-div1 {
         display: inline;
     }
@@ -1318,7 +1318,7 @@ table tr td {
     }
 }
 
-@media screen and (min-width:769px) {
+@media screen and (min-width:768px) {
     .account-heading {
         margin-bottom: 15px;
     }
@@ -1365,7 +1365,7 @@ table tr td {
 }
 
 /*Tablet device*/
-@media screen and (min-width: 769px) and (max-width: 1024px) {
+@media screen and (min-width: 768px) and (max-width: 1024px) {
     .payroll-status-wrapper {
         top: 28px;
     }
