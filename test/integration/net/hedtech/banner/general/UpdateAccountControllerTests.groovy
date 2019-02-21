@@ -43,7 +43,7 @@ class UpdateAccountControllerTests extends BaseIntegrationTestCase {
 
         def isReadOnly = controller.readOnlyCheck()
 
-        assertNull isReadOnly
+        assertFalse isReadOnly
     }
 
     @Test
