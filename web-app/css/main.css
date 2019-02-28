@@ -1,5 +1,5 @@
 /********************************************************************************
-  Copyright 2015-2018 Ellucian Company L.P. and its affiliates.
+  Copyright 2015-2019 Ellucian Company L.P. and its affiliates.
 ********************************************************************************/
 /* General Styles */
 body {
@@ -1376,5 +1376,15 @@ table tr td {
 
     .input-layer {
         z-index: 1000;
+    }
+}
+
+/* Mobile devices up through iPad landscape */
+@media screen and (max-width:1024px) {
+    /* Fix iOS-only issue where background scrolls when user touches an <input> element to scroll */
+    body.modal-open {
+        overflow: hidden;
+        position: fixed;
+        width: 100%;
     }
 }
