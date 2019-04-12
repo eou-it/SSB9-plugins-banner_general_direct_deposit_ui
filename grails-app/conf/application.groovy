@@ -55,8 +55,6 @@ grails.enable.native2ascii = false
 // enable GSP preprocessing: replace head -> g:captureHead, title -> g:captureTitle, meta -> g:captureMeta, body -> g:captureBody
 grails.views.gsp.sitemesh.preprocess = true
 
-seedDataTarget =  ['bgp': ['/src/main/groovy/net/hedtech/banner/seeddata/Data/banner_general_person.xml']]
-
 dataSource {
     dialect = "org.hibernate.dialect.Oracle10gDialect"
     loggingSql = false

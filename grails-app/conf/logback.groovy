@@ -1,3 +1,6 @@
+/*******************************************************************************
+ Copyright 2019 Ellucian Company L.P. and its affiliates.
+ *******************************************************************************/
 import grails.util.BuildSettings
 import grails.util.Environment
 import org.springframework.boot.logging.logback.ColorConverter

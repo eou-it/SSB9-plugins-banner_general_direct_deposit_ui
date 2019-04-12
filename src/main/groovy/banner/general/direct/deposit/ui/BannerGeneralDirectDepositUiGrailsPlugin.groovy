@@ -1,3 +1,6 @@
+/*******************************************************************************
+ Copyright 2019 Ellucian Company L.P. and its affiliates.
+ *******************************************************************************/
 package banner.general.direct.deposit.ui
 
 import grails.plugins.*
