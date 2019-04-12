@@ -1,12 +1,12 @@
 /*******************************************************************************
- Copyright 2015-2018 Ellucian Company L.P. and its affiliates.
+ Copyright 2015-2019 Ellucian Company L.P. and its affiliates.
  *******************************************************************************/
 
 package net.hedtech.banner.general
 
 import grails.converters.JSON
 import net.hedtech.banner.exceptions.ApplicationException
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.grails.web.json.JSONObject
 
 class UpdateAccountController {
 

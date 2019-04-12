@@ -1,0 +1,23 @@
+include ':banner-general-common'
+project(':banner-general-common').projectDir = new File('../banner_general_common.git')
+
+include ':banner-general-person'
+project(':banner-general-person').projectDir = new File('../banner_general_person.git')
+
+include ':banner-general-validation-common'
+project(':banner-general-validation-common').projectDir = new File('../banner_general_validation_common.git')
+
+include ':banner-general-utility'
+project(':banner-general-utility').projectDir = new File('../banner_general_utility.git')
+
+include ':banner-ui-ss'
+project(':banner-ui-ss').projectDir = new File('../banner_ui_ss.git')
+
+include ':banner-core'
+project(':banner-core').projectDir = new File('../banner_core.git')
+
+include ':banner-codenarc'
+project(':banner-codenarc').projectDir = new File('../banner_codenarc.git')
+
+include ':i18n-core'
+project(':i18n-core').projectDir = new File('../i18n_core.git')

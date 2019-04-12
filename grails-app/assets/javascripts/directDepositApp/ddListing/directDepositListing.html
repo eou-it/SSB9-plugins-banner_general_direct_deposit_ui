@@ -1,0 +1,123 @@
+<!--*******************************************************************************
+Copyright 2015-2018 Ellucian Company L.P. and its affiliates.
+*******************************************************************************-->
+
+<div role="tablist" hide-popover>
+    <form name="editForm" role="form" >
+    <div ng-show="isEmployee">
+        <!-- PAYROLL MOST RECENT -->
+        <div id="payTabMostRecent" class="row tile">
+            <div class="col-md-12 no-padding panel-group panel-accordion">
+                <h2 id="pay-account-most-recent-listing-heading" class="panel panel-heading panel-default panel-title panel-bottom-border">
+                    <a href="" data-toggle="collapse" data-target="#pay-account-most-recent-listing"
+                       ng-class="{'collapsed': payPanelMostRecentCollapsed}" ng-click="payPanelMostRecentCollapsed = !payPanelMostRecentCollapsed;"
+                       aria-controls="pay-account-most-recent-listing" aria-expanded="{{!payPanelMostRecentCollapsed}}" role="tab">
+                        {{hasPayAccountsMostRecent ? 'directDeposit.label.payDistributionAsOf' : 'directDeposit.label.payDistribution'|i18n}} {{distributions.mostRecent.payDate}}
+                    </a>
+                </h2>
+
+                <div id="pay-account-most-recent-listing" class="collapse in" aria-labelledby="pay-account-most-recent-listing-heading"
+                     aria-expanded="{{!payPanelMostRecentCollapsed}}" aria-hidden="{{payPanelMostRecentCollapsed}}" role="tabpanel">
+                    <div ng-show="payAccountsMostRecentLoaded">
+                        <div class="pay-listing-panel-wrapper-most-recent">
+                            <div ng-if="hasPayAccountsMostRecent">
+                                <pay-listing-panel-populated-most-recent/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- PAYROLL PROPOSED -->
+        <div id="payTabProposed" class="row tile">
+            <div class="col-md-12 no-padding panel-group panel-accordion">
+                <h2 id="pay-account-proposed-listing-heading" class="panel panel-heading panel-default panel-title">
+                    <a href="" data-toggle="collapse" data-target="#pay-account-proposed-listing"
+                       ng-class="{'collapsed': payPanelProposedCollapsed}" ng-click="payPanelProposedCollapsed = !payPanelProposedCollapsed;"
+                       aria-controls="pay-account-proposed-listing" aria-expanded="{{!payPanelProposedCollapsed}}" role="tab">
+                        {{'directDeposit.label.payDistribution.proposed'|i18n}}
+                    </a>
+                </h2>
+
+                <div id="pay-account-proposed-listing" class="collapse in" aria-labelledby="pay-account-proposed-listing-heading"
+                     aria-expanded="{{!payPanelProposedCollapsed}}" aria-hidden="{{payPanelProposedCollapsed}}" role="tabpanel">
+                    <div ng-show="payAccountsProposedLoaded">
+                        <div class="pay-listing-panel-wrapper-proposed">
+                            <div ng-if="areAccountsUpdatable" class="proposed-pay-listing-subheader clearfix">
+                                <a class="add-account-link" ng-if="!hasMaxPayrollAccounts" ng-click="showAddAccount('HR')" enter-key="showAddAccount('HR')" tabindex="0"><span class="icon-add-CO"></span> <span>{{'directDeposit.account.label.add.new'|i18n}}</span></a>
+                                <a class="add-account-link disabled" ng-if="hasMaxPayrollAccounts" dd-pop-over popover-msg="directDeposit.max.payroll.accounts.text" popover-position="left" popover-width="200px"
+                                   enter-key="togglePopover()" tabindex="0" aria-disabled="true"><span class="icon-add-CO"></span> <span>{{'directDeposit.account.label.add.new'|i18n}}</span></a>
+                                <a class="delete-account-link" ng-if="selectedForDelete.payroll" ng-click="confirmPayrollDelete()" enter-key="confirmPayrollDelete()" tabindex="0"><span class="icon-delete-CO"></span> <span>{{'directDeposit.account.label.delete'|i18n}}</span></a>
+                                <a class="delete-account-link disabled" ng-if="!selectedForDelete.payroll" aria-disabled="true" ng-click="confirmPayrollDelete()" enter-key="confirmPayrollDelete()" tabindex="0"><span class="icon-delete-CO"></span> <span>{{'directDeposit.account.label.delete'|i18n}}</span></a>
+                            </div>
+                            <div ng-if="hasPayAccountsProposed">
+                                <pay-listing-panel-populated-proposed/>
+                            </div>
+                            <div ng-if="!hasPayAccountsProposed">
+                                <pay-listing-panel-nonpopulated-proposed/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ACCOUNTS PAYABLE -->
+    <div id="apTab" class="row tile">
+        <div class="col-md-12 no-padding panel-group panel-accordion">
+            <div class="notification-box-wrapper" ng-show="accountLoaded">
+                <div ng-if="areAccountsUpdatable && hasApAccount">
+                    <notification-box notification-text="{{'directDeposit.notification.only.one.accounts.payable.allocation.can.exist.tap'|i18n}}"/>
+                </div>
+            </div>
+            <h2 id="ap-account-listing-heading" class="panel panel-heading panel-default panel-title">
+                <a href="" data-toggle="collapse" data-target="#ap-account-listing"
+                   ng-class="{'collapsed': panelCollapsed}" ng-click="panelCollapsed = !panelCollapsed;"
+                   aria-controls="ap-account-listing" aria-expanded="{{!panelCollapsed}}" role="tab">
+                    {{'directDeposit.label.accountsPayableDeposit'|i18n}}
+                </a>
+            </h2>
+
+            <div id="ap-account-listing" class="collapse in" aria-labelledby="ap-account-listing-heading"
+                 aria-expanded="{{!panelCollapsed}}" aria-hidden="{{panelCollapsed}}" role="tabpanel">
+                <div ng-show="accountLoaded">
+                    <div ng-if="areAccountsUpdatable" class="ap-listing-panel clearfix">
+                        <a class="add-account-link" ng-if="!hasApAccount" ng-click="showAddAccount('AP')" enter-key="showAddAccount('AP')" tabindex="0"><span class="icon-add-CO"></span> <span>{{'directDeposit.account.label.add.new'|i18n}}</span></a>
+                        <a class="add-account-link disabled" ng-if="hasApAccount" aria-disabled="true" ng-click="showAddAccount('AP')" enter-key="showAddAccount('AP')" tabindex="0"><span class="icon-add-CO"></span> <span>{{'directDeposit.account.label.add.new'|i18n}}</span></a>
+                        <a class="delete-account-link" ng-if="selectedForDelete.ap" ng-click="confirmAPDelete()" enter-key="confirmAPDelete()" tabindex="0"><span class="icon-delete-CO"></span> <span>{{'directDeposit.account.label.delete'|i18n}}</span></a>
+                        <a class="delete-account-link disabled" ng-if="!selectedForDelete.ap" aria-disabled="true" ng-click="confirmAPDelete()" enter-key="confirmAPDelete()" tabindex="0"><span class="icon-delete-CO"></span> <span>{{'directDeposit.account.label.delete'|i18n}}</span></a>
+                    </div>
+                    <div ng-if="hasApAccount">
+                        <ap-listing-panel-populated/>
+                    </div>
+                    <div ng-if="!hasApAccount">
+                        <ap-listing-panel-nonpopulated/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+    <span class="visuallyhidden" id="checking-lbl" tabindex="-1">{{'directDeposit.account.type.checking'|i18n}}</span>
+    <span class="visuallyhidden" id="savings-lbl" tabindex="-1">{{'directDeposit.account.type.savings'|i18n}}</span>
+    <div ng-if="isDesktopView && (hasApAccount || hasPayAccountsProposed)" id="footerChunk"></div>
+</div>
+<div class="dird-footer-container">
+    <div footer id="buttonFooter" ng-if="areAccountsUpdatable && isDesktopView && (hasApAccount || hasPayAccountsProposed)">
+        <span class="desktop-save">
+            <input type="checkbox" class="main-nav-check" id="disclaimer-check" aria-label="{{'directDeposit.label.disclaimer.ack'|i18n}}"
+                   aria-describedby="disclaimerTxt" ng-checked="authorizedChanges" ng-click="toggleAuthorizedChanges()"/><span class="lbl"></span>
+            <span class="lbl-text" id="disclaimerTxt">{{'directDeposit.disclaimer.text'|i18n}}</span>
+        </span>
+        <span class="buttons-desktop-save">
+            <button ng-click="cancelChanges()" ng-disabled="disableCancel()" class="secondary" aria-label="{{'directDeposit.cancel.changes.button.label'|i18n}}"
+                    title="{{'directDeposit.cancel.changes.button.label'|i18n}}">{{'directDeposit.cancel.changes.button.label'|i18n}}</button>
+            <button ng-click="updateAccounts()" ng-disabled="disableSave()" class="primary" >{{'directDeposit.save.changes.button.label'|i18n}}</button>
+        </span>
+    </div>
+</div>
+<!-- Audible message div made visible when audible message is to be read by screen reader. Designed to be used with tooltips/popovers that may
+     not work correctly with readers. -->
+<div ng-class="{'audible-message': true, 'audible-message-hidden': !playAudibleMessage, 'audible-message-visible': playAudibleMessage}" role="alert" aria-live="assertive">
+    {{playAudibleMessage}}
+</div>

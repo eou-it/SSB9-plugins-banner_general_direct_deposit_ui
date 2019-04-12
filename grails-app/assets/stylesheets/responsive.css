@@ -1,0 +1,9 @@
+/*******************************************************************************
+ Copyright 2015 Ellucian Company L.P. and its affiliates.
+ *******************************************************************************/
+@media screen and (max-width: 767px) {
+    .breadcrumbButton {
+        float: left;
+        padding-top: 8px;
+    }
+}

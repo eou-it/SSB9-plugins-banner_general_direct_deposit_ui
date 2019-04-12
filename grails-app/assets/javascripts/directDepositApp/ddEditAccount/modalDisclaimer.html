@@ -1,0 +1,10 @@
+<!--*******************************************************************************
+Copyright 2015 Ellucian Company L.P. and its affiliates.
+*******************************************************************************-->
+<div class="row disclaimer-margin">
+    <div class="col-xs-12">
+        <label class="visuallyhidden" for="{{disclaimerId}}">{{'directDeposit.label.disclaimer.checkbox'|i18n}}</label>
+        <input ng-model="setup.authorizedChanges" class="main-nav-check" id="{{disclaimerId}}" type="checkbox" aria-describedby="{{disclaimerId+'-p'}}"/>
+        <p class="lbl" id="{{disclaimerId+'-p'}}">{{'directDeposit.disclaimer.text'|i18n}}</p>
+    </div>
+</div>

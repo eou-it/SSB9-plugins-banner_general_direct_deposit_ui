@@ -1,0 +1,45 @@
+<!--*******************************************************************************
+Copyright 2015-2018 Ellucian Company L.P. and its affiliates.
+*******************************************************************************-->
+<div ng-if="areAccountsUpdatable" class="delete-checkbox-wrapper no-margin">
+    <label class="visuallyhidden" id="for-delete{{$index}}">{{'directDeposit.label.select.for.delete'|i18n}}</label>
+    <input type="checkbox" ng-model="alloc.deleteMe" no-dirty-check aria-labelledby="for-delete{{$index}} pro-bank-name{{$index}}">
+    <div class="lbl"></div>
+</div>
+<div ng-class="(areAccountsUpdatable ? 'proposed-entry' : null)">
+    <div class="hr-heading break-word hdg-inline" id="pro-bank-name{{$index}}">
+        {{alloc.bankRoutingInfo.bankName}}
+    </div>
+    <div ng-if="areAccountsUpdatable" class="edit-acct">
+        <a class="edit-account-link" ng-click="showEditPayroll()" enter-key="showEditPayroll()" tabindex="0"><span class="icon-edit"></span> <span>{{'directDeposit.account.label.edit'|i18n}}</span></a>
+    </div>
+    <div class="row flex-div no-margin">
+        <div class="col-xs-9 no-padding">
+            <div class="col-sm-4 hr-account-field no-padding">
+                {{'directDeposit.account.label.routing'|i18n}}: {{alloc.bankRoutingInfo.bankRoutingNum}}
+            </div>
+            <div class="col-sm-4 hr-account-field no-padding">
+                {{'directDeposit.account.label.account'|i18n}}: {{alloc.bankAccountNum}}
+            </div>
+            <div class="col-sm-4 hr-account-field no-padding">
+                {{'directDeposit.account.label.accountType'|i18n}}: <account-type account="alloc"/>
+            </div>
+            <div class="clearfix visible-sm"></div>
+            <div class="col-sm-4 hr-account-field no-padding">
+                {{'directDeposit.account.label.amount'|i18n}}: {{(isRemaining(alloc) ? ('directDeposit.account.label.remaining'|i18n) : alloc.allocation)}}
+            </div>
+            <div class="col-sm-4 hr-account-field no-padding">
+                {{'directDeposit.account.label.priority'|i18n}}: {{alloc.priority}}
+            </div>
+            <div ng-if="isTabletView" class="col-sm-4 hr-account-field no-padding">
+                {{alloc.calculatedAmount}}
+            </div>
+        </div>
+        <div class="col-xs-3 hr-amount no-padding">
+            <div class="payroll-status-wrapper clearfix">
+                <account-status account="alloc"/>
+            </div>
+            <span ng-if="!isTabletView">{{alloc.calculatedAmount}}</span>
+        </div>
+    </div>
+</div>

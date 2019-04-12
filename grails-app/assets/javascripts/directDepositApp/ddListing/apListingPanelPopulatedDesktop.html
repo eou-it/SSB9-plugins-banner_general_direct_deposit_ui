@@ -1,0 +1,17 @@
+<table role="grid" aria-labelledby="ap_account_list_label">
+<caption id ="ap_account_list_label" class="offscreen" aria-hidden="false">{{'directDeposit.apListTableDesc'|i18n}}</caption>
+    <thead>
+        <tr>
+            <th ng-repeat="heading in apListingColumns">
+                <div class="headervalues">
+                    <span class="column-title">
+                        {{heading.title}}
+                    </span>
+                </div>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="apAcct in apAccountList"  ap-account-info-desktop></tr>
+    </tbody>
+</table>

@@ -52,6 +52,14 @@ dependencies {
     testCompile "org.grails:grails-web-testing-support"
 }
 
+// Added for BannerXE - Internal plugin dependency
+grails {
+    plugins {
+        compile project(":banner-general-common")
+        compile project(":banner-general-person")
+    }
+}
+
 bootRun {
     jvmArgs('-Dspring.output.ansi.enabled=always')
     addResources = true

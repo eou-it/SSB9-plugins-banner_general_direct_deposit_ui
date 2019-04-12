@@ -1,0 +1,35 @@
+<!--*******************************************************************************
+Copyright 2017 Ellucian Company L.P. and its affiliates.
+*******************************************************************************-->
+
+<div aria-labelledby="add-acct-title" hide-popover>
+    <button class="close closebtn" ng-click="cancelModal()" title="{{'directDeposit.button.title.close'|i18n}}"></button>
+    <h1 class="dialog-hdr1" id="add-acct-title">
+        <title-for-edit-modal/>
+    </h1>
+    <div ng-if="!setup.hasOtherAccounts">
+        <div class="pad-dialog-lr">
+            <ng-include
+                src="webAppResourcePathStr + 'directDepositApp/ddEditAccount/accountNumberInput.html'">
+            </ng-include>
+        </div>
+    </div>
+    <div ng-if="setup.hasOtherAccounts">
+        <div class="pad-dialog-lr">
+            <ng-include
+                src="webAppResourcePathStr + 'directDepositApp/ddEditAccount/existingAccountInput.html'">
+            </ng-include>
+        </div>
+    </div>
+    <div class="dialog-footer-margin modal-footer addAcct">
+        <button class="dialog-btn" ng-click="cancelModal()">{{'directDeposit.button.cancel'|i18n}}</button>
+        <button class="dialog-btn save-btn" ng-disabled="!setup.authorizedChanges" ng-click="saveAccount()">
+            <span class="mid-dash"><edit-modal-save-button/></span>
+        </button>
+    </div>
+</div>
+<!-- Audible message div made visible when audible message is to be read by screen reader. Designed to be used with tooltips/popovers that may
+     not work correctly with readers. -->
+<div ng-class="{'audible-message': true, 'audible-message-hidden': !playAudibleMessage, 'audible-message-visible': playAudibleMessage}" role="alert" aria-live="assertive">
+    {{playAudibleMessage}}
+</div>

@@ -1,0 +1,24 @@
+<!--*******************************************************************************
+Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
+*******************************************************************************-->
+<div class="hr-heading">
+    {{payHistoryDist.bankName}}
+</div>
+<div class="row flex-div no-margin">
+    <div class="col-xs-9 no-padding">
+        <div class="row no-margin">
+            <div class="col-sm-4 hr-account-field no-padding">
+                {{'directDeposit.account.label.routing'|i18n}}: {{payHistoryDist.bankRoutingNumber}}
+            </div>
+            <div class="col-sm-4 hr-account-field no-padding">
+                {{'directDeposit.account.label.account'|i18n}}: {{payHistoryDist.bankAccountNumber}}
+            </div>
+            <div class="col-sm-4 hr-account-field no-padding">
+                {{'directDeposit.account.label.accountType'|i18n}}: <account-type account="payHistoryDist"/>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-3 hr-amount no-padding">
+        <span>{{payHistoryDist.net}}</span>
+    </div>
+</div>
