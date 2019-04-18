@@ -20,7 +20,7 @@ class DirectDepositInterceptor {
         } else if (requestParams in Map) {
             SanitizeUtility.sanitizeMap(requestParams)
         } else {
-            logger.error(new Exception('Unknown request parameter type. Expected Map or Array.'))
+            log.error(new Exception('Unknown request parameter type. Expected Map or Array.'))
             return false
         }
 

@@ -9,7 +9,6 @@ import grails.converters.JSON
 import grails.core.ApplicationAttributes
 import grails.util.Environment
 import org.apache.commons.logging.LogFactory
-import org.apache.log4j.Logger
 import org.grails.plugins.web.taglib.ValidationTagLib
 import org.springframework.context.i18n.LocaleContextHolder as LCH
 
@@ -53,7 +52,7 @@ class BootStrap {
 
 
         grailsApplication.controllerClasses.each {
-            logger.info "adding log property to controller: $it"
+            log.info "adding log property to controller: $it"
             // Note: weblogic throws an error if we try to inject the method if it is already present
             if (!it.metaClass.methods.find { m -> m.name.matches("getLog") }) {
                 def name = it.name // needed as this 'it' is not visible within the below closure...
@@ -66,7 +65,7 @@ class BootStrap {
 
         grailsApplication.allClasses.each {
             if (it.name?.contains("plugin.resource")) {
-                logger.info "adding log property to plugin.resource: $it"
+                log.info "adding log property to plugin.resource: $it"
 
                 // Note: weblogic throws an error if we try to inject the method if it is already present
                 if (!it.metaClass.methods.find { m -> m.name.matches("getLog") }) {
