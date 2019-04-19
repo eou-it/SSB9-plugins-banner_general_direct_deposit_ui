@@ -81,7 +81,8 @@ class BootStrap {
         // Register the JSON Marshallers for format conversion and XSS protection
         registerJSONMarshallers()
 
-        resourceService.reloadAll()
+        // TODO: Grails 3 cannot find resourceService.reloadAll. Determine what to do with this.  JDC 4/19/19
+        //resourceService.reloadAll()
     }
 
 
