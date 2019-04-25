@@ -1,10 +1,18 @@
 /*******************************************************************************
- Copyright 2015-2018 Ellucian Company L.P. and its affiliates.
+ Copyright 2015-2019 Ellucian Company L.P. and its affiliates.
  *******************************************************************************/
 
 package net.hedtech.banner.general
 
 import grails.converters.JSON
+import grails.gorm.transactions.Rollback
+import grails.testing.mixin.integration.Integration
+import grails.util.GrailsWebMockUtil
+import grails.util.Holders
+import grails.web.servlet.context.GrailsWebApplicationContext
+import org.grails.plugins.testing.GrailsMockHttpServletRequest
+import org.grails.plugins.testing.GrailsMockHttpServletResponse
+import org.grails.web.servlet.mvc.GrailsWebRequest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -16,16 +24,21 @@ import net.hedtech.banner.testing.BaseIntegrationTestCase
 
 import net.hedtech.banner.general.AccountListingController
 
+@Integration
+@Rollback
 class AccountListingControllerTests extends BaseIntegrationTestCase {
+
+    def controller
 
     /**
      * The setup method will run before all test case method executions start.
      */
     @Before
     public void setUp() {
-        formContext = ['GUAGMNU']
-        controller = new AccountListingController()
+        formContext = ['SELFSERVICE','GUAGMNU']
         super.setUp()
+        webAppCtx = new GrailsWebApplicationContext()
+        controller = Holders.grailsApplication.getMainContext().getBean("net.hedtech.banner.general.AccountListingController")
     }
 
     /**
@@ -40,8 +53,9 @@ class AccountListingControllerTests extends BaseIntegrationTestCase {
 
     @Test
     void testGetApAccountsForCurrentUser(){
-        loginSSB 'HOSH00018', '111111'
-        
+        mockRequest()
+        SSBSetUp('HOSH00018', '111111')
+
         controller.request.contentType = "text/json"
         controller.getApAccountsForCurrentUser()
         def dataForNullCheck = controller.response.contentAsString
@@ -53,7 +67,8 @@ class AccountListingControllerTests extends BaseIntegrationTestCase {
 
     @Test
     void testGetApAccountsForCurrentUserWithInactive(){
-        loginSSB 'GDP000001', '111111'
+        mockRequest()
+        SSBSetUp('GDP000001', '111111')
 
         controller.request.contentType = "text/json"
         controller.getApAccountsForCurrentUser()
@@ -69,7 +84,8 @@ class AccountListingControllerTests extends BaseIntegrationTestCase {
 
     @Test
     void testGetUserPayrollAllocations(){
-        loginSSB 'GDP000005', '111111'
+        mockRequest()
+        SSBSetUp('GDP000005', '111111')
 
         controller.getUserPayrollAllocations()
         def dataForNullCheck = controller.response.contentAsString
@@ -81,7 +97,8 @@ class AccountListingControllerTests extends BaseIntegrationTestCase {
 
     @Test
     void testGetLastPayDateInfo(){
-        loginSSB 'HOP510001', '111111'
+        mockRequest()
+        SSBSetUp('HOP510001', '111111')
 
         controller.getLastPayDateInfo()
         def dataForNullCheck = controller.response.contentAsString
@@ -94,7 +111,8 @@ class AccountListingControllerTests extends BaseIntegrationTestCase {
 
     @Test
     void testGetCurrency() {
-        loginSSB 'GDP000005', '111111'
+        mockRequest()
+        SSBSetUp('GDP000005', '111111')
 
         controller.getCurrency()
         def dataForNullCheck = controller.response.contentAsString
@@ -102,6 +120,12 @@ class AccountListingControllerTests extends BaseIntegrationTestCase {
 
         assertNotNull data
         assertEquals '$', data.currencySymbol
+    }
+
+    public GrailsWebRequest mockRequest() {
+        GrailsMockHttpServletRequest mockRequest = new GrailsMockHttpServletRequest();
+        GrailsMockHttpServletResponse mockResponse = new GrailsMockHttpServletResponse();
+        GrailsWebMockUtil.bindMockWebRequest(webAppCtx, mockRequest, mockResponse)
     }
 
 }

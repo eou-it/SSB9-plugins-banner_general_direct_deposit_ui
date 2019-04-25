@@ -50,8 +50,6 @@ class UpdateAccountController {
                 def r = [:]
 
                 removeKeyValuePairsNotWantedForUpdate(map)
-                fixJSONObjectForCast(map)
-
                 directDepositAccountService.validateAccountAmounts(map)
 
                 //newPosition is set so we need to do some reodering as we insert
@@ -85,7 +83,6 @@ class UpdateAccountController {
         try {
             // Do some cleanup to prepare for update
             removeKeyValuePairsNotWantedForUpdate(map)
-            fixJSONObjectForCast(map)
 
             // Account and routing numbers will be masked, and are not updatable anyway,
             // so exclude them from the update.
@@ -112,7 +109,7 @@ class UpdateAccountController {
         try {
             // Do some cleanup to prepare for update
             removeKeyValuePairsNotWantedForUpdate(map)
-            fixJSONObjectForCast(map)
+
             def unmaskedAcctIds = unmaskAccountInfoFromSessionCache([map])
 
             def prioritizedAccounts = directDepositAccountCompositeService.rePrioritizeAccounts(map, map.newPosition)
@@ -304,33 +301,6 @@ class UpdateAccountController {
 
         if (bankRoutingInfo) {
             bankRoutingInfo.remove("lastModified")
-        }
-    }
-
-    /**
-     * Prepare the values in a JSONObject map to be properly cast to values that can be set on the
-     * domain object (i.e. class DirectDepositAccount).
-     *
-     * To be specific, here's the problem:  ServiceBase.update uses InvokerHelper to set properties from
-     * the JSON object onto the domain object.  In doing this, InvokerHelper.setProperties eventually
-     * results in the DefaultTypeTransformation.castToType (the class is a Java one not Groovy).  This
-     * method does not know how to handle JSONObject.NULL as a true Java null nor a date string as a
-     * Date object, which results in exceptions being thrown for these.  In this method we fix the null
-     * issue.  We have no date objects that we want to explicitly update, so as of this writing we don't
-     * try to fix those.
-     * @param json JSONObject to fix
-     */
-    private def fixJSONObjectForCast(JSONObject json) {
-        json.each {entry ->
-            // Make JSONObject.NULL a real Java null
-            if (entry.value == JSONObject.NULL) {
-                entry.value = null
-
-//            If we ever want to fix dates, this is one possible solution
-//            } else if (entry.key == "lastModified") {
-//                // Make this date string a real Date object
-//                entry.value = DateUtility.parseDateString(entry.value, "yyyy-MM-dd'T'HH:mm:ss'Z'")
-            }
         }
     }
 

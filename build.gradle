@@ -57,6 +57,7 @@ grails {
     plugins {
         compile project(":banner-general-common")
         compile project(":banner-general-person")
+        compile project(":web-app-extensibility")
     }
 }
 

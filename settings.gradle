@@ -21,3 +21,6 @@ project(':banner-codenarc').projectDir = new File('../banner_codenarc.git')
 
 include ':i18n-core'
 project(':i18n-core').projectDir = new File('../i18n_core.git')
+
+include ':web-app-extensibility'
+project(':web-app-extensibility').projectDir = new File('../web-app-extensibility.git')

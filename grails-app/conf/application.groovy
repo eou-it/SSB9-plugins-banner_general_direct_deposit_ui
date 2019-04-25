@@ -17,7 +17,8 @@
 
 // Added for integration tests to run in plugin level
 grails.config.locations = [
-        BANNER_APP_CONFIG: "banner_configuration.groovy"
+        BANNER_APP_CONFIG: "banner_configuration.groovy",
+        BANNER_GENERAL_SSB_CONFIG: "BannerGeneralSsb_configuration.groovy"
 ]
 
 grails.databinding.useSpringBinder=true
