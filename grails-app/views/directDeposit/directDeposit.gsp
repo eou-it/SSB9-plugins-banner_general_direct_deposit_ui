@@ -17,6 +17,7 @@ Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
         var url = '${url}'
 
     </script>
+    <asset:javascript src="modules/extensibilityAngular-mf.js"/>
     <g:applyLayout name="bannerWebPage">
         <meta name="locale" content="${request.locale.toLanguageTag()}" >
         <meta name="menuEndPoint" content="${request.contextPath}/ssb/menu"/>
