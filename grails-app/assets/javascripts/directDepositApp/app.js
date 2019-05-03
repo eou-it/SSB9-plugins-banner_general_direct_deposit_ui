@@ -31,9 +31,11 @@ var directDepositApp = angular.module('directDepositApp', ['ngResource','ui.rout
                 window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '');
             }
 
-            directDepositService.getCurrencySymbol().$promise.then(function (response) {
-                $rootScope.currencySymbol = response.currencySymbol.trim();
-            });
+            // TODO: commented out because eventual call to AccountListingController.getCurrency fails.  Figure that out.  JDC 5/19
+            // directDepositService.getCurrencySymbol().$promise.then(function (response) {
+            //     $rootScope.currencySymbol = response.currencySymbol.trim();
+            // });
+            $rootScope.currencySymbol = 'X';
 
             $rootScope.isDesktopView = isDesktop();
 
@@ -56,7 +58,7 @@ var directDepositApp = angular.module('directDepositApp', ['ngResource','ui.rout
     ]
 );
 
-directDepositApp.constant('webAppResourcePathString', '../plugins/banner-general-direct-deposit-ui-0.1');
+directDepositApp.constant('webAppResourcePathString', '../assets');
 
 directDepositApp.config(['$stateProvider', '$urlRouterProvider', 'webAppResourcePathString',
     function($stateProvider, $urlRouterProvider, webAppResourcePathString){
