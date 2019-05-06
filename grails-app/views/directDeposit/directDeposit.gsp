@@ -27,8 +27,15 @@ Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
         <g:set var="applicationContextRoot" value= "${application.contextPath}"/>
         <meta name="applicationContextRoot" content="${applicationContextRoot}">
 
-        %{--TODO: handle RTL (see above) --}%
-        <asset:stylesheet src="modules/dd-application-LTR-mf.css"/>
+        <asset:stylesheet src="modules/dd-application-mf.css"/>
+
+        <g:if test="${message(code: 'default.language.direction')  == 'rtl'}">
+            <asset:stylesheet src="modules/directDepositAppRTL-mf.css"/>
+        </g:if>
+        <g:else>
+            <asset:stylesheet src="modules/directDepositAppLTR-mf.css"/>
+        </g:else>
+
         <asset:javascript src="modules/dd-application-mf.js"/>
 
     </g:applyLayout>
