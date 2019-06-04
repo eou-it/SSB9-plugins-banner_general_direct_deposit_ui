@@ -364,7 +364,7 @@ button.closebtn {
     opacity: 1;
     font-size: 14px;
     font-family: open-sans-semi-bold;
-    background: url('../images/close.svg') 50% 50% no-repeat;
+    background: url('../../images/close.svg') 50% 50% no-repeat;
     padding: 2.85em;
     display: block;
     border: none;
@@ -1222,7 +1222,7 @@ table {
 }
 
 table th, .table>thead>tr>th {
-    background: #ffffff url('../images/table-separator.png') center right no-repeat;
+    background: #ffffff url('../../images/table-separator.png') center right no-repeat;
     border: none;
     padding: 18px 16px 18px 16px;
     text-align: left;

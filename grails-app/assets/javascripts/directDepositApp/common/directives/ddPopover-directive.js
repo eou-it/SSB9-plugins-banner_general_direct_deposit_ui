@@ -1,5 +1,5 @@
 /*******************************************************************************
- Copyright 2015 Ellucian Company L.P. and its affiliates.
+ Copyright 2015-2019 Ellucian Company L.P. and its affiliates.
  *******************************************************************************/
 
 generalSsbAppDirectives.directive('sampleCheckPopOver', ['$filter', 'directDepositService', function($filter, directDepositService) {
@@ -24,7 +24,7 @@ generalSsbAppDirectives.directive('sampleCheckPopOver', ['$filter', 'directDepos
 
                 // Open popover
                 element.popover({
-                    content: '<img class="sample-check" src="' + src + '" alt="' + alt + '">',
+                    content: '<img class="sample-check" src="' + $filter('webAppResourcePath')(src) + '" alt="' + alt + '">',
                     trigger: 'manual',
                     placement: 'bottom',
                     html: true

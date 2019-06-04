@@ -1,5 +1,5 @@
 %{--*******************************************************************************
-Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
+Copyright 2015-2019 Ellucian Company L.P. and its affiliates.
 *******************************************************************************--}%
 <!DOCTYPE html>
 <!--[if IE 9 ]>    <html xmlns:ng="http://angularjs.org" ng-app="directDepositApp" id="ng-app" class="ie9"> <![endif]-->
@@ -14,10 +14,9 @@ Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
         var proxyFlag=${session['proxyFlag'] ?: 'undefined'};
         var originatorFlag =${session['originatorFlag'] ?: 'undefined'};
         var approverFlag =${session['approverFlag'] ?: 'undefined'};
-        var url = '${url}'
+        var url = '${url}';
 
     </script>
-    <asset:javascript src="modules/extensibilityAngular-mf.js"/>
     <g:applyLayout name="bannerWebPage">
         <meta name="locale" content="${request.locale.toLanguageTag()}" >
         <meta name="menuEndPoint" content="${request.contextPath}/ssb/menu"/>
