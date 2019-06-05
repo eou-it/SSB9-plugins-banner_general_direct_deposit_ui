@@ -1,5 +1,5 @@
 %{--*******************************************************************************
-Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
+Copyright 2015-2019 Ellucian Company L.P. and its affiliates.
 *******************************************************************************--}%
 <!DOCTYPE html>
 <!--[if IE 9 ]>    <html xmlns:ng="http://angularjs.org" ng-app="directDepositApp" id="ng-app" class="ie9"> <![endif]-->
@@ -14,7 +14,7 @@ Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
         var proxyFlag=${session['proxyFlag'] ?: 'undefined'};
         var originatorFlag =${session['originatorFlag'] ?: 'undefined'};
         var approverFlag =${session['approverFlag'] ?: 'undefined'};
-        var url = '${url}'
+        var url = '${url}';
 
     </script>
     <g:applyLayout name="bannerWebPage">
@@ -26,12 +26,16 @@ Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
         <g:set var="applicationContextRoot" value= "${application.contextPath}"/>
         <meta name="applicationContextRoot" content="${applicationContextRoot}">
 
+        <asset:stylesheet src="modules/dd-application-mf.css"/>
+
         <g:if test="${message(code: 'default.language.direction')  == 'rtl'}">
-            <r:require modules="directDepositAppRTL"/>
+            <asset:stylesheet src="modules/directDepositAppRTL-mf.css"/>
         </g:if>
         <g:else>
-            <r:require modules="directDepositAppLTR"/>
+            <asset:stylesheet src="modules/directDepositAppLTR-mf.css"/>
         </g:else>
+
+        <asset:javascript src="modules/dd-application-mf.js"/>
 
     </g:applyLayout>
 

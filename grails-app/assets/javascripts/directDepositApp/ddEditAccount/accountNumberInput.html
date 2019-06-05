@@ -1,0 +1,134 @@
+<!--*******************************************************************************
+Copyright 2015-2019 Ellucian Company L.P. and its affiliates.
+*******************************************************************************-->
+<div class="row semi-bold dd-popover-client">
+    <div class="edit-flex-div1">
+        <div class="edit-flex-div2">
+            <div class="col-xs-6 col-sm-6 col-md-6 clear-both xs-fix">
+                <div>
+                    <label class="rout-num-lbl input-field-label" for="routing-number">{{'directDeposit.account.label.bank.routing.num'|i18n}}</label>
+                    <sample-check-pop-over ng-show="checkBrowserLocale('en-US')" class="dd-popover" popover-img="sample_check_290x166.png" popover-alt="{{'directDeposit.sample.check.alt.text'|i18n}}"></sample-check-pop-over>
+                </div>
+                <div class="pos-relative input-layer">
+                    <input ng-model="account.bankRoutingInfo.bankRoutingNum" ng-blur="routNumFocused=false; validateRoutingNum()" ng-focus="routNumFocused=true" ng-disabled="!creatingNewAccount"
+                         ng-class="[(routingNumErr && !routNumFocused ? 'input-field-error' : null)]" class="text-input-field gssb-eds-text-field semi-bold form-spacing" id="routing-number" type="text"
+                         placeholder="{{'directDeposit.account.label.bank.routing.num'|i18n}}" />
+                    <truncated-bank-name ng-if="!routingNumErr && !routNumFocused" class="input-bank-name" title="{{account.bankRoutingInfo.bankName}}"></truncated-bank-name>
+                </div>
+                <p class="input-field-label mobile-errors" ng-class="[(routingNumErr ? 'field-error error-font-size' : 'no-display')]" role="alert" aria-live="assertive">{{routingNumMessage}}</p>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6 xs-fix flex-end">
+                <div class="unflex">
+                    <label class="input-field-label" for="account-number">
+                        {{'directDeposit.account.label.account.num'|i18n}}
+                    </label>
+                    <sample-check-pop-over ng-show="checkBrowserLocale('en-US')" class="dd-popover" popover-img="sample_check_290x166.png" popover-alt="{{'directDeposit.sample.check.alt.text'|i18n}}"></sample-check-pop-over>
+                    <div class="pos-relative input-layer">
+                        <input data-ng-model="account.bankAccountNum" ng-blur="acctNumFocused=false; validateAccountNum()" ng-focus="acctNumFocused=true" ng-disabled="!creatingNewAccount"
+                            ng-class="['text-input-field', 'semi-bold', 'form-spacing', (accountNumErr && !acctNumFocused ? 'input-field-error' : null)]" class="gssb-eds-text-field"
+                            id="account-number" title="{{(creatingNewAccount?null:account.bankAccountNum)}}" type="text" placeholder="{{'directDeposit.account.label.account.num'|i18n}}"/>
+                    </div>
+                    <p class="input-field-label mobile-errors" ng-class="[(accountNumErr ? 'field-error error-font-size' : 'no-display')]" role="alert" aria-live="assertive">{{accountNumMessage}}</p-->
+                </div>
+            </div>
+        </div>
+        <div class="row col-xs-12 no-margin no-padding xs-errors-visible">
+            <div class="col-xs-6">
+                <p class="input-field-label ng-class: (routingNumErr ? 'field-error error-font-size' : 'no-display');" role="alert" aria-live="assertive">{{routingNumMessage}}</p>
+            </div>
+            <div class="col-xs-6">
+                <p class="input-field-label ng-class: (accountNumErr ? 'field-error error-font-size' : 'no-display');" role="alert" aria-live="assertive">{{accountNumMessage}}</p>
+            </div>
+        </div>
+        <div class="clearfix visible-xs-block hidden-sm hidden-md hidden-lg"></div>
+        <div class="col-xs-6 col-sm-4 col-md-4 xs-fix flex-end menu-fix input-layer">
+            <div class="unflex">
+                <label class="input-field-label">{{'directDeposit.account.label.accountType'|i18n}}</label>
+                <label class="visuallyhidden" id="select-acct-type">{{'directDeposit.label.account.type.select'|i18n}}</label>
+                <span><choose-account account="account" class="visuallyhidden" id="account-type" tabindex="-1"/></span>
+                <div dropdown-state="dropdownIsOpen" class="dropdown" role="menu">
+                    <button dropdown-helper="begin" dropdown-selected="account.accountType" ng-focus="acctTypeFocused=true" ng-blur="acctTypeFocused=false"
+                            ng-class="(accountTypeErr ? 'dropdown-btn input-field-error' : 'dropdown-btn')"
+                            data-toggle="dropdown" class="gssb-eds-text-field" aria-haspopup="true" aria-labelledby="select-acct-type account-type">
+                        <span class="float-l form-spacing">
+                            <choose-account account="account"/>
+                        </span>
+                        <span class="float-r form-spacing down-caret caret-color"></span>
+                    </button>
+                    <ul menu-controls class="dropdown-menu addAcct">
+                        <li role="presentation">
+                            <a ng-click="setAccountType('C')" class="addAcct form-spacing" role="menuitem" aria-label="" aria-describedby="" aria-labelledby="checking-lbl" tabindex="0">{{'directDeposit.account.type.checking'|i18n}}</a>
+                        </li>
+                        <li role="presentation">
+                            <a dropdown-helper="end" ng-click="setAccountType('S')" class="addAcct end-dropdown-radius form-spacing" role="menuitem" aria-label="" aria-describedby="" aria-labelledby="savings-lbl" tabindex="0">{{'directDeposit.account.type.savings'|i18n}}</a>
+                        </li>
+                    </ul>
+                </div>
+                <p ng-show="accountTypeErr" class="input-field-label field-error error-font-size mobile-errors-acType" role="alert" aria-live="assertive">{{'directDeposit.invalid.missing.account.type'|i18n}}</p>
+            </div>
+        </div>
+    </div>
+    <div class="row col-sm-12 no-margin no-padding hidden-xs">
+        <div class="col-sm-4 col-md-4">
+            <p class="input-field-label ng-class: (routingNumErr ? 'field-error error-font-size' : 'no-display');" role="alert" aria-live="assertive">{{routingNumMessage}}</p>
+        </div>
+        <div class="col-sm-4 col-md-4">
+            <p class="input-field-label ng-class: (accountNumErr ? 'field-error error-font-size' : 'no-display');" role="alert" aria-live="assertive">{{accountNumMessage}}</p>
+        </div>
+        <div class="col-sm-4 col-md-4">
+            <p ng-show="accountTypeErr" class="input-field-label field-error error-font-size" role="alert" aria-live="assertive">{{'directDeposit.invalid.missing.account.type'|i18n}}</p>
+        </div>
+    </div>
+    <div class="clearfix visible-md-block hidden-xs"></div>
+    <div ng-show="typeIndicator==='HR'" class="col-xs-6 col-sm-4 col-md-4 xs-fix">
+        <label class="input-field-label">{{'directDeposit.account.label.amount'|i18n}}</label><br>
+        <input ng-model="account.amountType" class="edit-radio" type="radio" name="amount-type" value="remaining" checked aria-labelledby="rem-radio-lbl"><span class="lbl radio-list" id="rem-radio-lbl">{{'directDeposit.account.amount.remaining'|i18n}}</span>
+        <br>
+        <input ng-model="account.amountType" class="edit-radio" type="radio" name="amount-type" value="amount" aria-labelledby="amt-radio-lbl"><span class="lbl radio-list" id="amt-radio-lbl">{{'directDeposit.account.amount.amount'|i18n}}</span>
+        <div ng-show="account.amountType === 'amount'" class="amount-spacing">
+            <label class="visuallyhidden" for="amt-txt-input">{{'directDeposit.account.label.amount.amount'|i18n}}</label>
+            <input ng-model="account.amount" ng-blur="amountAmtFocused=false" ng-focus="amountAmtFocused=true"
+                   ng-class="[(amountErr === 'amt' && !amountAmtFocused ? 'input-field-error' : null)]"
+                   class="gssb-eds-text-field radio-txt-input semi-bold form-spacing" id="amt-txt-input" type="number"
+                   step="0.01" placeholder="{{'directDeposit.label.input.amount'|i18n}}"/>
+        </div>
+        <br>
+        <input ng-model="account.amountType" class="edit-radio" type="radio" name="amount-type" value="percentage" aria-labelledby="pct-radio-lbl"><span class="lbl radio-list" id="pct-radio-lbl">{{'directDeposit.account.amount.percentage'|i18n}}</span>
+        <div ng-show="account.amountType === 'percentage'" class="ws-nowrap amount-spacing">
+            <label class="visuallyhidden" for="pct-txt-input">{{'directDeposit.account.label.amount.percent'|i18n}}</label>
+            <input ng-model="account.percent" ng-blur="amountPctFocused=false" ng-focus="amountPctFocused=true"
+                   ng-class="[(amountErr === 'pct' && !amountPctFocused ? 'input-field-error' : null)]"
+                   class="gssb-eds-text-field radio-txt-input semi-bold form-spacing" id="pct-txt-input" type="number"
+                   step="0.01" placeholder="{{'directDeposit.label.input.percent'|i18n}}"/> %
+        </div>
+        <p ng-show="amountErr" class="input-field-label field-error error-font-size">{{amountMessage}}</p>
+    </div>
+    <div ng-show="typeIndicator==='HR'" class="clearfix visible-xs-block hidden-sm hidden-md hidden-lg"></div>
+    <div ng-show="typeIndicator==='HR'" class="col-xs-6 col-sm-4 col-md-4 xs-fix">
+        <label class="input-field-label">{{'directDeposit.account.label.priority'|i18n}}</label><br>
+        <label class="visuallyhidden" id="priority-menu">{{'directDeposit.label.account.priority.edit'|i18n}}</label>
+        <span class="visuallyhidden" id="priority" tabindex="-1">{{account.priority}}</span>
+        <div class="dropdown" role="menu">
+            <button dropdown-helper="begin" dropdown-selected="account.priority" ng-if="!isRemaining()" class="dropdown-btn gssb-eds-text-field" data-toggle="dropdown" aria-haspopup="true" aria-labelledby="priority priority-menu">
+                <span ng-if="shouldDisplayPriority" class="float-l form-spacing">
+                    {{account.priority}}
+                </span>
+                <span class="float-r form-spacing down-caret caret-color"></span>
+            </button>
+            <button dropdown-helper="begin" dropdown-selected="account.priority" ng-if="isRemaining()" dd-pop-over popover-msg="directDeposit.invalid.reprioritize.remaining.popover" popover-width="225px"
+                    class="dropdown-btn disabled gssb-eds-text-field-disabled" data-toggle="dropdown" aria-labelledby="priority priority-menu" aria-disabled="true">
+                <span ng-if="shouldDisplayPriority" class="float-l form-spacing">
+                    {{account.priority}}
+                </span>
+                <span class="float-r form-spacing down-caret caret-color"></span>
+            </button>
+            <ul menu-controls ng-if="!isRemaining()" class="dropdown-menu addAcct">
+                <li ng-repeat="i in priorities" role="presentation">
+                    <a ng-click="setAccountPriority(i.displayVal)" dropdown-helper="{{($last ? 'end': null)}}" ng-class="[($last ? 'end-dropdown-radius' : null)]" class="addAcct form-spacing" id="acct-inpPri{{$index}}" role="menuitem" aria-label="" aria-describedby="" aria-labelledby="acct-inpPri{{$index}}" tabindex="0">{{i.displayVal}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<span ng-if="!!miscMessage" class="misc-message inline-notification field-error">{{miscMessage}}</span>
+<modal-disclaimer id="acct-input-disclaimer"/>

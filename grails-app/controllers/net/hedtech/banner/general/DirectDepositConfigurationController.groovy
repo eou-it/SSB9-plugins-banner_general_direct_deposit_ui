@@ -2,7 +2,6 @@ package net.hedtech.banner.general
 
 import grails.converters.JSON
 import net.hedtech.banner.exceptions.ApplicationException
-import org.codehaus.groovy.grails.plugins.web.taglib.ValidationTagLib
 
 class DirectDepositConfigurationController {
 

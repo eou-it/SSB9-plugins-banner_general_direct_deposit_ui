@@ -1,0 +1,15 @@
+//= require /directDepositApp/app.js
+//= require /directDepositApp/ddListing/ddListing-service.js
+//= require /directDepositApp/common/services/breadcrumb-service.js
+//= require /directDepositApp/common/services/notificationcenter-service.js
+//= require /directDepositApp/common/services/directDeposit-service.js
+//= require /directDepositApp/ddEditAccount/ddEditAccount-service.js
+//= require /directDepositApp/ddEditAccount/ddAccountDirty-service.js
+//= require /directDepositApp/ddListing/ddListing-controller.js
+//= require /directDepositApp/ddEditAccount/ddEditAccount-controller.js
+//= require /directDepositApp/common/filters/i18n-filter.js
+//= require /directDepositApp/common/filters/webAppResourcePath-filter.js
+//= require /directDepositApp/ddListing/ddListing-directive.js
+//= require /directDepositApp/ddEditAccount/ddEditAccount-directive.js
+//= require /directDepositApp/common/directives/enterKey-directive.js
+//= require /directDepositApp/common/directives/ddPopover-directive.js
