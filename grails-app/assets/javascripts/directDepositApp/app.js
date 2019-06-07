@@ -90,6 +90,7 @@ directDepositApp.config(['$stateProvider', '$urlRouterProvider', 'webAppResource
 directDepositApp.config(['$locationProvider',
     function ($locationProvider) {
         $locationProvider.html5Mode(false);
+        $locationProvider.hashPrefix('');
     }
 ]);
 
