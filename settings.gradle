@@ -13,6 +13,9 @@ project(':banner-general-utility').projectDir = new File('../banner_general_util
 include ':banner-ui-ss'
 project(':banner-ui-ss').projectDir = new File('../banner_ui_ss.git')
 
+include ':grails-constraints'
+project(':grails-constraints').projectDir = new File('../grails_constraints.git')
+
 include ':banner-core'
 project(':banner-core').projectDir = new File('../banner_core.git')
 
