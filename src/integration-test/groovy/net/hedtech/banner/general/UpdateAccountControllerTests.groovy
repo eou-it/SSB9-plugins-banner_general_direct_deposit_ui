@@ -1689,11 +1689,10 @@ class UpdateAccountControllerTests extends BaseIntegrationTestCase {
         // TODO: Using the string property since the json property doesn't seem to exist anymore.  Or is there
         // something we need to do to bring it back? JDC 4/19
 //        def failureMessageModel = controller.response.json
-        def failureMessageJson = controller.response.contentAsString
+        def failureMessageJson = controller.response.contentAsString as String
 
         assertNotNull failureMessageJson
-//        assertEquals false, failureMessageModel.failure
-        assertEquals '{\n  "failure": false\n}', failureMessageJson
+        assertTrue failureMessageJson.contains('"failure": false')
     }
 
     // TODO: It seems the json property is not being passed into the call to the controller below (validateAccountsAreUnique).
@@ -1777,11 +1776,11 @@ class UpdateAccountControllerTests extends BaseIntegrationTestCase {
 //        assertNotNull failureMessageModel
 //        assertEquals true, failureMessageModel.failure
 //        assertEquals("Record already exists for this Bank Account.", failureMessageModel.message)
-        def failureMessageJson = controller.response.contentAsString
+        def failureMessageJson = controller.response.contentAsString as String
 
         assertNotNull failureMessageJson
-        assertEquals '{\n  "failure": false\n}', failureMessageJson
-        assertEquals("Record already exists for this Bank Account.", failureMessageJson.message)
+        assertTrue failureMessageJson.contains('"failure": true')
+        assertTrue failureMessageJson.contains('"message": "Record already exists for this Bank Account."')
     }
 
     public GrailsWebRequest mockRequest() {

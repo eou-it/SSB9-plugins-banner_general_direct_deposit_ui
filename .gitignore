@@ -36,3 +36,5 @@ bannerTransform.jar
 .gradle/
 build/
 local.properties
+*scss*
+
