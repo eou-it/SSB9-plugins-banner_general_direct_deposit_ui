@@ -26,12 +26,12 @@ Copyright 2015-2019 Ellucian Company L.P. and its affiliates.
         <g:set var="applicationContextRoot" value= "${application.contextPath}"/>
         <meta name="applicationContextRoot" content="${applicationContextRoot}">
 
-        <asset:stylesheet src="modules/dd-application-mf.css"/>
-
         <g:if test="${message(code: 'default.language.direction')  == 'rtl'}">
+            <asset:stylesheet src="modules/dd-applicationRTL-mf.css"/>
             <asset:stylesheet src="modules/directDepositAppRTL-mf.css"/>
         </g:if>
         <g:else>
+            <asset:stylesheet src="modules/dd-applicationLTR-mf.css"/>
             <asset:stylesheet src="modules/directDepositAppLTR-mf.css"/>
         </g:else>
 
