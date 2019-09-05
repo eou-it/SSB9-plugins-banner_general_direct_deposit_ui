@@ -314,8 +314,20 @@ input:disabled {
     background: #F6E5E6;
 }
 
-.icon-caret-down.ellucian-font {
-    font-family: ellucian;
+.dropdown-caret {
+    background: url('../../images/dropdown-open-icon.svg') no-repeat 100% 100%;
+    padding-top: .5em;
+    display: inline-block;
+    width: 18px;
+    height: 100%;
+}
+
+.upside-down {
+    -webkit-transform:rotate(180deg);
+    -moz-transform:rotate(180deg);
+    -o-transform:rotate(180deg);
+    -ms-transform:rotate(180deg);
+    transform:rotate(180deg);
 }
 
 .text-input-field:focus,
@@ -1104,7 +1116,7 @@ a.delete-account-link {
     .edit-account-modal .modal-dialog {
         width: auto;
     }
-    
+
     span.check-amount {
         text-align: left;
     }
@@ -1342,7 +1354,7 @@ table tr td {
         font-size: 24px;
         padding: 1em 1em 0.75em;
     }
-    
+
     button.closebtn {
         padding: 2.35em;
     }
