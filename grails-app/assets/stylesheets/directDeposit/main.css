@@ -922,6 +922,10 @@ button.dropdown-btn.ng-not-empty {
     display: none;
 }
 
+.account-number-small-screen-errors {
+    display: none;
+}
+
 .table-fmt{
     clear: both;
 }
@@ -1328,6 +1332,10 @@ table tr td {
     .clear-xs-sm {
         clear: both;
     }
+
+    .account-number-small-screen-errors {
+        display: inline-block;
+    }
 }
 
 @media screen and (min-width:768px) {
@@ -1361,10 +1369,6 @@ table tr td {
 
     .pad-dialog-lr {
         padding: 0em 1.7em;
-    }
-
-    .edit-flex-div2 {
-        width: 66.666666666%;
     }
 
     .mobile-errors-acType {
