@@ -10,6 +10,7 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
 
         $scope.routNumFocused = false;
         $scope.acctNumFocused = false;
+        $scope.acctNumVerifyFocused = false;
         $scope.acctTypeFocused = false;
         $scope.amountAmtFocused = false;
         $scope.amountPctFocused = false;
@@ -76,12 +77,11 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
             };
 
         $scope.validateAccountNum = function () {
-            if($scope.account.bankAccountNum){
-
                 if( invalidCharRegEx.test($scope.account.bankAccountNum) ){
                     setAccountNumError($filter('i18n')('directDeposit.invalid.chars.account'));
-                }
-                else {
+                } else if ($scope.account.bankAccountNumVerify && ($scope.account.bankAccountNum !== $scope.account.bankAccountNumVerify)) {
+                    setAccountNumError($filter('i18n')('directDeposit.invalid.mismatch.account.number'));
+                } else {
                     $scope.account.bankAccountNum = $scope.account.bankAccountNum.toUpperCase();
 
                     ddEditAccountService.validateAccountNum($scope.account.bankAccountNum).$promise.then(function (response) {
@@ -95,7 +95,6 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
                         }
                     });
                 }
-            }
         };
 
         $scope.accountTypeErr = false;
@@ -290,6 +289,7 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
                             // so user can start fresh
                             if($scope.setup.createFromExisting === 'yes'){
                                 $scope.account.bankAccountNum = null;
+                                $scope.account.bankAccountNumVerify = null;
                                 $scope.account.bankRoutingInfo = {bankRoutingNum: null};
                                 $scope.account.accountType = null;
                             }
@@ -305,6 +305,7 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
                 // so user can start fresh
                 if($scope.setup.createFromExisting === 'yes'){
                     $scope.account.bankAccountNum = null;
+                    $scope.account.bankAccountNumVerify = null;
                     $scope.account.bankRoutingInfo = {bankRoutingNum: null};
                     $scope.account.accountType = null;
                 }
@@ -321,7 +322,12 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
             }
 
             if(!$scope.account.bankAccountNum) {
-                setAccountNumError($filter('i18n')('directDeposit.invalid.missing.account.number'));
+                if ($scope.isAccountNumberVerificationFieldEnabled) {
+                    setAccountNumError($filter('i18n')('directDeposit.invalid.missing.account.number.and.verify.account.number'));
+                }
+                else {
+                    setAccountNumError($filter('i18n')('directDeposit.invalid.missing.account.number'));
+                }
             }
             else if($scope.accountNumErr){
                 notificationCenterService.removeNotification(accountNotification);
@@ -383,6 +389,7 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
                     apIndicator: 'A',
                     hrIndicator: 'I',
                     bankAccountNum: null,
+                    bankAccountNumVerify: null,
                     amount: null,
                     percent: 100,
                     accountType: '',

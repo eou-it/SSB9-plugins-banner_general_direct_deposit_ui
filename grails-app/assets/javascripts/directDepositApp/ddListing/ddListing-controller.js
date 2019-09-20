@@ -1,5 +1,5 @@
 /*******************************************************************************
- Copyright 2017-2018 Ellucian Company L.P. and its affiliates.
+ Copyright 2017-2019 Ellucian Company L.P. and its affiliates.
  *******************************************************************************/
 generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope', '$state', '$stateParams', '$modal',
     '$filter', '$q', '$timeout', 'ddListingService', 'ddEditAccountService', 'directDepositService',
@@ -154,6 +154,7 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                 // Set in rootScope as this value needs to be accessed application-wide,
                 // e.g. in scopes created by ngRepeat.
                 $rootScope.areAccountsUpdatable = response.areAccountsUpdatable;
+                $rootScope.isAccountNumberVerificationFieldEnabled = response.enableVerifyAccountNumber;
 
                 // getApListing
                 acctPromises[0].then(function (response) {
@@ -306,7 +307,7 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
             { title: $filter('i18n')('directDeposit.account.label.accountType')},
             { title: $filter('i18n')('directDeposit.account.label.status')}
         ];
-        
+
         // Most Recent Pay
         $scope.mostRecentPayColumns = [
             { tabindex: '0', title: $filter('i18n')('directDeposit.account.label.bank.name')},
@@ -315,7 +316,7 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
             { title: $filter('i18n')('directDeposit.account.label.accountType')},
             { title: $filter('i18n')('directDeposit.label.distribution.net.pay')}
         ];
-        
+
         // Proposed Pay
         $scope.proposedPayColumns = [
             { tabindex: '0', title: $filter('i18n')('directDeposit.account.label.bank.name')},
@@ -338,8 +339,8 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                 scope: $scope,
                 resolve: {
                     editAcctProperties: function () {
-                        return { 
-                            typeIndicator: typeInd, 
+                        return {
+                            typeIndicator: typeInd,
                             creatingNew: !!isAddNew,
                             otherAccounts: acctList || []
                         };
@@ -422,7 +423,7 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
         $scope.cancelChanges = function () {
             if ($scope.editForm.$dirty || $scope.selectedForDelete.payroll || $scope.selectedForDelete.ap || $scope.authorizedChanges) {
                 $scope.cancelNotification();
-                
+
                 var newWarning = new Notification({
                     message: $filter('i18n')('default.cancel.message'),
                     type: "warning"
