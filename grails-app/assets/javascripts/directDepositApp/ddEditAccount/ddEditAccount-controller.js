@@ -43,7 +43,7 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
                     setRoutingNumError($filter('i18n')('directDeposit.invalid.chars.routing'));
                 }
                 else {
-                    $scope.account.bankRoutingInfo.bankRoutingNum = $scope.account.bankRoutingInfo.bankRoutingNum.toUpperCase();
+                    $scope.account.bankRoutingInfo.bankRoutingNum = $scope.account.bankRoutingInfo.bankRoutingNum.trim().toUpperCase();
 
                     ddEditAccountService.getBankInfo($scope.account.bankRoutingInfo.bankRoutingNum).$promise.then(function (response) {
                         if(response.failure) {
@@ -66,7 +66,6 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
         $scope.accountNumMessage = null;
 
         var accountNotification = null,
-
             setAccountNumError = function (message) {
                 notificationCenterService.removeNotification(accountNotification);
 
@@ -74,6 +73,12 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
                 $scope.accountNumMessage = message;
                 accountNotification = notificationCenterService.addNotification($scope.accountNumMessage, "error");
                 clearMiscMessage();
+            },
+            removeWhitespacesAndCapitalizeAccountNumber = function() {
+                $scope.account.bankAccountNum = $scope.account.bankAccountNum.trim().toUpperCase();
+                if ($scope.account.bankAccountNumVerify) {
+                    $scope.account.bankAccountNumVerify = $scope.account.bankAccountNumVerify.trim().toUpperCase()
+                }
             };
 
         $scope.validateAccountNum = function () {
@@ -82,8 +87,7 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
                 } else if ($scope.account.bankAccountNumVerify && ($scope.account.bankAccountNum !== $scope.account.bankAccountNumVerify)) {
                     setAccountNumError($filter('i18n')('directDeposit.invalid.mismatch.account.number'));
                 } else {
-                    $scope.account.bankAccountNum = $scope.account.bankAccountNum.toUpperCase();
-
+                    removeWhitespacesAndCapitalizeAccountNumber();
                     ddEditAccountService.validateAccountNum($scope.account.bankAccountNum).$promise.then(function (response) {
                         if(response.failure) {
                             setAccountNumError($filter('i18n')('directDeposit.invalid.account.number'));
@@ -321,7 +325,7 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
                 routingNotification = notificationCenterService.addNotification($scope.routingNumMessage, "error");
             }
 
-            if(!$scope.account.bankAccountNum) {
+            if(!$scope.account.bankAccountNum || ($scope.isAccountNumberVerificationFieldEnabled && !$scope.account.bankAccountNumVerify)) {
                 if ($scope.isAccountNumberVerificationFieldEnabled) {
                     setAccountNumError($filter('i18n')('directDeposit.invalid.missing.account.number.and.verify.account.number'));
                 }
