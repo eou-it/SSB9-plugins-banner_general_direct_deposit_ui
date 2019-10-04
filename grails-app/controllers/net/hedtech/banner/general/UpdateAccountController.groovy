@@ -51,6 +51,7 @@ class UpdateAccountController {
 
                 removeKeyValuePairsNotWantedForUpdate(map)
                 directDepositAccountService.validateAccountAmounts(map)
+                directDepositAccountService.validateRemainingAmountStatusValid([map])
 
                 //newPosition is set so we need to do some reodering as we insert
                 if(map.newPosition) {
@@ -90,6 +91,7 @@ class UpdateAccountController {
             map.remove('bankRoutingInfo')
 
             directDepositAccountService.validateAccountAmounts(map)
+            directDepositAccountService.validateRemainingAmountStatusValid([map])
 
             def updatedAccount = directDepositAccountService.update(map)
             def marshalledAccount = directDepositAccountService.marshallAccountsToMinimalStateForUi(updatedAccount)
@@ -173,6 +175,9 @@ class UpdateAccountController {
         try {
             def model = [:]
             def accounts = directDepositAccountService.setupAccountsForDelete(map)
+
+            directDepositAccountService.validateRemainingAmountStatusValid(accounts.toBeDeleted, true)
+
             def result = directDepositAccountService.delete(accounts.toBeDeleted)
 
             // Now that the operation has been completed successfully, clear old masking data in preparation for new
