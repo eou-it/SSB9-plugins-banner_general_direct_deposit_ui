@@ -102,7 +102,35 @@ class UpdateAccountController {
             render ControllerUtility.returnFailureMessage(e) as JSON
         }
     }
-    
+
+    def updateMultipleAccounts() {
+        def map = request?.JSON ?: params
+
+        try {
+            // Do some cleanup to prepare for update
+            map.each { acct ->
+                removeKeyValuePairsNotWantedForUpdate(acct)
+
+                // Account and routing numbers will be masked, and are not updatable anyway,
+                // so exclude them from the update.
+                acct.remove('bankAccountNum')
+                acct.remove('bankRoutingInfo')
+
+                directDepositAccountService.validateAccountAmounts(acct)
+            }
+
+            directDepositAccountService.validateRemainingAmountStatusValid(map)
+
+            directDepositAccountService.update(map)
+
+            Map response = [failure: false]
+            render response as JSON
+
+        } catch (ApplicationException e) {
+            render ControllerUtility.returnFailureMessage(e) as JSON
+        }
+    }
+
     def reorderAccounts() {
         def map = request?.JSON ?: params
 
