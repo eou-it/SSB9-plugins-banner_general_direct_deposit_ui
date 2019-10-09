@@ -11,6 +11,9 @@ directDepositApp.service('ddEditAccountService', ['directDepositService', '$reso
         updateAccount = $resource('../ssb/:controller/:action',
         {controller: 'UpdateAccount', action: 'updateAccount'}, {save: {method:'POST'}}),
 
+        updateMultipleAccounts = $resource('../ssb/:controller/:action',
+        {controller: 'UpdateAccount', action: 'updateMultipleAccounts'}, {save: {method:'POST'}}),
+
         reorderAllAccounts = $resource('../ssb/:controller/:action',
         {controller: 'UpdateAccount', action: 'reorderAllAccounts'}, {save: {method:'POST', isArray:true}}),
         
@@ -41,7 +44,20 @@ directDepositApp.service('ddEditAccountService', ['directDepositService', '$reso
             return updateAccount.save(account);
         }
     };
-    
+
+    this.updateAccounts = function (accounts) {
+        var self = this;
+
+        // set the priority back to one received from database if updating payroll account
+        _.each(accounts, function (acct) {
+            if(acct.hrIndicator === 'A') {
+                acct.priority = self.priorities[acct.priority-1].persistVal;
+            }
+        });
+
+        return updateMultipleAccounts.save(accounts);
+    };
+
     this.reorderAccounts = function (account) {
         if(this.doReorder === 'all') {
             var i;

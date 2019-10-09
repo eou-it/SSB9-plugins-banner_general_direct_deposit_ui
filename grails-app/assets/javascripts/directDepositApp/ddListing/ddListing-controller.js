@@ -484,6 +484,8 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                 notifications = [],
 
                 doUpdate = function() {
+                    var updatedAccounts = [];
+
                     if (ddEditAccountService.doReorder === 'all') {
                         deferred = $q.defer();
 
@@ -518,8 +520,12 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                         if ($scope.isEmployee) {
                             for (i = 0; i < allocs.length; i++) {
                                 if (ddAccountDirtyService.isAccountDirty(allocs[i])) {
-                                    promises.push(updateAccount(allocs[i]));
+                                    updatedAccounts.push(allocs[i]);
                                 }
+                            }
+
+                            if (updatedAccounts.length > 0) {
+                                promises.push(doAccountUpdates(updatedAccounts));
                             }
                         }
                     }
@@ -538,7 +544,7 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                     else {
                         // AP account will already be updated if it has a corresponding Payroll account
                         if ($scope.hasApAccount && !$scope.getMatchingPayrollForApAccount() && ddAccountDirtyService.isAccountDirty($scope.apAccount)) {
-                            promises.push(updateAccount($scope.apAccount));
+                            promises.push(doAccountUpdates([$scope.apAccount]));
                         }
                     }
 
@@ -593,14 +599,16 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
 
         };
 
-        var updateAccount = function (acct) {
+        var doAccountUpdates = function (accounts) {
             var deferred = $q.defer();
 
-            if (acct.hrIndicator === 'A') {
-                ddEditAccountService.setAmountValues(acct, acct.amountType);
-            }
+            _.each(accounts, function (acct) {
+                if (acct.hrIndicator === 'A') {
+                    ddEditAccountService.setAmountValues(acct, acct.amountType);
+                }
+            });
 
-            ddEditAccountService.saveAccount(acct).$promise.then(function (response) {
+            ddEditAccountService.updateAccounts(accounts).$promise.then(function (response) {
                 if (response.failure) {
                     // Using addNotification results in displaying stacked error messages if there are more than one.
                     notificationCenterService.addNotification(response.message, "error");
