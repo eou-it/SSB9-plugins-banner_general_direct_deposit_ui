@@ -46,15 +46,6 @@ directDepositApp.service('ddEditAccountService', ['directDepositService', '$reso
     };
 
     this.updateAccounts = function (accounts) {
-        var self = this;
-
-        // set the priority back to one received from database if updating payroll account
-        _.each(accounts, function (acct) {
-            if(acct.hrIndicator === 'A') {
-                acct.priority = self.priorities[acct.priority-1].persistVal;
-            }
-        });
-
         return updateMultipleAccounts.save(accounts);
     };
 
@@ -125,6 +116,15 @@ directDepositApp.service('ddEditAccountService', ['directDepositService', '$reso
             this.priorities[i] = priorityInfo;
         }
         this.accounts = accts;
+    };
+
+    this.restorePrioritiesToPersistedValues = function (accts) {
+        var i = 0,
+            len = accts.length;
+
+        for(; i < len; i++){
+            accts[i].priority = this.priorities[i].persistVal;
+        }
     };
     
     this.setAccountPriority = function (acct, priority) {
