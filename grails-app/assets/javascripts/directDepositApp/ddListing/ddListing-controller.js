@@ -525,6 +525,12 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                             }
 
                             if (updatedAccounts.length > 0) {
+                                // As we'll be updating one or more accounts, level set all their priorities to their
+                                // persisted values.  If the update succeeds, all accounts will be reloaded fresh.
+                                // If it fails, then all the priorities will be reset for display *with the assumption*
+                                // that they're all currently at their persisted values.
+                                ddEditAccountService.restorePrioritiesToPersistedValues(allocs);
+                                
                                 promises.push(doAccountUpdates(updatedAccounts));
                             }
                         }
