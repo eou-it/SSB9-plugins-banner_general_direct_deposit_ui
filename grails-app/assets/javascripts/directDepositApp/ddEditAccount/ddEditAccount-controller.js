@@ -449,6 +449,11 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
                     $scope.amountMessage = null;
                 });
             }
+            else{
+                //When editing an existing account, the verify account number field should already be filled out,
+                //as the users cannot edit the account number or verify account number fields.
+                $scope.account.bankAccountNumVerify = $scope.account.bankAccountNum
+            }
         };
 
         // INITIALIZE
