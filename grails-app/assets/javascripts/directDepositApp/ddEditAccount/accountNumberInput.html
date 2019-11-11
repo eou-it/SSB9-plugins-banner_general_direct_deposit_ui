@@ -15,7 +15,6 @@ Copyright 2015-2019 Ellucian Company L.P. and its affiliates.
                            ng-class="[(routingNumErr && !routNumFocused ? 'input-field-error' : null)]" class="text-input-field gssb-eds-text-field semi-bold form-spacing" id="routing-number"
                            type="text"
                            placeholder="{{'directDeposit.account.label.bank.routing.num'|i18n}}" />
-                    <truncated-bank-name ng-if="!routingNumErr && !routNumFocused" class="input-bank-name" title="{{account.bankRoutingInfo.bankName}}"></truncated-bank-name>
                 </div>
                 <p class="input-field-label account-number-small-screen-errors" ng-class="[(routingNumErr ? 'field-error error-font-size' : 'no-display')]" role="alert" aria-live="assertive">{{routingNumMessage}}</p>
             </div>
@@ -63,6 +62,16 @@ Copyright 2015-2019 Ellucian Company L.P. and its affiliates.
     <div class="row semi-bold dd-popover-client">
         <div class="col-xs-12 col-sm-4 col-md-4 xs-fix flex-end menu-fix input-layer">
             <div class="unflex">
+                <label class="input-field-label" for="bank-name-display">{{'directDeposit.account.label.bank.name'|i18n}}</label>
+                <div class="pos-relative input-layer">
+                    <input id="bank-name-display" class="readonly-input text-input-field semi-bold form-spacing truncate"
+                           ng-value="account.bankRoutingInfo.bankName ? account.bankRoutingInfo.bankName : ''" aria-readonly="true"
+                            title="{{account.bankRoutingInfo.bankName ? account.bankRoutingInfo.bankName : ''}}" readonly/>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-4 col-md-4 xs-fix flex-end menu-fix input-layer">
+            <div class="unflex">
                 <label class="input-field-label">{{'directDeposit.account.label.accountType'|i18n}}</label>
                 <label class="visuallyhidden" id="select-acct-type">{{'directDeposit.label.account.type.select'|i18n}}</label>
                 <span><choose-account account="account" class="visuallyhidden" id="account-type" tabindex="-1" /></span>
@@ -89,32 +98,6 @@ Copyright 2015-2019 Ellucian Company L.P. and its affiliates.
                 <p ng-show="accountTypeErr" class="ng-class: (accountTypeErr ? 'field-error error-font-size' : 'no-display');" role="alert" aria-live="assertive">
                     {{'directDeposit.invalid.missing.account.type'|i18n}}</p>
             </div>
-        </div>
-        <div ng-show="typeIndicator==='HR'" class="col-xs-12 col-sm-4 col-md-4 xs-fix">
-            <label class="input-field-label">{{'directDeposit.account.label.amount'|i18n}}</label><br>
-            <input ng-model="account.amountType" class="edit-radio" type="radio" name="amount-type" value="remaining"
-                   checked aria-labelledby="rem-radio-lbl"><span class="lbl radio-list" id="rem-radio-lbl">{{'directDeposit.account.amount.remaining'|i18n}}</span>
-            <br>
-            <input ng-model="account.amountType" class="edit-radio" type="radio" name="amount-type" value="amount"
-                   aria-labelledby="amt-radio-lbl"><span class="lbl radio-list" id="amt-radio-lbl">{{'directDeposit.account.amount.amount'|i18n}}</span>
-            <div ng-show="account.amountType === 'amount'" class="amount-spacing">
-                <label class="visuallyhidden" for="amt-txt-input">{{'directDeposit.account.label.amount.amount'|i18n}}</label>
-                <input ng-model="account.amount" ng-blur="amountAmtFocused=false" ng-focus="amountAmtFocused=true"
-                       ng-class="[(amountErr === 'amt' && !amountAmtFocused ? 'input-field-error' : null)]"
-                       class="gssb-eds-text-field radio-txt-input semi-bold form-spacing" id="amt-txt-input" type="number"
-                       step="0.01" placeholder="{{'directDeposit.label.input.amount'|i18n}}" />
-            </div>
-            <br>
-            <input ng-model="account.amountType" class="edit-radio" type="radio" name="amount-type" value="percentage" aria-labelledby="pct-radio-lbl">
-            <span class="lbl radio-list" id="pct-radio-lbl">{{'directDeposit.account.amount.percentage'|i18n}}</span>
-            <div ng-show="account.amountType === 'percentage'" class="ws-nowrap amount-spacing">
-                <label class="visuallyhidden" for="pct-txt-input">{{'directDeposit.account.label.amount.percent'|i18n}}</label>
-                <input ng-model="account.percent" ng-blur="amountPctFocused=false" ng-focus="amountPctFocused=true"
-                       ng-class="[(amountErr === 'pct' && !amountPctFocused ? 'input-field-error' : null)]"
-                       class="gssb-eds-text-field radio-txt-input semi-bold form-spacing" id="pct-txt-input" type="number"
-                       step="0.01" placeholder="{{'directDeposit.label.input.percent'|i18n}}" /> %
-            </div>
-            <p ng-show="amountErr" class="input-field-label field-error error-font-size">{{amountMessage}}</p>
         </div>
         <div ng-show="typeIndicator==='HR'" class="clearfix visible-xs-block hidden-sm hidden-md hidden-lg"></div>
         <div ng-show="typeIndicator==='HR'" class="col-xs-12 col-sm-4 col-md-4 xs-fix">
@@ -146,6 +129,34 @@ Copyright 2015-2019 Ellucian Company L.P. and its affiliates.
             </div>
         </div>
         <span ng-if="!!miscMessage" class="misc-message inline-notification field-error">{{miscMessage}}</span>
+    </div>
+    <div class="row semi-bold dd-popover-client">
+        <div ng-show="typeIndicator==='HR'" class="col-xs-12 col-sm-4 col-md-4 xs-fix">
+            <label class="input-field-label">{{'directDeposit.account.label.amount'|i18n}}</label><br>
+            <input ng-model="account.amountType" class="edit-radio" type="radio" name="amount-type" value="remaining"
+                   checked aria-labelledby="rem-radio-lbl"><span class="lbl radio-list" id="rem-radio-lbl">{{'directDeposit.account.amount.remaining'|i18n}}</span>
+            <br>
+            <input ng-model="account.amountType" class="edit-radio" type="radio" name="amount-type" value="amount"
+                   aria-labelledby="amt-radio-lbl"><span class="lbl radio-list" id="amt-radio-lbl">{{'directDeposit.account.amount.amount'|i18n}}</span>
+            <div ng-show="account.amountType === 'amount'" class="amount-spacing">
+                <label class="visuallyhidden" for="amt-txt-input">{{'directDeposit.account.label.amount.amount'|i18n}}</label>
+                <input ng-model="account.amount" ng-blur="amountAmtFocused=false" ng-focus="amountAmtFocused=true"
+                       ng-class="[(amountErr === 'amt' && !amountAmtFocused ? 'input-field-error' : null)]"
+                       class="gssb-eds-text-field radio-txt-input semi-bold form-spacing" id="amt-txt-input" type="number"
+                       step="0.01" placeholder="{{'directDeposit.label.input.amount'|i18n}}" />
+            </div>
+            <br>
+            <input ng-model="account.amountType" class="edit-radio" type="radio" name="amount-type" value="percentage" aria-labelledby="pct-radio-lbl">
+            <span class="lbl radio-list" id="pct-radio-lbl">{{'directDeposit.account.amount.percentage'|i18n}}</span>
+            <div ng-show="account.amountType === 'percentage'" class="ws-nowrap amount-spacing">
+                <label class="visuallyhidden" for="pct-txt-input">{{'directDeposit.account.label.amount.percent'|i18n}}</label>
+                <input ng-model="account.percent" ng-blur="amountPctFocused=false" ng-focus="amountPctFocused=true"
+                       ng-class="[(amountErr === 'pct' && !amountPctFocused ? 'input-field-error' : null)]"
+                       class="gssb-eds-text-field radio-txt-input semi-bold form-spacing" id="pct-txt-input" type="number"
+                       step="0.01" placeholder="{{'directDeposit.label.input.percent'|i18n}}" /> %
+            </div>
+            <p ng-show="amountErr" class="input-field-label field-error error-font-size">{{amountMessage}}</p>
+        </div>
     </div>
     <div class="row">
         <div class="col-sm-12 col-md-12 col-lg-12">
