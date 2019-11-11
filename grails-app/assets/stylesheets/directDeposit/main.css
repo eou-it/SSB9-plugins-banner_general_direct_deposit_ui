@@ -574,6 +574,19 @@ button.dropdown-btn.disabled.ng-not-empty {
     min-width: 0px;
 }
 
+.truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.readonly-input {
+    user-select: none;
+    cursor: default;
+    background: #F7F7F7;
+    border: 1px solid #B2B3B7;
+    color: #5B5E65;
+}
+
 .dropdown-menu.addAcct {
     left: 0;
     border-bottom-right-radius: 6px;
