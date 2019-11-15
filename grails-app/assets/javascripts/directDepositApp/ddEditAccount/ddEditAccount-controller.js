@@ -50,7 +50,7 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
                             setRoutingNumError($filter('i18n')('directDeposit.invalid.routing.number'));
                         }
                         else {
-                            $scope.account.bankRoutingInfo.bankName = response.bankName;
+                            $scope.account.bankRoutingInfo.bankName = htmlDecode(response.bankName);
                             $scope.routingNumErr = false;
                             notificationCenterService.removeNotification(routingNotification);
                         }
@@ -216,7 +216,11 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
             }
 
             return result;
-        };
+            },
+            htmlDecode = function (string) {
+                var doc = new DOMParser().parseFromString(string, "text/html");
+                return doc.documentElement.textContent;
+            };
 
         $scope.saveAccount = function() {
             var doSave = true,
