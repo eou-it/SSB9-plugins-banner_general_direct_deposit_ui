@@ -5,14 +5,10 @@ Copyright 2015-2018 Ellucian Company L.P. and its affiliates.
 <input enter-key="setCreateFromExisting('yes')" ng-model="setup.createFromExisting" class="edit-radio" type="radio" name="create-option" value="yes" aria-labelledby="create-opt-existing"><span class="lbl radio-list" id="create-opt-existing">{{'directDeposit.label.create.from.exisiting'|i18n}}</span>
 <div ng-show="setup.createFromExisting === 'yes'" class="existing-accts-old">
     <label class="visuallyhidden" id="select-existing">{{'directDeposit.label.select.from.exisiting'|i18n}}</label>
-    <span><select-bank-acct class="visuallyhidden" id="existing-acct" tabindex="-1"/></span>
     <div ng-show="typeIndicator==='AP'" class="dropdown" role="menu">
-        <button dropdown-helper="begin" dropdown-selected="otherAccountSelected" class="gssb-eds-text-field dropdown-btn"
+        <button dropdown-helper="begin" dropdown-selected="otherAccountSelected" class="gssb-eds-text-field dropdown-btn semi-bold"
                 data-toggle="dropdown" aria-haspopup="true" aria-labelledby="select-existing existing-acct">
-            <span class="float-l semi-bold form-spacing">
-                <select-bank-acct/>
-            </span>
-            <span class="float-r form-spacing down-caret caret-color"></span>
+            <span class="form-spacing break-word max-width-full float-l left-align-text">{{existingAcctText}}</span><span class="float-r down-caret caret-color form-spacing"></span>
         </button>
         <ul menu-controls class="dropdown-menu addAcct">
             <li ng-repeat="existingAcct in setup.otherAccounts" role="presentation">

@@ -16,6 +16,7 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
         $scope.amountPctFocused = false;
         $scope.dropdownIsOpen = false;
         $scope.shouldDisplayPriority = true;
+        $scope.existingAcctText = '';
 
         $scope.popoverElements = {}; // Used to coordinate popovers in modal
 
@@ -139,6 +140,7 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
 
         $scope.selectOtherAcct = function (acct) {
             $scope.otherAccountSelected = acct;
+            getExistingAcctText();
         };
 
         $scope.isRemaining = function(){
@@ -146,8 +148,19 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
         };
 
         var displayMiscError = function (msg) {
-            $scope.miscMessage = msg;
-        };
+                $scope.miscMessage = msg;
+            },
+            getExistingAcctText = function () {
+                var bankName = $scope.otherAccountSelected.bankRoutingInfo.bankName;
+                var acctNum = $scope.otherAccountSelected.bankAccountNum;
+                
+                if (!$scope.otherAccountSelected) {
+                    $scope.existingAcctText = $filter('i18n')('directDeposit.label.select.exisiting');
+                } else {
+                    $scope.existingAcctText = bankName;
+                    $scope.existingAcctText += ' ...' + acctNum.substring(acctNum.length - 4);
+                }
+            };
 
         var clearMiscMessage = function () {
             $scope.miscMessage = null;
@@ -375,6 +388,8 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
         this.init = function() {
             $scope.setup = {};
             $scope.setup.hasOtherAccounts = false;
+
+            getExistingAcctText();
 
             // start with a 'fresh' reorder flag
             ddEditAccountService.doReorder = false;
