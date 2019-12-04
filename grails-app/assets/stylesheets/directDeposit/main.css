@@ -19,6 +19,14 @@ body {
     margin: 0 !important;
 }
 
+.left-align-text {
+    text-align: left;
+}
+
+.max-width-full {
+    max-width: 100%;
+}
+
 
 #content {
     overflow-x: hidden !important;
@@ -616,8 +624,7 @@ button.dropdown-btn.disabled.ng-not-empty {
     border-width: 1px;
     border-color: #026BC8;
     top: 3.175em;
-    width: auto;
-    min-width: 100%;
+    width: 100%;
 }
 
 .dropdown-menu > li > a.addAcct,
