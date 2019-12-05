@@ -151,12 +151,13 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
                 $scope.miscMessage = msg;
             },
             getExistingAcctText = function () {
-                var bankName = $scope.otherAccountSelected.bankRoutingInfo.bankName;
-                var acctNum = $scope.otherAccountSelected.bankAccountNum;
-                
+                var bankName;
+                var acctNum;
                 if (!$scope.otherAccountSelected) {
                     $scope.existingAcctText = $filter('i18n')('directDeposit.label.select.exisiting');
                 } else {
+                    bankName = $scope.otherAccountSelected.bankRoutingInfo.bankName;
+                    acctNum = $scope.otherAccountSelected.bankAccountNum;
                     $scope.existingAcctText = bankName;
                     $scope.existingAcctText += ' ...' + acctNum.substring(acctNum.length - 4);
                 }
