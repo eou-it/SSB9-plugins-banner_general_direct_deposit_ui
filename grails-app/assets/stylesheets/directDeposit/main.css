@@ -27,6 +27,10 @@ body {
     max-width: 100%;
 }
 
+.max-width-half {
+    max-width: 50%;
+}
+
 
 #content {
     overflow-x: hidden !important;
