@@ -24,7 +24,7 @@ directDepositApp.service('ddEditAccountService', ['directDepositService', '$reso
             {controller: 'UpdateAccount', action: 'deleteAccounts'}, {delete: {method:'POST', isArray:true}}),
 
         bankInfo = $resource('../ssb/:controller/:action',
-            {controller: 'UpdateAccount', action: 'getBankInfo'}, {query: {method:'GET', isArray:false}}),
+            {controller: 'UpdateAccount', action: 'getBankInfo'}, {query: {method:'POST', isArray:false}}),
 
         validateAccountsUnique = $resource('../ssb/:controller/:action',
             {controller: 'UpdateAccount', action: 'validateAccountsAreUnique'}, {query: {method:'POST', isArray:false}});
@@ -74,7 +74,7 @@ directDepositApp.service('ddEditAccountService', ['directDepositService', '$reso
     };
     
     var validAccount = $resource('../ssb/:controller/:action',
-            {controller: 'UpdateAccount', action: 'validateAccountNum'}, {query: {method:'GET', isArray:false}});
+            {controller: 'UpdateAccount', action: 'validateAccountNum'}, {query: {method:'POST', isArray:false}});
     
     this.validateAccountNum = function (accountNum) {
         return validAccount.query({bankAccountNum: accountNum});
