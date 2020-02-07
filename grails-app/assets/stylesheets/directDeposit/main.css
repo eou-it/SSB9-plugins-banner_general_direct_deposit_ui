@@ -610,7 +610,8 @@ button.dropdown-btn.disabled.ng-not-empty {
     margin: 0;
 }
 
-.dropdown-menu.addAcct.listing {
+.dropdown-menu.addAcct.listing,
+.open > .dropdown-menu.addAcct.listing {
     min-width: 100%;
     width: auto;
 }
