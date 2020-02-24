@@ -1,5 +1,5 @@
 <!--*******************************************************************************
-Copyright 2015-2019 Ellucian Company L.P. and its affiliates.
+Copyright 2015-2020 Ellucian Company L.P. and its affiliates.
 *******************************************************************************-->
 <div class="container-fluid">
     <div class="row semi-bold dd-popover-client">
@@ -7,7 +7,7 @@ Copyright 2015-2019 Ellucian Company L.P. and its affiliates.
             <div class="col-xs-12 col-sm-12 col-md-6 clear-both xs-fix">
                 <div>
                     <label class="rout-num-lbl input-field-label" for="routing-number">{{'directDeposit.account.label.bank.routing.num'|i18n}}</label>
-                    <sample-check-pop-over ng-show="checkBrowserLocale('en-US')" class="dd-popover" popover-img="sample_check_290x166.png"
+                    <sample-check-pop-over ng-show="checkBrowserLocale('en_US')" class="dd-popover" popover-img="sample_check_290x166.png"
                                            popover-alt="{{'directDeposit.sample.check.alt.text'|i18n}}"></sample-check-pop-over>
                 </div>
                 <div class="pos-relative input-layer">
@@ -23,7 +23,7 @@ Copyright 2015-2019 Ellucian Company L.P. and its affiliates.
                     <label class="input-field-label" for="account-number">
                         {{'directDeposit.account.label.account.num'|i18n}}
                     </label>
-                    <sample-check-pop-over ng-show="checkBrowserLocale('en-US')" class="dd-popover" popover-img="sample_check_290x166.png"
+                    <sample-check-pop-over ng-show="checkBrowserLocale('en_US')" class="dd-popover" popover-img="sample_check_290x166.png"
                                            popover-alt="{{'directDeposit.sample.check.alt.text'|i18n}}"></sample-check-pop-over>
                     <div class="pos-relative input-layer">
                         <input data-ng-model="account.bankAccountNum" ng-blur="acctNumFocused=false; validateAccountNum()" ng-focus="acctNumFocused=true" ng-disabled="!creatingNewAccount"

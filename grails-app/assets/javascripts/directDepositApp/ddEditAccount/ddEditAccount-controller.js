@@ -1,5 +1,5 @@
 /*******************************************************************************
- Copyright 2015-2017 Ellucian Company L.P. and its affiliates.
+ Copyright 2015-2020 Ellucian Company L.P. and its affiliates.
  *******************************************************************************/
 
 generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$modalInstance', '$state', '$filter', '$timeout', 'directDepositService', 'ddEditAccountService', 'ddListingService', 'notificationCenterService', 'editAcctProperties',
@@ -75,8 +75,11 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
                 accountNotification = notificationCenterService.addNotification($scope.accountNumMessage, "error");
                 clearMiscMessage();
             },
-            removeWhitespacesAndCapitalizeAccountNumber = function() {
-                $scope.account.bankAccountNum = $scope.account.bankAccountNum.trim().toUpperCase();
+            removeWhitespacesAndCapitalizeAccountNumber = function () {
+                if ($scope.account.bankAccountNum) {
+                    $scope.account.bankAccountNum = $scope.account.bankAccountNum.trim().toUpperCase();
+                }
+
                 if ($scope.account.bankAccountNumVerify) {
                     $scope.account.bankAccountNumVerify = $scope.account.bankAccountNumVerify.trim().toUpperCase()
                 }
@@ -118,11 +121,7 @@ generalSsbAppControllers.controller('ddEditAccountController', ['$scope', '$moda
 
         $scope.checkBrowserLocale = function(localeIn) {
             var locale = $('meta[name=locale]').attr("content");
-            if (localeIn.toUpperCase() === locale.toUpperCase() ) {
-                return true;
-            } else {
-                return false;
-            }
+            return localeIn.toUpperCase() === locale.toUpperCase();
         };
 
         $scope.setAccountPriority = function (priority) {
