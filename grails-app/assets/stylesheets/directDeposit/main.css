@@ -1,5 +1,5 @@
 /********************************************************************************
-  Copyright 2015-2019 Ellucian Company L.P. and its affiliates.
+  Copyright 2015-2020 Ellucian Company L.P. and its affiliates.
 ********************************************************************************/
 /* General Styles */
 body {
@@ -541,6 +541,12 @@ button.closebtn {
     padding: unset !important;
 }
 
+.dropdown-text {
+    word-wrap: break-word;
+    max-width: 75%;
+    text-align: left;
+}
+
 .dropdown-btn:focus {
     background-color: #fff;
     border:1px solid #151618;
@@ -628,7 +634,7 @@ button.dropdown-btn.disabled.ng-not-empty {
     border-style: none solid solid;
     border-width: 1px;
     border-color: #026BC8;
-    top: 3.175em;
+    top: 85%;
     width: 100%;
 }
 

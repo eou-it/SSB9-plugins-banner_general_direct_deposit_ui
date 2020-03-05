@@ -1,5 +1,5 @@
 <!--*******************************************************************************
-Copyright 2015-2018 Ellucian Company L.P. and its affiliates.
+Copyright 2015-2020 Ellucian Company L.P. and its affiliates.
 *******************************************************************************-->
 <td class="break-word">
     <div ng-if="areAccountsUpdatable" class="delete-checkbox-wrapper-desktop">
@@ -17,7 +17,7 @@ Copyright 2015-2018 Ellucian Company L.P. and its affiliates.
     <div class="dropdown desktop-listing" role="menu">
         <button dropdown-helper="begin" class="gssb-eds-text-field dropdown-btn" data-toggle="dropdown" aria-haspopup="true"
                 aria-labelledby="select-acct-type{{$index}} account-type{{$index}}">
-            <span class="float-l form-spacing">
+            <span class="float-l form-spacing dropdown-text">
                 <choose-account account="alloc"/>
             </span>
             <span class="icon float-r form-spacing"><span class="dropdown-caret upside-down"></span></span>
@@ -46,8 +46,8 @@ Copyright 2015-2018 Ellucian Company L.P. and its affiliates.
     <div dropdown-state="amtDropdownOpen" class="dropdown desktop-listing">
         <button dropdown-helper="begin"
             ng-class="(((amountErr === 'amt' && alloc.amountType === 'amount') || (amountErr === 'pct' && alloc.amountType === 'percentage')) && !amtDropdownOpen ? 'input-field-error' : null)"
-            class="gssb-eds-text-field dropdown-btn ws-nowrap" data-toggle="dropdown" href="#" aria-labelledby="amount{{$index}} radios{{$index}}">
-            <span ng-class="(((amountErr === 'amt' && alloc.amountType === 'amount') || (amountErr === 'pct' && alloc.amountType === 'percentage')) && !amtDropdownOpen ? 'field-error' : null)" class="float-l form-spacing">
+            class="gssb-eds-text-field dropdown-btn" data-toggle="dropdown" href="#" aria-labelledby="amount{{$index}} radios{{$index}}">
+            <span ng-class="(((amountErr === 'amt' && alloc.amountType === 'amount') || (amountErr === 'pct' && alloc.amountType === 'percentage')) && !amtDropdownOpen ? 'field-error' : null)" class="float-l form-spacing dropdown-text">
                 {{displayAllocationVal()}}
             </span>
             <span class="icon float-r form-spacing"><span class="dropdown-caret upside-down"></span></span>
@@ -55,7 +55,7 @@ Copyright 2015-2018 Ellucian Company L.P. and its affiliates.
         <ul stop-click suppress-enter-key amount-menu-controls selection="alloc.amountType" class="dropdown-menu addAcct listing" role="radiogroup" aria-label="{{'directDeposit.label.account.amount.edit'|i18n}}" id="radios{{$index}}">
             <li ng-class="(alloc.amountType === 'remaining' ? 'dropdown-li-focus' : '')" class="listing" role="presentation">
                 <input ng-model="alloc.amountType" class="edit-radio" type="radio" name="amount-type{{$index}}" value="remaining" tabindex="0" aria-labelledby="rem-radio-lbl{{$index}}">
-                <span class="lbl radio-list ws-nowrap" id="rem-radio-lbl{{$index}}">{{'directDeposit.account.amount.remaining'|i18n}}</span>
+                <span class="lbl radio-list" id="rem-radio-lbl{{$index}}">{{'directDeposit.account.amount.remaining'|i18n}}</span>
                 <br>
             </li>
             <li ng-class="(alloc.amountType === 'amount' ? 'dropdown-li-focus' : '')" class="listing" role="presentation">
@@ -90,14 +90,14 @@ Copyright 2015-2018 Ellucian Company L.P. and its affiliates.
     <div class="dropdown desktop-listing" role="menu">
         <button dropdown-helper="begin"
             ng-if="!isValidRemainingAmountAllocation(alloc)" class="gssb-eds-text-field dropdown-btn" data-toggle="dropdown" aria-haspopup="true" aria-labelledby="priority-{{$index}} priority-menu{{$index}}">
-            <span ng-if="getShouldDisplayPriority()" class="float-l form-spacing">
+            <span ng-if="getShouldDisplayPriority()" class="float-l form-spacing dropdown-text">
                 {{alloc.priority}}
             </span>
             <span class="icon float-r form-spacing"><span class="dropdown-caret upside-down"></span></span>
         </button>
         <button dd-pop-over popover-msg="directDeposit.invalid.reprioritize.remaining.popover" popover-width="225px"
             ng-if="isValidRemainingAmountAllocation(alloc)" class="gssb-eds-text-field-disabled dropdown-btn disabled" data-toggle="dropdown" aria-labelledby="priority-{{$index}} priority-menu{{$index}}" aria-disabled="true">
-            <span ng-if="getShouldDisplayPriority()" class="float-l form-spacing">
+            <span ng-if="getShouldDisplayPriority()" class="float-l form-spacing dropdown-text">
                 {{alloc.priority}}
             </span>
             <span class="icon float-r form-spacing"><span class="dropdown-caret upside-down"></span></span>
