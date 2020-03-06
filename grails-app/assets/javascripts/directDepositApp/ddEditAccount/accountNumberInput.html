@@ -79,7 +79,7 @@ Copyright 2015-2020 Ellucian Company L.P. and its affiliates.
                     <button dropdown-helper="begin" dropdown-selected="account.accountType" ng-focus="acctTypeFocused=true" ng-blur="acctTypeFocused=false"
                             ng-class="(accountTypeErr ? 'dropdown-btn input-field-error' : 'dropdown-btn')"
                             data-toggle="dropdown" class="gssb-eds-text-field" aria-haspopup="true" aria-labelledby="select-acct-type account-type">
-                    <span class="float-l form-spacing">
+                    <span class="float-l form-spacing dropdown-text">
                         <choose-account account="account" />
                     </span>
                         <span class="float-r form-spacing down-caret caret-color"></span>
@@ -107,7 +107,7 @@ Copyright 2015-2020 Ellucian Company L.P. and its affiliates.
             <div class="dropdown" role="menu">
                 <button dropdown-helper="begin" dropdown-selected="account.priority" ng-if="!isRemaining()" class="dropdown-btn gssb-eds-text-field" data-toggle="dropdown" aria-haspopup="true"
                         aria-labelledby="priority priority-menu">
-                <span ng-if="shouldDisplayPriority" class="float-l form-spacing">
+                <span ng-if="shouldDisplayPriority" class="float-l form-spacing dropdown-text">
                     {{account.priority}}
                 </span>
                     <span class="float-r form-spacing down-caret caret-color"></span>
@@ -115,7 +115,7 @@ Copyright 2015-2020 Ellucian Company L.P. and its affiliates.
                 <button dropdown-helper="begin" dropdown-selected="account.priority" ng-if="isRemaining()" dd-pop-over popover-msg="directDeposit.invalid.reprioritize.remaining.popover"
                         popover-width="225px"
                         class="dropdown-btn disabled gssb-eds-text-field-disabled" data-toggle="dropdown" aria-labelledby="priority priority-menu" aria-disabled="true">
-                <span ng-if="shouldDisplayPriority" class="float-l form-spacing">
+                <span ng-if="shouldDisplayPriority" class="float-l form-spacing dropdown-text">
                     {{account.priority}}
                 </span>
                     <span class="float-r form-spacing down-caret caret-color"></span>
