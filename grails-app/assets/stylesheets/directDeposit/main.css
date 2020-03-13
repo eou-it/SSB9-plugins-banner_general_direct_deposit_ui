@@ -463,7 +463,7 @@ button.closebtn {
 }
 
 .save-btn[disabled] {
-    color: #869FB1;
+    color: #869FB1 !important;
 }
 
 .buttons-desktop-save {
