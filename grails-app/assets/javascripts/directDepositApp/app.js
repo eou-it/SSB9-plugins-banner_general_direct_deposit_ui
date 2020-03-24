@@ -76,9 +76,9 @@ directDepositApp.config(['$stateProvider', '$urlRouterProvider', 'webAppResource
                 url: "/directDepositListing",
                 templateUrl: webAppResourcePathString + '/directDepositApp/ddListing/directDepositListing.html',
                 controller: 'ddListingController',
-                onEnter: function(ddListingService){
+                onEnter: ['ddListingService', function(ddListingService){
                     ddListingService.doReload();
-                },
+                }],
                 data: {
                     breadcrumbs: []
                 },
