@@ -55,6 +55,11 @@ dependencies {
     testCompile "org.grails:grails-web-testing-support"
 }
 
+configurations {
+    runtime.exclude group: "org.springframework.boot", module: "spring-boot-starter-actuator"
+    runtime.exclude group: "org.grails", module: "grails-gorm-testing-support"
+}
+
 // Added for BannerXE - Internal plugin dependency
 grails {
     plugins {
