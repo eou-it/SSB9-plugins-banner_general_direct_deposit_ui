@@ -11,6 +11,9 @@ directDepositApp.service('ddEditAccountService', ['directDepositService', '$reso
         updateAccount = $resource('../ssb/:controller/:action',
         {controller: 'UpdateAccount', action: 'updateAccount'}, {save: {method:'POST'}}),
 
+        updateMultipleAccounts = $resource('../ssb/:controller/:action',
+        {controller: 'UpdateAccount', action: 'updateMultipleAccounts'}, {save: {method:'POST'}}),
+
         reorderAllAccounts = $resource('../ssb/:controller/:action',
         {controller: 'UpdateAccount', action: 'reorderAllAccounts'}, {save: {method:'POST', isArray:true}}),
         
@@ -21,7 +24,7 @@ directDepositApp.service('ddEditAccountService', ['directDepositService', '$reso
             {controller: 'UpdateAccount', action: 'deleteAccounts'}, {delete: {method:'POST', isArray:true}}),
 
         bankInfo = $resource('../ssb/:controller/:action',
-            {controller: 'UpdateAccount', action: 'getBankInfo'}, {query: {method:'GET', isArray:false}}),
+            {controller: 'UpdateAccount', action: 'getBankInfo'}, {query: {method:'POST', isArray:false}}),
 
         validateAccountsUnique = $resource('../ssb/:controller/:action',
             {controller: 'UpdateAccount', action: 'validateAccountsAreUnique'}, {query: {method:'POST', isArray:false}});
@@ -41,7 +44,11 @@ directDepositApp.service('ddEditAccountService', ['directDepositService', '$reso
             return updateAccount.save(account);
         }
     };
-    
+
+    this.updateAccounts = function (accounts) {
+        return updateMultipleAccounts.save(accounts);
+    };
+
     this.reorderAccounts = function (account) {
         if(this.doReorder === 'all') {
             var i;
@@ -67,7 +74,7 @@ directDepositApp.service('ddEditAccountService', ['directDepositService', '$reso
     };
     
     var validAccount = $resource('../ssb/:controller/:action',
-            {controller: 'UpdateAccount', action: 'validateAccountNum'}, {query: {method:'GET', isArray:false}});
+            {controller: 'UpdateAccount', action: 'validateAccountNum'}, {query: {method:'POST', isArray:false}});
     
     this.validateAccountNum = function (accountNum) {
         return validAccount.query({bankAccountNum: accountNum});
@@ -109,6 +116,15 @@ directDepositApp.service('ddEditAccountService', ['directDepositService', '$reso
             this.priorities[i] = priorityInfo;
         }
         this.accounts = accts;
+    };
+
+    this.restorePrioritiesToPersistedValues = function (accts) {
+        var i = 0,
+            len = accts.length;
+
+        for(; i < len; i++){
+            accts[i].priority = this.priorities[i].persistVal;
+        }
     };
     
     this.setAccountPriority = function (acct, priority) {

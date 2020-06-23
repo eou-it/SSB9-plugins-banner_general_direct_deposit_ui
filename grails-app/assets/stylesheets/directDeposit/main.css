@@ -19,6 +19,18 @@ body {
     margin: 0 !important;
 }
 
+.left-align-text {
+    text-align: left;
+}
+
+.max-width-full {
+    max-width: 100%;
+}
+
+.max-width-half {
+    max-width: 50%;
+}
+
 
 #content {
     overflow-x: hidden !important;
@@ -314,8 +326,20 @@ input:disabled {
     background: #F6E5E6;
 }
 
-.icon-caret-down.ellucian-font {
-    font-family: ellucian;
+.dropdown-caret {
+    background: url('../../images/dropdown-open-icon.svg') no-repeat 100% 100%;
+    padding-top: .5em;
+    display: inline-block;
+    width: 18px;
+    height: 100%;
+}
+
+.upside-down {
+    -webkit-transform:rotate(180deg);
+    -moz-transform:rotate(180deg);
+    -o-transform:rotate(180deg);
+    -ms-transform:rotate(180deg);
+    transform:rotate(180deg);
 }
 
 .text-input-field:focus,
@@ -562,6 +586,19 @@ button.dropdown-btn.disabled.ng-not-empty {
     min-width: 0px;
 }
 
+.truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.readonly-input {
+    user-select: none;
+    cursor: default;
+    background: #F7F7F7;
+    border: 1px solid #B2B3B7;
+    color: #5B5E65;
+}
+
 .dropdown-menu.addAcct {
     left: 0;
     border-bottom-right-radius: 6px;
@@ -573,7 +610,8 @@ button.dropdown-btn.disabled.ng-not-empty {
     margin: 0;
 }
 
-.dropdown-menu.addAcct.listing {
+.dropdown-menu.addAcct.listing,
+.open > .dropdown-menu.addAcct.listing {
     min-width: 100%;
     width: auto;
 }
@@ -591,8 +629,7 @@ button.dropdown-btn.disabled.ng-not-empty {
     border-width: 1px;
     border-color: #026BC8;
     top: 3.175em;
-    width: auto;
-    min-width: 100%;
+    width: 100%;
 }
 
 .dropdown-menu > li > a.addAcct,
@@ -910,6 +947,10 @@ button.dropdown-btn.ng-not-empty {
     display: none;
 }
 
+.account-number-small-screen-errors {
+    display: none;
+}
+
 .table-fmt{
     clear: both;
 }
@@ -1104,7 +1145,7 @@ a.delete-account-link {
     .edit-account-modal .modal-dialog {
         width: auto;
     }
-    
+
     span.check-amount {
         text-align: left;
     }
@@ -1316,6 +1357,10 @@ table tr td {
     .clear-xs-sm {
         clear: both;
     }
+
+    .account-number-small-screen-errors {
+        display: inline-block;
+    }
 }
 
 @media screen and (min-width:768px) {
@@ -1342,17 +1387,13 @@ table tr td {
         font-size: 24px;
         padding: 1em 1em 0.75em;
     }
-    
+
     button.closebtn {
         padding: 2.35em;
     }
 
     .pad-dialog-lr {
         padding: 0em 1.7em;
-    }
-
-    .edit-flex-div2 {
-        width: 66.666666666%;
     }
 
     .mobile-errors-acType {

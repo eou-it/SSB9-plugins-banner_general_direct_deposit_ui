@@ -51,6 +51,7 @@ class UpdateAccountController {
 
                 removeKeyValuePairsNotWantedForUpdate(map)
                 directDepositAccountService.validateAccountAmounts(map)
+                directDepositAccountService.validateRemainingAmountStatusValid([map])
 
                 //newPosition is set so we need to do some reodering as we insert
                 if(map.newPosition) {
@@ -90,6 +91,7 @@ class UpdateAccountController {
             map.remove('bankRoutingInfo')
 
             directDepositAccountService.validateAccountAmounts(map)
+            directDepositAccountService.validateRemainingAmountStatusValid([map])
 
             def updatedAccount = directDepositAccountService.update(map)
             def marshalledAccount = directDepositAccountService.marshallAccountsToMinimalStateForUi(updatedAccount)
@@ -100,7 +102,35 @@ class UpdateAccountController {
             render ControllerUtility.returnFailureMessage(e) as JSON
         }
     }
-    
+
+    def updateMultipleAccounts() {
+        def map = request?.JSON ?: params
+
+        try {
+            // Do some cleanup to prepare for update
+            map.each { acct ->
+                removeKeyValuePairsNotWantedForUpdate(acct)
+
+                // Account and routing numbers will be masked, and are not updatable anyway,
+                // so exclude them from the update.
+                acct.remove('bankAccountNum')
+                acct.remove('bankRoutingInfo')
+
+                directDepositAccountService.validateAccountAmounts(acct)
+            }
+
+            directDepositAccountService.validateRemainingAmountStatusValid(map)
+
+            directDepositAccountService.update(map)
+
+            Map response = [failure: false]
+            render response as JSON
+
+        } catch (ApplicationException e) {
+            render ControllerUtility.returnFailureMessage(e) as JSON
+        }
+    }
+
     def reorderAccounts() {
         def map = request?.JSON ?: params
 
@@ -173,6 +203,9 @@ class UpdateAccountController {
         try {
             def model = [:]
             def accounts = directDepositAccountService.setupAccountsForDelete(map)
+
+            directDepositAccountService.validateRemainingAmountStatusValid(accounts.toBeDeleted, true)
+
             def result = directDepositAccountService.delete(accounts.toBeDeleted)
 
             // Now that the operation has been completed successfully, clear old masking data in preparation for new

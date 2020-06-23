@@ -1,5 +1,5 @@
 /*******************************************************************************
- Copyright 2017-2018 Ellucian Company L.P. and its affiliates.
+ Copyright 2017-2019 Ellucian Company L.P. and its affiliates.
  *******************************************************************************/
 generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope', '$state', '$stateParams', '$modal',
     '$filter', '$q', '$timeout', 'ddListingService', 'ddEditAccountService', 'directDepositService',
@@ -154,6 +154,7 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                 // Set in rootScope as this value needs to be accessed application-wide,
                 // e.g. in scopes created by ngRepeat.
                 $rootScope.areAccountsUpdatable = response.areAccountsUpdatable;
+                $rootScope.isAccountNumberVerificationFieldEnabled = response.enableVerifyAccountNumber;
 
                 // getApListing
                 acctPromises[0].then(function (response) {
@@ -306,7 +307,7 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
             { title: $filter('i18n')('directDeposit.account.label.accountType')},
             { title: $filter('i18n')('directDeposit.account.label.status')}
         ];
-        
+
         // Most Recent Pay
         $scope.mostRecentPayColumns = [
             { tabindex: '0', title: $filter('i18n')('directDeposit.account.label.bank.name')},
@@ -315,7 +316,7 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
             { title: $filter('i18n')('directDeposit.account.label.accountType')},
             { title: $filter('i18n')('directDeposit.label.distribution.net.pay')}
         ];
-        
+
         // Proposed Pay
         $scope.proposedPayColumns = [
             { tabindex: '0', title: $filter('i18n')('directDeposit.account.label.bank.name')},
@@ -338,8 +339,8 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                 scope: $scope,
                 resolve: {
                     editAcctProperties: function () {
-                        return { 
-                            typeIndicator: typeInd, 
+                        return {
+                            typeIndicator: typeInd,
                             creatingNew: !!isAddNew,
                             otherAccounts: acctList || []
                         };
@@ -422,7 +423,7 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
         $scope.cancelChanges = function () {
             if ($scope.editForm.$dirty || $scope.selectedForDelete.payroll || $scope.selectedForDelete.ap || $scope.authorizedChanges) {
                 $scope.cancelNotification();
-                
+
                 var newWarning = new Notification({
                     message: $filter('i18n')('default.cancel.message'),
                     type: "warning"
@@ -483,6 +484,8 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                 notifications = [],
 
                 doUpdate = function() {
+                    var updatedAccounts = [];
+
                     if (ddEditAccountService.doReorder === 'all') {
                         deferred = $q.defer();
 
@@ -517,8 +520,18 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                         if ($scope.isEmployee) {
                             for (i = 0; i < allocs.length; i++) {
                                 if (ddAccountDirtyService.isAccountDirty(allocs[i])) {
-                                    promises.push(updateAccount(allocs[i]));
+                                    updatedAccounts.push(allocs[i]);
                                 }
+                            }
+
+                            if (updatedAccounts.length > 0) {
+                                // As we'll be updating one or more accounts, level set all their priorities to their
+                                // persisted values.  If the update succeeds, all accounts will be reloaded fresh.
+                                // If it fails, then all the priorities will be reset for display *with the assumption*
+                                // that they're all currently at their persisted values.
+                                ddEditAccountService.restorePrioritiesToPersistedValues(allocs);
+                                
+                                promises.push(doAccountUpdates(updatedAccounts));
                             }
                         }
                     }
@@ -537,7 +550,7 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
                     else {
                         // AP account will already be updated if it has a corresponding Payroll account
                         if ($scope.hasApAccount && !$scope.getMatchingPayrollForApAccount() && ddAccountDirtyService.isAccountDirty($scope.apAccount)) {
-                            promises.push(updateAccount($scope.apAccount));
+                            promises.push(doAccountUpdates([$scope.apAccount]));
                         }
                     }
 
@@ -592,14 +605,16 @@ generalSsbAppControllers.controller('ddListingController',['$scope', '$rootScope
 
         };
 
-        var updateAccount = function (acct) {
+        var doAccountUpdates = function (accounts) {
             var deferred = $q.defer();
 
-            if (acct.hrIndicator === 'A') {
-                ddEditAccountService.setAmountValues(acct, acct.amountType);
-            }
+            _.each(accounts, function (acct) {
+                if (acct.hrIndicator === 'A') {
+                    ddEditAccountService.setAmountValues(acct, acct.amountType);
+                }
+            });
 
-            ddEditAccountService.saveAccount(acct).$promise.then(function (response) {
+            ddEditAccountService.updateAccounts(accounts).$promise.then(function (response) {
                 if (response.failure) {
                     // Using addNotification results in displaying stacked error messages if there are more than one.
                     notificationCenterService.addNotification(response.message, "error");

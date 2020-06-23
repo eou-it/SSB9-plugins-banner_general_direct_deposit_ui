@@ -18,14 +18,14 @@ generalSsbAppDirectives.directive('titleForEditModal',[function () {
         restrict: 'E',
         link: function(scope){
             scope.title = 'directDeposit.label.';
-            
+
             if(scope.creatingNewAccount){
                 scope.title += 'add.';
             }
             else {
                 scope.title += 'edit.';
             }
-            
+
             if(scope.typeIndicator === 'HR'){
                 scope.title += 'hrDeposit';
             }
@@ -44,80 +44,7 @@ generalSsbAppDirectives.directive('editModalSaveButton',[function () {
     };
 }]);
 
-generalSsbAppDirectives.directive('selectBankAcct',['$filter', function ($filter) {
-    return{
-        restrict: 'E',
-        link: function(scope, elem){
-            scope.getExistingAcctText = function(){
-                var existingAcctText;
-                
-                if(!scope.otherAccountSelected){
-                    existingAcctText = $filter('i18n')('directDeposit.label.select.exisiting');
-                }
-                else{
-                    var bankName = scope.otherAccountSelected.bankRoutingInfo.bankName;
-                    var acctNum = scope.otherAccountSelected.bankAccountNum;
-                    
-                    existingAcctText = bankName;
-                    existingAcctText += ' ...' + acctNum.substring(acctNum.length-4);
-                    
-                    var btnWidth = elem.parent().parent().width();
-                    
-                    // magic formula to truncate bank name to fit text in button based on estimated
-                    // icon width and character widths
-                    if(btnWidth - ((existingAcctText.length*8) + 45) < 0){
-                        var num = (-(btnWidth - ((existingAcctText.length*8) + 45)))/10 - 1;
-
-                        existingAcctText = bankName.substring(0, bankName.length-num);
-                        existingAcctText += ' ...' + acctNum.substring(acctNum.length-4);
-                    }
-                }
-                
-                return existingAcctText;
-            }
-        },
-        template: "{{getExistingAcctText()}}"
-    };
-}]);
-
-generalSsbAppDirectives.directive('truncatedBankName',[function () {
-    return {
-        restrict: 'E',
-        link: function(scope, elem){
-            scope.getTruncatedBankName = function(){
-                var bankName = scope.account.bankRoutingInfo.bankName,
-                    routNum = scope.account.bankRoutingInfo.bankRoutingNum,
-                    truncated = bankName,
-                    inputWidth = 0,
-                    factor = 8;
-
-                if(routNum && routNum.length > 9)
-                    factor = 9;
-
-                if(bankName){
-                    inputWidth = $('#routing-number').width();
-                    
-                    // magic formula to truncate bank name to fit text in box based on estimated
-                    // icon width and character widths
-                    if(inputWidth - ((truncated.length*factor) + 100) < 0){
-                        var num = (-(inputWidth - ((truncated.length*factor) + 100)))/10;
-    
-                        truncated = bankName.substring(0, bankName.length-num);
-                        truncated += '...';
-                    }
-                }
-                else {
-                    truncated = '';
-                }
-                
-                return truncated;
-            };
-        },
-        template: "{{getTruncatedBankName()}}"
-    };
-}]);
-
-/* 
+/*
  * usage:
  * place dropdown-helper="begin" on the element with the data-toggle attribute so that when user keys to the previous focusable element
  * with shift+tab the dropdown menu is closed. Place dropdown-helper="end" on the last item in the menu so when the user keys to the

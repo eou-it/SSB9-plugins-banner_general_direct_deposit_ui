@@ -20,7 +20,7 @@ Copyright 2015-2018 Ellucian Company L.P. and its affiliates.
             <span class="float-l form-spacing">
                 <choose-account account="alloc"/>
             </span>
-            <span class="icon float-r form-spacing"><span class="icon-caret-down ellucian-font caret-color"></span></span>
+            <span class="icon float-r form-spacing"><span class="dropdown-caret upside-down"></span></span>
         </button>
         <ul menu-controls class="dropdown-menu addAcct" aria-label="{{'directDeposit.label.account.type.edit'|i18n}}">
             <li role="presentation">
@@ -50,7 +50,7 @@ Copyright 2015-2018 Ellucian Company L.P. and its affiliates.
             <span ng-class="(((amountErr === 'amt' && alloc.amountType === 'amount') || (amountErr === 'pct' && alloc.amountType === 'percentage')) && !amtDropdownOpen ? 'field-error' : null)" class="float-l form-spacing">
                 {{displayAllocationVal()}}
             </span>
-            <span class="icon float-r form-spacing"><span class="icon-caret-down ellucian-font caret-color"></span></span>
+            <span class="icon float-r form-spacing"><span class="dropdown-caret upside-down"></span></span>
         </button>
         <ul stop-click suppress-enter-key amount-menu-controls selection="alloc.amountType" class="dropdown-menu addAcct listing" role="radiogroup" aria-label="{{'directDeposit.label.account.amount.edit'|i18n}}" id="radios{{$index}}">
             <li ng-class="(alloc.amountType === 'remaining' ? 'dropdown-li-focus' : '')" class="listing" role="presentation">
@@ -93,14 +93,14 @@ Copyright 2015-2018 Ellucian Company L.P. and its affiliates.
             <span ng-if="getShouldDisplayPriority()" class="float-l form-spacing">
                 {{alloc.priority}}
             </span>
-            <span class="icon float-r form-spacing"><span class="icon-caret-down ellucian-font caret-color"></span></span>
+            <span class="icon float-r form-spacing"><span class="dropdown-caret upside-down"></span></span>
         </button>
         <button dd-pop-over popover-msg="directDeposit.invalid.reprioritize.remaining.popover" popover-width="225px"
             ng-if="isValidRemainingAmountAllocation(alloc)" class="gssb-eds-text-field-disabled dropdown-btn disabled" data-toggle="dropdown" aria-labelledby="priority-{{$index}} priority-menu{{$index}}" aria-disabled="true">
             <span ng-if="getShouldDisplayPriority()" class="float-l form-spacing">
                 {{alloc.priority}}
             </span>
-            <span class="icon float-r form-spacing"><span class="icon-caret-down ellucian-font caret-color"></span></span>
+            <span class="icon float-r form-spacing"><span class="dropdown-caret upside-down"></span></span>
         </button>
         <ul ng-if="!isValidRemainingAmountAllocation(alloc)" menu-controls class="dropdown-menu addAcct min-width-priority" aria-labelledby="priority-menu{{$index}}">
             <li ng-repeat="i in priorities" role="presentation">
