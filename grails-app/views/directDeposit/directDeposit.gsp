@@ -1,6 +1,6 @@
 <%@ page import="org.springframework.context.i18n.LocaleContextHolder" %>
 %{--*******************************************************************************
-Copyright 2015-2019 Ellucian Company L.P. and its affiliates.
+Copyright 2015-2020 Ellucian Company L.P. and its affiliates.
 *******************************************************************************--}%
 <!DOCTYPE html>
 <!--[if IE 9 ]>    <html xmlns:ng="http://angularjs.org" ng-app="directDepositApp" id="ng-app" class="ie9"> <![endif]-->
@@ -37,7 +37,7 @@ Copyright 2015-2019 Ellucian Company L.P. and its affiliates.
         </g:else>
 
         <asset:javascript src="modules/dd-application-mf.js"/>
-
+        <g:theme/>
     </g:applyLayout>
 
     <meta name="viewport" content="width=device-width, height=device-height,  initial-scale=1.0, user-scalable=no, user-scalable=0"/>
