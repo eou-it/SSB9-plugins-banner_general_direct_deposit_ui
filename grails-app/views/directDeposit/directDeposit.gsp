@@ -1,6 +1,6 @@
 <%@ page import="org.springframework.context.i18n.LocaleContextHolder" %>
 %{--*******************************************************************************
-Copyright 2015-2020 Ellucian Company L.P. and its affiliates.
+Copyright 2015-2021 Ellucian Company L.P. and its affiliates.
 *******************************************************************************--}%
 <!DOCTYPE html>
 <!--[if IE 9 ]>    <html xmlns:ng="http://angularjs.org" ng-app="directDepositApp" id="ng-app" class="ie9"> <![endif]-->
