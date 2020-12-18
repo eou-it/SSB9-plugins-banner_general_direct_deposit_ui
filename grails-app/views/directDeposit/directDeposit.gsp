@@ -62,7 +62,7 @@ Copyright 2015-2020 Ellucian Company L.P. and its affiliates.
                     return regex.test(referrerUrl);
                 });
 
-                if (!isExcluded) {
+                if (!isExcluded && referrerUrl.indexOf("/ssb/") !== -1) {
                     // Track this page
                     sessionStorage.setItem('genAppCallingPage', referrerUrl);
                 }
