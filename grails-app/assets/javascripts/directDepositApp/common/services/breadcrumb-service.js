@@ -1,5 +1,5 @@
 /*******************************************************************************
- Copyright 2017 Ellucian Company L.P. and its affiliates.
+ Copyright 2017-2021 Ellucian Company L.P. and its affiliates.
  *******************************************************************************/
 
 directDepositApp.service( 'breadcrumbService', ['$filter', '$rootScope', function ($filter, $rootScope) {
@@ -9,7 +9,7 @@ directDepositApp.service( 'breadcrumbService', ['$filter', '$rootScope', functio
         GEN_LANDING_PAGE_SIGNATURE;
 
     $rootScope.applicationContextRoot = $('meta[name=applicationContextRoot]').attr("content");
-    GEN_LANDING_PAGE_SIGNATURE = new RegExp($rootScope.applicationContextRoot +'/ssb/general$');
+    GEN_LANDING_PAGE_SIGNATURE = new RegExp($rootScope.applicationContextRoot +'/ssb/general#$');
 
     this.reset = function() {
         var label;
@@ -21,7 +21,9 @@ directDepositApp.service( 'breadcrumbService', ['$filter', '$rootScope', functio
             }
         ];
 
-        callingUrl = sessionStorage.getItem('genAppCallingPage');
+        if (sessionStorage.getItem('genAppCallingPage')){
+            callingUrl = sessionStorage.getItem('genAppCallingPage') + '#';
+        }
 
         if (callingUrl) {
             label = GEN_LANDING_PAGE_SIGNATURE.test(callingUrl) ? 'banner.generalssb.landingpage.title' : 'default.paginate.prev';
